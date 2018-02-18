@@ -11,7 +11,7 @@ int failed = 0;
 
 int main() {
     struct chipbox_chip8_state state;
-    char example_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START] = {3, 1, 4, 1, 5, 9, 2};
+    byte example_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START] = {0x0D, 0xEA, 0xD0, 0x0B, 0xE0, 0xE0, 0xF0};
     /* SECTION 1: typedefs and other low-level administrative stuff */
     test(sizeof(byte) == 1, "byte type should be one byte in length");
     test(sizeof(dbyte) == 2, "dbyte type should be two bytes in length");
