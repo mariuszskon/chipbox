@@ -20,7 +20,7 @@ int main() {
 
     /* SECTION 2: validating initial state */
     state = chipbox_init_state();
-    test(sizeof(state.screen) == CHIPBOX_SCREEN_WIDTH * CHIPBOX_SCREEN_HEIGHT / sizeof(byte), "screen should have appropriate size");
+    test(sizeof(state.screen) == CHIPBOX_SCREEN_WIDTH_PIXELS * CHIPBOX_SCREEN_HEIGHT / 8, "screen should have appropriate size");
     test(sizeof(state.memory) == CHIPBOX_MEMORY_SIZE, "memory should have appropriate size");
     test(all_equal(state.V, CHIPBOX_GREGISTERS, 0), "general purpose registers should be initialised to 0");
     test(state.I == 0, "I register should be set to 0");

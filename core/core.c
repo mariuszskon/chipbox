@@ -6,8 +6,8 @@ struct chipbox_chip8_state chipbox_init_state() {
 
     /* initialise screen */
     for (i = 0; i < CHIPBOX_SCREEN_HEIGHT; i++) {
-        for (j = 0; j < CHIPBOX_SCREEN_WIDTH; j++) {
-            state.screen[CHIPBOX_SCREEN_HEIGHT * i + j] = 0;
+        for (j = 0; j < CHIPBOX_SCREEN_WIDTH_BYTES; j++) {
+            state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * i + j] = 0;
         }
     }
 
