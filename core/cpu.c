@@ -9,3 +9,10 @@ int chipbox_cpu_load_program(struct chipbox_chip8_state *state, char *program_da
     state->PC = CHIPBOX_PROGRAM_START;
     return 1;
 }
+
+dbyte chipbox_cpu_get_opcode(struct chipbox_chip8_state *state) {
+    dbyte opcode = 0;
+    opcode = state->memory[state->PC] << 4 | state->memory[state->PC + 1];
+    state->PC += 2;
+    return opcode;
+}
