@@ -12,6 +12,7 @@ all: $(BUILD_DIR)/testcore
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(BUILD_DIR)/testcore: testcore.o core.o cpu.o
+	@mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
