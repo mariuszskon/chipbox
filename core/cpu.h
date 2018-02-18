@@ -3,6 +3,6 @@
 
 #include <string.h>
 #include "core.h"
-int chipbox_cpu_load_program(struct chipbox_chip8_state* state, char* program_data, size_t size);
+int chipbox_cpu_load_program(struct chipbox_chip8_state *state, char *program_data, size_t size);
 
 #endif
