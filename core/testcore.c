@@ -11,7 +11,7 @@ int failed = 0;
 
 int main() {
     struct chipbox_chip8_state state;
-    byte example_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START] = {0x0D, 0xEA, 0xD0, 0x0B, 0xE0, 0xE0, 0xF0};
+    byte example_data[CHIPBOX_MEMORY_SIZE] = {0x0D, 0xEA, 0xD0, 0x0B, 0xE0, 0xE0, 0xF0};
     byte write_data[4096];
     byte temp_data[4096];
     /* SECTION 1: typedefs and other low-level administrative stuff */
