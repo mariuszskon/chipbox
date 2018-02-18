@@ -13,3 +13,6 @@ all: testcore
 
 testcore: testcore.o core.o cpu.o
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$@ $^
+
+clean:
+	rm *.o build/*
