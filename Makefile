@@ -6,13 +6,13 @@ BUILD_DIR = build
 
 HEADERS = $(CORE_DIR)/core.h $(CORE_DIR)/cpu.h
 
-all: testcore
+all: $(BUILD_DIR)/testcore
 
 %.o: */%.c $(HEADERS)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-testcore: testcore.o core.o cpu.o
-	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$@ $^
+$(BUILD_DIR)/testcore: testcore.o core.o cpu.o
+	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
 	rm *.o build/*
