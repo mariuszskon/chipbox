@@ -16,3 +16,15 @@ dbyte chipbox_cpu_get_opcode(struct chipbox_chip8_state *state) {
     state->PC += 2;
     return opcode;
 }
+
+/* chipbox_cpu_opcode_to_nybbles: convert an opcode into nybbles (4 bits)
+   nybbles array must be at have at least 4 cells
+   nybbles are stored most significant bit first
+   i.e. 0xABCD becomes {0xA, 0xB, 0xC, 0xD} so nybbles[0] == 0xA */
+void chipbox_cpu_opcode_to_nybbles(dbyte opcode, byte nybbles[]) {
+    int i;
+    for (i = 0; i < 4; i++) {
+        nybbles[3-i] = opcode & 0xF;
+        opcode >>= 4;
+    }
+}
