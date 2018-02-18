@@ -41,6 +41,7 @@ int main() {
     state = chipbox_init_state();
     chipbox_cpu_load_program(&state, example_data, 7);
     test(chipbox_cpu_get_opcode(&state) == 0x0DEA, "chipbox_cpu_get_opcode should correctly return opcode (next two bytes, big endian)");
+    test(state.PC == CHIPBOX_PROGRAM_START + 2, "chipbox_cpu_get_opcode should increment PC by 2");
 
     /* END */
     printf("Tests: %d, failed: %d\n", tests, failed);
