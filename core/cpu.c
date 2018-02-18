@@ -12,7 +12,7 @@ int chipbox_cpu_load_program(struct chipbox_chip8_state *state, byte *program_da
 
 dbyte chipbox_cpu_get_opcode(struct chipbox_chip8_state *state) {
     dbyte opcode = 0;
-    opcode = state->memory[state->PC] << 4 | state->memory[state->PC + 1];
+    opcode = state->memory[state->PC] << 8 | state->memory[state->PC + 1];
     state->PC += 2;
     return opcode;
 }
