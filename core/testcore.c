@@ -52,6 +52,9 @@ int main() {
     chipbox_cpu_opcode_to_nybbles(0xABCD, write_data);
     test(memcmp(temp_data, write_data, 4) == 0, "chipbox_cpu_opcode_to_nybbles should correctly convert an opcode to array of nybbles, most significant nybble first");
 
+    /* SECTION 4: opcode testing - the good part */
+
+
     /* END */
     printf("Tests: %d, failed: %d\n", tests, failed);
     return 0;

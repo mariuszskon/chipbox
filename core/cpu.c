@@ -28,3 +28,11 @@ void chipbox_cpu_opcode_to_nybbles(dbyte opcode, byte nybbles[]) {
         opcode >>= 4;
     }
 }
+
+/* chipbox_cpu_eval_opcode: evaluates an opcode by manipulating state
+   this is where the bulk of the logic for the chip-8 interpreter/emulator lies */
+void chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
+    byte nybbles[4];
+    chipbox_cpu_opcode_to_nybbles(opcode, nybbles);
+    /* TODO: evaluate the opcodes! */
+}
