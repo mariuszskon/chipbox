@@ -38,6 +38,10 @@ int main() {
     state = chipbox_init_state();
     test(chipbox_cpu_load_program(&state, example_data, CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START + 1) == 0, "loading a program of too great size should be rejected");
 
+    state = chipbox_init_state();
+    chipbox_cpu_load_program(&state, example_data, 7);
+    test(chipbox_cpu_get_opcode(&state) == 0x0DEA, "chipbox_cpu_get_opcode should correctly return opcode (next two bytes, big endian)");
+
     /* END */
     printf("Tests: %d, failed: %d\n", tests, failed);
     return 0;
