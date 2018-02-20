@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -ansi -pedantic -Wall
 
 CORE_DIR = core
-BUILD_DIR = build
+BUILD_DIR = bin
 
 HEADERS = $(CORE_DIR)/core.h $(CORE_DIR)/cpu.h $(CORE_DIR)/fonts.h
 
@@ -16,4 +16,4 @@ $(BUILD_DIR)/testcore: testcore.o core.o cpu.o fonts.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm *.o build/*
+	rm *.o $(BUILD_DIR)/*
