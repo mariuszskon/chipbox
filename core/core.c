@@ -30,5 +30,8 @@ struct chipbox_chip8_state chipbox_init_state() {
         state.input[i] = 0;
     }
 
+    /* set the default compatibiltiy mode */
+    state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
+
     return state;
 }

@@ -33,6 +33,16 @@ typedef unsigned short dbyte; /* double byte - 16 bits */
    interpreter on the original platform */
 #define CHIPBOX_PROGRAM_START 512
 
+/* it seems that there are two slightly differing standards to CHIP-8
+   Cowgod's docs: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+   Mattmik's docs: http://mattmik.com/files/chip8/mastering/chip8.html
+   Mattmik's is more accurate (closest to the classic implementation)
+   but Cowgod's is very popular amongst interpreter/emulator writers */
+#define CHIPBOX_COMPATIBILITY_MODE_COWGOD 0
+#define CHIPBOX_COMPATIBILITY_MODE_MATTMIK 1
+
+#define CHIPBOX_COMPATIBILITY_MODE_DEFAULT CHIPBOX_COMPATIBILITY_MODE_MATTMIK
+
 struct chipbox_chip8_state {
     byte screen[CHIPBOX_SCREEN_WIDTH_BYTES * CHIPBOX_SCREEN_HEIGHT];
     byte memory[CHIPBOX_MEMORY_SIZE];
@@ -44,6 +54,7 @@ struct chipbox_chip8_state {
     byte SP; /* stack pointer */
     dbyte stack[CHIPBOX_STACK_SIZE];
     byte input[CHIPBOX_INPUT_KEYS];
+    byte compat_mode;
 };
 
 struct chipbox_chip8_state chipbox_init_state();
