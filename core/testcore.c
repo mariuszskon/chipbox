@@ -51,7 +51,8 @@ int main() {
     test(x == 0xB && y == 0xC, "chipbox_cpu_opcode_xy should correctly extract the nybbles representing X and Y in the opcode");
 
     /* SECTION 4: opcode testing - the good part */
-
+    state = chipbox_init_state();
+    test(chipbox_cpu_eval_opcode(&state, 0x0123), "0x0NNN (SYS NNN) should succeed");
 
     /* END */
     printf("Tests: %d, failed: %d\n", tests, failed);
