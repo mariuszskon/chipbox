@@ -17,6 +17,11 @@ typedef unsigned short dbyte; /* double byte - 16 bits */
 /* Chip-8 has 4KB/4096 bytes of memory */
 #define CHIPBOX_MEMORY_SIZE 4 * 1024
 
+/* stack size for this implementation */
+#define CHIPBOX_STACK_SIZE 16
+/* stack size for COSMIC VIP (classic implementation) */
+#define CHIPBOX_STACK_SAFE_SIZE 12
+
 /* number of general purpose registers
  16 means we have V0 to VF */
 #define CHIPBOX_GREGISTERS 16
@@ -37,6 +42,7 @@ struct chipbox_chip8_state {
     byte ST; /* sound timer */
     dbyte PC; /* program counter */
     byte SP; /* stack pointer */
+    dbyte stack[CHIPBOX_STACK_SIZE];
     byte input[CHIPBOX_INPUT_KEYS];
 };
 
