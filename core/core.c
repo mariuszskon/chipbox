@@ -1,4 +1,5 @@
 #include "core.h"
+#include "fonts.h"
 
 struct chipbox_chip8_state chipbox_init_state() {
     struct chipbox_chip8_state state;
@@ -14,6 +15,11 @@ struct chipbox_chip8_state chipbox_init_state() {
     /* initialise memory */
     for (i = 0; i < CHIPBOX_MEMORY_SIZE; i++) {
         state.memory[i] = 0;
+    }
+
+    /* load fonts into memory */
+    for (i = 0; i < CHIPBOX_FONT_TOTAL_BYTES; i++) {
+        state.memory[CHIPBOX_PROGRAM_START - CHIPBOX_FONT_TOTAL_BYTES + i] = chipbox_font[i];
     }
 
     /* initialise registers */
