@@ -2,6 +2,7 @@
 #include <string.h>
 #include "core.h"
 #include "cpu.h"
+#include "fonts.h"
 
 void test(int condition, char* name);
 int all_equal(byte array[], int size, int value);
@@ -28,6 +29,7 @@ int main() {
     test(state.DT == 0 && state.ST == 0, "delay and sound timers should be set to 0");
     test(state.PC == CHIPBOX_PROGRAM_START, "PC (program counter) should start at specified value");
     test(all_equal(state.input, CHIPBOX_INPUT_KEYS, 0), "all input keys should be set to 0 (unpressed)");
+    test(memcmp(&(state.memory[CHIPBOX_PROGRAM_START - CHIPBOX_FONT_TOTAL_BYTES]), chipbox_font, CHIPBOX_FONT_TOTAL_BYTES) == 0, "font should be loaded into area of memory below program memory");
 
     /* SECTION 3: validating internal cpu functions */
     state = chipbox_init_state();
