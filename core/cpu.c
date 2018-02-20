@@ -27,7 +27,9 @@ void chipbox_cpu_opcode_xy(dbyte opcode, byte *x, byte *y) {
 }
 
 /* chipbox_cpu_eval_opcode: evaluates an opcode by manipulating state
-   this is where the bulk of the logic for the chip-8 interpreter/emulator lies */
-void chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
+   this is where the bulk of the logic for the chip-8 interpreter/emulator lies
+   returns 1 on success, 0 on error */
+int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
     /* TODO: evaluate the opcodes! */
+    return 0;
 }
