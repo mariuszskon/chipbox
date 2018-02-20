@@ -13,8 +13,7 @@ int failed = 0;
 int main() {
     struct chipbox_chip8_state state;
     byte example_data[CHIPBOX_MEMORY_SIZE] = {0x0D, 0xEA, 0xD0, 0x0B, 0xE0, 0xE0, 0xF0};
-    byte write_data[4096];
-    byte temp_data[4096];
+    byte x, y;
     /* SECTION 1: typedefs and other low-level administrative stuff */
     test(sizeof(byte) == 1, "byte type should be one byte in length");
     test(sizeof(dbyte) == 2, "dbyte type should be two bytes in length");
@@ -47,12 +46,8 @@ int main() {
     test(chipbox_cpu_get_opcode(&state) == 0x0DEA, "chipbox_cpu_get_opcode should correctly return opcode (next two bytes, big endian)");
     test(state.PC == CHIPBOX_PROGRAM_START + 2, "chipbox_cpu_get_opcode should increment PC by 2");
 
-    temp_data[0] = 0xA;
-    temp_data[1] = 0xB;
-    temp_data[2] = 0xC;
-    temp_data[3] = 0xD;
-    chipbox_cpu_opcode_to_nybbles(0xABCD, write_data);
-    test(memcmp(temp_data, write_data, 4) == 0, "chipbox_cpu_opcode_to_nybbles should correctly convert an opcode to array of nybbles, most significant nybble first");
+    chipbox_cpu_opcode_xy(0xABCD, &x, &y);
+    test(x == 0xB && y == 0xC, "chipbox_cpu_opcode_xy should correctly extract the nybbles representing X and Y in the opcode");
 
     /* SECTION 4: opcode testing - the good part */
 
