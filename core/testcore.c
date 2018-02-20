@@ -55,6 +55,12 @@ int main() {
     state = chipbox_init_state();
     test(chipbox_cpu_eval_opcode(&state, 0x0123), "0x0NNN (SYS NNN) should succeed");
 
+    state = chipbox_init_state();
+    state.screen[5] = 1;
+    state.screen[42] = 1;
+    test(chipbox_cpu_eval_opcode(&state, 0x00E0), "0x00E0 (CLS) should succeed");
+    test(all_equal(state.screen, CHIPBOX_SCREEN_WIDTH_BYTES * CHIPBOX_SCREEN_HEIGHT, 0), "screen should be all zeroes after 0x00E0");
+
     /* END */
     printf("Tests: %d, failed: %d\n", tests, failed);
     return 0;
