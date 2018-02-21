@@ -97,6 +97,10 @@ int main() {
     state = chipbox_init_state();
     test(chipbox_cpu_eval_opcode(&state, 0x21FF), "0x2NNN (CALL NNN) should succeed even if target address is below program starting address");
     test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNSAFE, "0x2NNN (CALL NNN) should raise unsafe warning if target address is below program start address");
+    state = chipbox_init_state();
+    state.SP = CHIPBOX_STACK_SIZE - 1;
+    test(chipbox_cpu_eval_opcode(&state, 0x2CB4) == 0, "0x2NNN (CALL NNN) should fail if SP is at its maximum");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_ERROR && state.log_msg == CHIPBOX_LOG_ILLEGAL, "0x2NNN (CALL NNN) should raise an illegal error if SP is its maximum (stack size - 1)");
 
     state = chipbox_init_state();
     state.PC = 0x456;
