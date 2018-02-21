@@ -56,6 +56,7 @@ int main() {
     /* SECTION 4: opcode testing - the good part */
     state = chipbox_init_state();
     test(chipbox_cpu_eval_opcode(&state, 0x0123), "0x0NNN (SYS NNN) should succeed");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNIMPL, "0x0NNN should raise an unimplemented warning");
 
     state = chipbox_init_state();
     state.screen[5] = 1;
