@@ -89,6 +89,15 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0x11FF), "0x1NNN (JP NNN) should succeed even if target address is below program start address");
     test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNSAFE, "0x1NNN (JP NNN) should raise unsafe warning if target address is below program start address");
 
+    state = chipbox_init_state();
+    state.PC = 0xEF8;
+    test(chipbox_cpu_eval_opcode(&state, 0x2F02), "0x2NNN (CALL NNN) should succeed");
+    test(state.stack[0] == 0xEF6, "0x2NNN (CALL NNN) should set stack[SP] to the calling address, which is PC-2 due to PC already being incremented to point to next instruction");
+    test(state.SP == 1, "0x2NNN (CALL NNN) should increment the stack pointer");
+    state = chipbox_init_state();
+    test(chipbox_cpu_eval_opcode(&state, 0x21FF), "0x2NNN (CALL NNN) should succeed even if target address is below program starting address");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNSAFE, "0x2NNN (CALL NNN) should raise unsafe warning if target address is below program start address");
+
     /* END */
     printf("Tests: %d, failed: %d\n", tests, failed);
     return 0;
