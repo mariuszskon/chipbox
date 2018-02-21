@@ -3,6 +3,7 @@
 #include "core.h"
 #include "cpu.h"
 #include "fonts.h"
+#include "log.h"
 
 void test(int condition, char* name);
 int all_equal(byte array[], int size, int value);
@@ -31,6 +32,7 @@ int main() {
     test(all_equal(state.input, CHIPBOX_INPUT_KEYS, 0), "all input keys should be set to 0 (unpressed)");
     test(memcmp(&(state.memory[CHIPBOX_PROGRAM_START - CHIPBOX_FONT_TOTAL_BYTES]), chipbox_font, CHIPBOX_FONT_TOTAL_BYTES) == 0, "font should be loaded into area of memory below program memory");
     test(state.compat_mode == CHIPBOX_COMPATIBILITY_MODE_DEFAULT, "compatibility mode should be set to default");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_NONE, "log level for initial message should be set to none");
 
     /* SECTION 3: validating internal cpu functions */
     state = chipbox_init_state();
