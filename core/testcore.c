@@ -80,6 +80,15 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0x00EE), "0x00EE (RET) should succeed even if target address is unsafe");
     test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNSAFE, "0x00EE (RET) should raise an unsafe warning if target address is below program start address");
 
+    state = chipbox_init_state();
+    state.PC = 0x300;
+    test(chipbox_cpu_eval_opcode(&state, 0x1AB2), "0x1NNN (JP NNN) should succeed");
+    test(state.PC == 0xAB2, "0x1NNN (JP NNN) should set PC to NNN");
+    state = chipbox_init_state();
+    state.PC = 0x312;
+    test(chipbox_cpu_eval_opcode(&state, 0x11FF), "0x1NNN (JP NNN) should succeed even if target address is below program start address");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNSAFE, "0x1NNN (JP NNN) should raise unsafe warning if target address is below program start address");
+
     /* END */
     printf("Tests: %d, failed: %d\n", tests, failed);
     return 0;
