@@ -98,6 +98,17 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0x21FF), "0x2NNN (CALL NNN) should succeed even if target address is below program starting address");
     test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNSAFE, "0x2NNN (CALL NNN) should raise unsafe warning if target address is below program start address");
 
+    state = chipbox_init_state();
+    state.PC = 0x456;
+    state.V[7] = 0xBE;
+    test(chipbox_cpu_eval_opcode(&state, 0x37BE), "0x3XNN (SE VX, NN) should succeed");
+    test(state.PC == 0x458, "0x3XNN (SE VX, NN) should increment PC by 2 if VX == NN");
+    state = chipbox_init_state();
+    state.PC = 0x234;
+    state.V[0xB] = 0xCE;
+    chipbox_cpu_eval_opcode(&state, 0x3BDE);
+    test(state.PC == 0x234, "0x3XNN (SE VX, NN) should not modify PC if VX != NN");
+
     /* END */
     printf("Tests: %d, failed: %d\n", tests, failed);
     return 0;
