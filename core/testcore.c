@@ -109,6 +109,17 @@ int main() {
     chipbox_cpu_eval_opcode(&state, 0x3BDE);
     test(state.PC == 0x234, "0x3XNN (SE VX, NN) should not modify PC if VX != NN");
 
+    state = chipbox_init_state();
+    state.PC = 0x876;
+    state.V[3] = 0x12;
+    test(chipbox_cpu_eval_opcode(&state, 0x4313), "0x4XNN (SNE VX, NN) should succeed");
+    test(state.PC == 0x878, "0x4XNN (SNE VX, NN) should increment PC by 2 if VX != NN");
+    state = chipbox_init_state();
+    state.PC = 0x202;
+    state.V[9] = 0x42;
+    chipbox_cpu_eval_opcode(&state, 0x4942);
+    test(state.PC == 0x202, "0x4XNN (SNE VX, NN) should not modify PC if VX == NN");
+
     /* END */
     printf("Tests: %d, failed: %d\n", tests, failed);
     return 0;
