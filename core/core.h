@@ -55,6 +55,8 @@ struct chipbox_chip8_state {
     dbyte stack[CHIPBOX_STACK_SIZE];
     byte input[CHIPBOX_INPUT_KEYS];
     byte compat_mode;
+    byte log_level; /* level of current message (info, warning, error) */
+    byte log_msg; /* message code (see log.h) */
 };
 
 struct chipbox_chip8_state chipbox_init_state();

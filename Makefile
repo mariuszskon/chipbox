@@ -4,7 +4,7 @@ CFLAGS = -ansi -pedantic -Wall
 CORE_DIR = core
 BUILD_DIR = bin
 
-HEADERS = $(CORE_DIR)/core.h $(CORE_DIR)/cpu.h $(CORE_DIR)/fonts.h
+HEADERS = $(CORE_DIR)/core.h $(CORE_DIR)/cpu.h $(CORE_DIR)/fonts.h $(CORE_DIR)/log.h
 
 all: $(BUILD_DIR)/testcore
 

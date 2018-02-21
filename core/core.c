@@ -1,5 +1,6 @@
 #include "core.h"
 #include "fonts.h"
+#include "log.h"
 
 struct chipbox_chip8_state chipbox_init_state() {
     struct chipbox_chip8_state state;
@@ -32,6 +33,9 @@ struct chipbox_chip8_state chipbox_init_state() {
 
     /* set the default compatibiltiy mode */
     state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
+
+    /* set 'none' log level for current message */
+    state.log_level = CHIPBOX_LOG_LEVEL_NONE;
 
     return state;
 }
