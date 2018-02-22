@@ -1,4 +1,6 @@
 #include "cpu.h"
+#include "core.h"
+#include "log.h"
 
 int chipbox_cpu_load_program(struct chipbox_chip8_state *state, byte *program_data, size_t size) {
     if (size > CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START) {
@@ -24,6 +26,26 @@ dbyte chipbox_cpu_get_opcode(struct chipbox_chip8_state *state) {
 void chipbox_cpu_opcode_xy(dbyte opcode, byte *x, byte *y) {
     *y = (opcode >> 4) & 0x0F;
     *x = (opcode >> 8) & 0x0F;
+}
+
+/* chipbox_cpu_jump: a safe function that sets PC to address, given that it is safe for this implementation,
+   returning 1 for success and 0 for failure */
+int chipbox_cpu_jump(struct chipbox_chip8_state *state, dbyte address) {
+    if (address >= CHIPBOX_MEMORY_SIZE) {
+        state->log_level = CHIPBOX_LOG_LEVEL_ERROR;
+        state->log_msg = CHIPBOX_LOG_ILLEGAL;
+        return 0;
+    }
+    if (address < CHIPBOX_PROGRAM_START) {
+        state->log_level = CHIPBOX_LOG_LEVEL_WARN;
+        state->log_msg = CHIPBOX_LOG_UNSAFE;
+    }
+    if (address % 2 == 1) {
+        state->log_level = CHIPBOX_LOG_LEVEL_WARN;
+        state->log_msg = CHIPBOX_LOG_IMPL_DEFINED;
+    }
+    state->PC = address;
+    return 1;
 }
 
 /* chipbox_cpu_eval_opcode: evaluates an opcode by manipulating state
