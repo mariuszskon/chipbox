@@ -54,6 +54,11 @@ int main() {
     test(chipbox_cpu_get_opcode(&state) == 0x0DEA, "chipbox_cpu_get_opcode should correctly return opcode (next two bytes, big endian)");
     test(state.PC == CHIPBOX_PROGRAM_START + 2, "chipbox_cpu_get_opcode should increment PC by 2");
 
+    state = chipbox_init_state();
+    state.PC = CHIPBOX_MEMORY_SIZE;
+    test(chipbox_cpu_get_opcode(&state) == 0, "chipbox_cpu_get_opcode should return 0 if PC is too high");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_ERROR && state.log_msg == CHIPBOX_LOG_ILLEGAL, "chipbox_cpu_get_opcode should raise an illegal error if PC is too high");
+
     chipbox_cpu_opcode_xy(0xABCD, &x, &y);
     test(x == 0xB && y == 0xC, "chipbox_cpu_opcode_xy should correctly extract the nybbles representing X and Y in the opcode");
 
