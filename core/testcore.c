@@ -15,11 +15,14 @@ int main() {
     struct chipbox_chip8_state state;
     byte example_data[CHIPBOX_MEMORY_SIZE] = {0x0D, 0xEA, 0xD0, 0x0B, 0xE0, 0xE0, 0xF0};
     byte x, y;
+
     /* SECTION 1: typedefs and other low-level administrative stuff */
+    printf("== SECTION 1 ==\n");
     test(sizeof(byte) == 1, "byte type should be one byte in length");
     test(sizeof(dbyte) == 2, "dbyte type should be two bytes in length");
 
     /* SECTION 2: validating initial state */
+    printf("== SECTION 2 ==\n");
     state = chipbox_init_state();
     test(sizeof(state.screen) == CHIPBOX_SCREEN_WIDTH_PIXELS * CHIPBOX_SCREEN_HEIGHT / 8, "screen should have appropriate size");
     test(all_equal(state.screen, CHIPBOX_SCREEN_WIDTH_BYTES * CHIPBOX_SCREEN_HEIGHT, 0), "screen should be initialised to all zeroes (off)");
@@ -35,6 +38,7 @@ int main() {
     test(state.log_level == CHIPBOX_LOG_LEVEL_NONE, "log level for initial message should be set to none");
 
     /* SECTION 3: validating internal cpu functions */
+    printf("== SECTION 3 ==\n");
     state = chipbox_init_state();
     test(chipbox_cpu_load_program(&state, example_data, 7), "chipbox_cpu_load_program should return a true value on valid input");
     test(memcmp(&(state.memory[CHIPBOX_PROGRAM_START]), example_data, 7) == 0, "program should be loaded into appropriate memory location");
@@ -70,6 +74,7 @@ int main() {
     test(state.log_level == CHIPBOX_LOG_LEVEL_ERROR && state.log_msg == CHIPBOX_LOG_ILLEGAL, "chipbox_cpu_jump should raise an illegal error on an invalid (too high) address");
 
     /* SECTION 4: opcode testing - the good part */
+    printf("== SECTION 4 ==\n");
     state = chipbox_init_state();
     test(chipbox_cpu_eval_opcode(&state, 0x0123), "0x0NNN (SYS NNN) should succeed");
     test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNIMPL, "0x0NNN should raise an unimplemented warning");
@@ -158,6 +163,7 @@ int main() {
     test(state.PC == 0x230, "0x5XY0 (SE VX, VY) should not modify PC if VX != VY");
 
     /* END */
+    printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
     return 0;
 }
