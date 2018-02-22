@@ -53,6 +53,22 @@ int main() {
     chipbox_cpu_opcode_xy(0xABCD, &x, &y);
     test(x == 0xB && y == 0xC, "chipbox_cpu_opcode_xy should correctly extract the nybbles representing X and Y in the opcode");
 
+    state = chipbox_init_state();
+    test(chipbox_cpu_jump(&state, 0x456), "chipbox_cpu_jump should succeed with a valid address");
+    test(state.PC == 0x456, "chipbox_cpu_jump should set PC to a valid address");
+    state = chipbox_init_state();
+    test(chipbox_cpu_jump(&state, 0x1FE), "chipbox_cpu_jump should succeed with a valid but unsafe for original implementation address");
+    test(state.PC == 0x1FE, "chipbox_cpu_jump should set PC to a original-unsafe address");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNSAFE, "chipbox_cpu_jump should warn about original-unsafe addresses");
+    state = chipbox_init_state();
+    test(chipbox_cpu_jump(&state, 0x201), "chipbox_cpu_jump should succeed on an odd address");
+    test(state.PC == 0x201, "chipbox_cpu_jump should set PC to an odd address if required");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_IMPL_DEFINED, "chipbox_cpu_jump should raise an implementation defined warning if target address is odd");
+    state = chipbox_init_state();
+    test(chipbox_cpu_jump(&state, 0x1000) == 0, "chipbox_cpu_jump should fail on an invalid address");
+    test(state.PC != 0x1000, "chipbox_cpu_jump should not set PC to an invalid address");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_ERROR && state.log_msg == CHIPBOX_LOG_ILLEGAL, "chipbox_cpu_jump should raise an illegal error on an invalid (too high) address");
+
     /* SECTION 4: opcode testing - the good part */
     state = chipbox_init_state();
     test(chipbox_cpu_eval_opcode(&state, 0x0123), "0x0NNN (SYS NNN) should succeed");
