@@ -57,6 +57,19 @@ int chipbox_cpu_jump(struct chipbox_chip8_state *state, dbyte address) {
    this is where the bulk of the logic for the chip-8 interpreter/emulator lies
    returns 1 on success, 0 on error */
 int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
-    /* TODO: evaluate the opcodes! */
+    int i, j;
+
+    switch ((opcode & 0xF000) >> 3) { /* get highest/left-most nybble */
+        case 0:
+            switch (opcode & 0x00FF) {
+                case 0xE0: /* 00E0 (CLS): clear screen */
+                    for (i = 0; i < CHIPBOX_SCREEN_HEIGHT; i++) {
+                        for (j = 0; j < CHIPBOX_SCREEN_WIDTH_BYTES; j++) {
+                            state->screen[CHIPBOX_SCREEN_WIDTH_BYTES * i + j] = 0;
+                        }
+                    }
+                    return 1;
+            }
+    }
     return 0;
 }
