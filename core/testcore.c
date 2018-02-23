@@ -174,7 +174,7 @@ int main() {
     state = chipbox_init_state();
     state.V[0xB] = 0x21;
     test(chipbox_cpu_eval_opcode(&state, 0x7BEF), "0x7XNN (ADD VX, NN) should succeed");
-    test(state.V[0xB] == 0x21 + 0xEF, "0x7XNN (ADD VX, NN) should add NN to VX");
+    test(state.V[0xB] == (byte)(0x21 + 0xEF), "0x7XNN (ADD VX, NN) should add NN to VX");
     test(state.V[0xF] == 0, "0x7XNN (ADD VX, NN) should not modify the VF register, even on overflow");
 
     state = chipbox_init_state();
