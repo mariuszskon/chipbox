@@ -183,6 +183,24 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0x8810), "0x8XY0 (LD VX, VY) should succeed");
     test(state.V[0x8] == state.V[0x1] && state.V[0x8] == 17, "0x8XY0 (LD VX, VY) should set VX to VY");
 
+    state = chipbox_init_state();
+    state.V[0x3] = 0xAB;
+    state.V[0x8] = 0x1D;
+    test(chipbox_cpu_eval_opcode(&state, 0x8381), "0x8XY1 (OR VX, VY) should succeed");
+    test(state.V[0x3] == (0xAB & 0x1D), "0x8XY1 (OR VX, VY) should set VX to VX OR VY");
+
+    state = chipbox_init_state();
+    state.V[0xE] = 0x15;
+    state.V[0x0] = 0xB6;
+    test(chipbox_cpu_eval_opcode(&state, 0x8E02), "0x8XY2 (AND VX, VY) should succeed");
+    test(state.V[0xE] == (0x15 & 0xB6), "0x8XY2 (AND VX, VY) should set VX to VX AND VY");
+
+    state = chipbox_init_state();
+    state.V[0x4] = 0xBE;
+    state.V[0x5] = 0x78;
+    test(chipbox_cpu_eval_opcode(&state, 0x8453), "0x8XY3 (XOR VX, VY) should succeed");
+    test(state.V[0x4] == (0xBE ^ 0x78), "0x8XY3 (XOR VX, VY) should set VX to VX XOR VY");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
