@@ -77,6 +77,10 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                     }
                     state->SP--;
                     return chipbox_cpu_jump(state, state->stack[state->SP]);
+                default: /* 0NNN (SYS): execute machine language subroutine at NNN (ignored in modern interpreters) */
+                    state->log_level = CHIPBOX_LOG_LEVEL_WARN;
+                    state->log_msg = CHIPBOX_LOG_UNIMPL;
+                    return 1;
             }
     }
     return 0;
