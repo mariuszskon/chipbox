@@ -167,6 +167,16 @@ int main() {
     chipbox_cpu_eval_opcode(&state, 0x5E10);
     test(state.PC == 0x230, "0x5XY0 (SE VX, VY) should not modify PC if VX != VY");
 
+    state = chipbox_init_state();
+    test(chipbox_cpu_eval_opcode(&state, 0x6D42), "0x6XNN (LD VX, NN) should succeed");
+    test(state.V[0xD] == 0x42, "0x6XNN (LD VX, NN) should set VX to NN");
+
+    state = chipbox_init_state();
+    state.V[0xB] = 0x21;
+    test(chipbox_cpu_eval_opcode(&state, 0x7BEF), "0x7XNN (ADD VX, NN) should succeed");
+    test(state.V[0xB] == 0x21 + 0xEF, "0x7XNN (ADD VX, NN) should add NN to VX");
+    test(state.V[0xF] == 0, "0x7XNN (ADD VX, NN) should not modify the VF register, even on overflow");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
