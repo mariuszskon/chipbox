@@ -69,6 +69,14 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                         }
                     }
                     return 1;
+                case 0xEE: /* 00EE (RET): jump to address popped off stack */
+                    if (state->SP == 0) {
+                        state->log_level = CHIPBOX_LOG_LEVEL_ERROR;
+                        state->log_msg = CHIPBOX_LOG_ILLEGAL;
+                        return 0;
+                    }
+                    state->SP--;
+                    return chipbox_cpu_jump(state, state->stack[state->SP]);
             }
     }
     return 0;
