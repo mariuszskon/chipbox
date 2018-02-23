@@ -201,6 +201,21 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0x8453), "0x8XY3 (XOR VX, VY) should succeed");
     test(state.V[0x4] == (0xBE ^ 0x78), "0x8XY3 (XOR VX, VY) should set VX to VX XOR VY");
 
+    state = chipbox_init_state();
+    state.V[0x3] = 210;
+    state.V[0xA] = 42;
+    state.V[0xF] = 5;
+    test(chipbox_cpu_eval_opcode(&state, 0x83A4), "0x8XY4 (ADD VX, VY) should succeed");
+    test(state.V[0x3] == 252, "0x8XY4 (ADD VX, VY) should add VY to VX");
+    test(state.V[0xF] == 0, "0x8XY4 (ADD VX, VY) should set VF to 0 if not carry occurs");
+    state = chipbox_init_state();
+    state.V[0x7] = 254;
+    state.V[0x0] = 2;
+    state.V[0xF] = 6;
+    chipbox_cpu_eval_opcode(&state, 0x8704);
+    test(state.V[0x7] == 0, "0x8XY4 (ADD VX, VY) should wrap on overflow");
+    test(state.V[0xF] == 1, "0x8XY4 (ADD VX, VY) should set VF to 1 on carry/overflow");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
