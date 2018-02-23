@@ -82,21 +82,21 @@ int main() {
     printf("== SECTION 4 ==\n");
     state = chipbox_init_state();
     test(chipbox_cpu_eval_opcode(&state, 0x0123), "0x0NNN (SYS NNN) should succeed");
-    test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNIMPL, "0x0NNN should raise an unimplemented warning");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNIMPL, "0x0NNN (SYS NNN) should raise an unimplemented warning");
 
     state = chipbox_init_state();
     state.screen[5] = 1;
     state.screen[42] = 1;
     test(chipbox_cpu_eval_opcode(&state, 0x00E0), "0x00E0 (CLS) should succeed");
-    test(all_equal(state.screen, CHIPBOX_SCREEN_WIDTH_BYTES * CHIPBOX_SCREEN_HEIGHT, 0), "screen should be all zeroes after 0x00E0");
+    test(all_equal(state.screen, CHIPBOX_SCREEN_WIDTH_BYTES * CHIPBOX_SCREEN_HEIGHT, 0), "0x00E0 (CLS) should set screen to all zeroes (off)");
 
     state = chipbox_init_state();
     state.PC = 0x432;
     state.stack[0] = 0x314;
     state.SP = 1;
     test(chipbox_cpu_eval_opcode(&state, 0x00EE), "0x00EE (RET) should succeed");
-    test(state.PC == 0x314, "0x00EE should set PC to stack[SP-1]");
-    test(state.SP == 0, "0x00EE should decrement SP");
+    test(state.PC == 0x314, "0x00EE (RET) should set PC to stack[SP-1]");
+    test(state.SP == 0, "0x00EE (RET) should decrement SP");
     state = chipbox_init_state();
     test(chipbox_cpu_eval_opcode(&state, 0x00EE) == 0, "0x00EE (RET) should fail if SP == 0");
     test(state.log_level == CHIPBOX_LOG_LEVEL_ERROR && state.log_msg == CHIPBOX_LOG_ILLEGAL, "0x00EE (RET) should send an illegal error if SP == 0");
