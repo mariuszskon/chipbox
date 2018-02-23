@@ -177,6 +177,12 @@ int main() {
     test(state.V[0xB] == 0x21 + 0xEF, "0x7XNN (ADD VX, NN) should add NN to VX");
     test(state.V[0xF] == 0, "0x7XNN (ADD VX, NN) should not modify the VF register, even on overflow");
 
+    state = chipbox_init_state();
+    state.V[0x1] = 17;
+    state.V[0x8] = 200;
+    test(chipbox_cpu_eval_opcode(&state, 0x8810), "0x8XY0 (LD VX, VY) should succeed");
+    test(state.V[0x8] == state.V[0x1] && state.V[0x8] == 17, "0x8XY0 (LD VX, VY) should set VX to VY");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
