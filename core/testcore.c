@@ -216,6 +216,21 @@ int main() {
     test(state.V[0x7] == 0, "0x8XY4 (ADD VX, VY) should wrap on overflow");
     test(state.V[0xF] == 1, "0x8XY4 (ADD VX, VY) should set VF to 1 on carry/overflow");
 
+    state = chipbox_init_state();
+    state.V[0x2] = 50;
+    state.V[0x5] = 26;
+    state.V[0xF] = 8;
+    test(chipbox_cpu_eval_opcode(&state, 0x8255), "0x8XY5 (SUB VX, VY) should succeed");
+    test(state.V[0x2] == 24, "0x8XY5 (SUB VX, VY) should subtract VY from VX (VX = VX - VY)");
+    test(state.V[0xF] == 1, "0x8XY5 (SUB VX, VY) should set VF to 1 if no borrow/underflow occurs");
+    state = chipbox_init_state();
+    state.V[0x3] = 1;
+    state.V[0xE] = 2;
+    state.V[0xF] = 99;
+    chipbox_cpu_eval_opcode(&state, 0x83E5);
+    test(state.V[0x3] == 255, "0x8XY5 (SUB VX, VY) should wrap on underflow");
+    test(state.V[0xF] == 0, "0x8XY5 (SUB VX, VY) should set VF to 0 if a borrow/underflow occurs");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
