@@ -80,6 +80,18 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
             }
         case 1: /* 1NNN (JP NNN): jump (set PC) to NNN */
             return chipbox_cpu_jump(state, opcode & 0x0FFF);
+        case 2: /* 2NNN (CALL NNN): jump (set PC) to NNN after pushing PC to stack */
+            if (state->SP >= CHIPBOX_STACK_SIZE - 1) {
+                state->log_level = CHIPBOX_LOG_LEVEL_ERROR;
+                state->log_msg = CHIPBOX_LOG_ILLEGAL;
+                return 0;
+            } else if (state->SP >= CHIPBOX_STACK_SAFE_SIZE - 1) {
+                state->log_level = CHIPBOX_LOG_LEVEL_WARN;
+                state->log_msg = CHIPBOX_LOG_UNSAFE;
+            }
+            state->stack[state->SP] = state->PC;
+            state->SP++;
+            return chipbox_cpu_jump(state, opcode & 0x0FFF);
     }
     return 0;
 }
