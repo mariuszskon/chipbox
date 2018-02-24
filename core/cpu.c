@@ -82,6 +82,8 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                     state->log_msg = CHIPBOX_LOG_UNIMPL;
                     return 1;
             }
+        case 1: /* 1NNN (JP NNN): jump (set PC) to NNN */
+            return chipbox_cpu_jump(state, opcode & 0x0FFF);
     }
     return 0;
 }
