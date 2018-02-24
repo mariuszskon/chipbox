@@ -59,7 +59,7 @@ int chipbox_cpu_jump(struct chipbox_chip8_state *state, dbyte address) {
 int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
     int i, j;
 
-    switch ((opcode & 0xF000) >> 3) { /* get highest/left-most nybble */
+    switch ((opcode & 0xF000) >> 12) { /* get highest/left-most nybble */
         case 0:
             switch (opcode & 0x00FF) {
                 case 0xE0: /* 00E0 (CLS): clear screen */
