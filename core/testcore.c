@@ -72,7 +72,6 @@ int main() {
     state = chipbox_init_state();
     test(chipbox_cpu_jump(&state, 0x201), "chipbox_cpu_jump should succeed on an odd address");
     test(state.PC == 0x201, "chipbox_cpu_jump should set PC to an odd address if required");
-    test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_IMPL_DEFINED, "chipbox_cpu_jump should raise an implementation defined warning if target address is odd");
     state = chipbox_init_state();
     test(chipbox_cpu_jump(&state, 0x1000) == 0, "chipbox_cpu_jump should fail on an invalid address");
     test(state.PC != 0x1000, "chipbox_cpu_jump should not set PC to an invalid address");

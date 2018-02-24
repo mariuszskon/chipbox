@@ -45,10 +45,6 @@ int chipbox_cpu_jump(struct chipbox_chip8_state *state, dbyte address) {
         state->log_level = CHIPBOX_LOG_LEVEL_WARN;
         state->log_msg = CHIPBOX_LOG_UNSAFE;
     }
-    if (address % 2 == 1) {
-        state->log_level = CHIPBOX_LOG_LEVEL_WARN;
-        state->log_msg = CHIPBOX_LOG_IMPL_DEFINED;
-    }
     state->PC = address;
     return 1;
 }
