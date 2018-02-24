@@ -111,6 +111,9 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                 return 1;
             }
             break;
+        case 6: /* 6XNN (LD VX, NN): set value of VX to NN */
+            state->V[(opcode >> 8) & 0xF] = (opcode & 0x00FF);
+            return 1;
     }
 
     /* if we are here, then no implemented instruction was run */
