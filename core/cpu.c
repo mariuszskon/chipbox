@@ -54,6 +54,10 @@ int chipbox_cpu_jump(struct chipbox_chip8_state *state, dbyte address) {
    returns 1 on success, 0 on error */
 int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
     int i, j;
+    byte x, y;
+
+    chipbox_cpu_opcode_xy(opcode, &x, &y);
+
     state->log_level = CHIPBOX_LOG_LEVEL_NONE;
 
     switch ((opcode & 0xF000) >> 12) { /* get highest/left-most nybble */
@@ -94,33 +98,33 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
             state->SP++;
             return chipbox_cpu_jump(state, opcode & 0x0FFF);
         case 3: /* 3XNN (SE VX, NN): skip the next instruction if VX == NN */
-            if (state->V[(opcode >> 8) & 0xF] == (opcode & 0x00FF)) {
+            if (state->V[x] == (opcode & 0x00FF)) {
                 state->PC += 2;
             }
             return 1;
         case 4: /* 4XNN (SNE VX, NN): skip the next instruction if VX != NN */
-            if (state->V[(opcode >> 8) & 0xF] != (opcode & 0x00FF)) {
+            if (state->V[x] != (opcode & 0x00FF)) {
                 state->PC += 2;
             }
             return 1;
         case 5: /* 5XY0: (SE VX, VY): skip the next instruction if VX == VY */
             if ((opcode & 0x000F) == 0) {
-                if (state->V[(opcode >> 8) & 0xF] == state->V[(opcode >> 4) & 0xF]) {
+                if (state->V[x] == state->V[y]) {
                     state->PC += 2;
                 }
                 return 1;
             }
             break;
         case 6: /* 6XNN (LD VX, NN): set value of VX to NN */
-            state->V[(opcode >> 8) & 0xF] = (opcode & 0x00FF);
+            state->V[x] = (opcode & 0x00FF);
             return 1;
         case 7: /* 7XNN (ADD VX, NN): add NN to VX */
-            state->V[(opcode >> 8) & 0xF] += (opcode & 0x00FF);
+            state->V[x] += (opcode & 0x00FF);
             return 1;
         case 8:
             switch (opcode & 0x000F) {
                 case 0: /* 8XY0 (LD VX, VY): set VX to VY */
-                    state->V[(opcode >> 8) & 0xF] = state->V[(opcode >> 4) & 0xF];
+                    state->V[x] = state->V[y];
                     return 1;
             }
     }
