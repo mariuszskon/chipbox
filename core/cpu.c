@@ -92,6 +92,11 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
             state->stack[state->SP] = state->PC;
             state->SP++;
             return chipbox_cpu_jump(state, opcode & 0x0FFF);
+        case 3: /* 3XNN (SE VX, NN): skip the next instruction if VX == NN */
+            if (state->V[(opcode >> 8) & 0xF] == (opcode & 0x00FF)) {
+                state->PC += 2;
+            }
+            return 1;
     }
     return 0;
 }
