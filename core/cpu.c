@@ -102,6 +102,14 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                 state->PC += 2;
             }
             return 1;
+        case 5: /* 5XY0: (SE VX, VY): skip the next instruction if VX == VY */
+            if ((opcode & 0x000F) == 0) {
+                if (state->V[(opcode >> 8) & 0xF] == state->V[(opcode >> 4) & 0xF]) {
+                    state->PC += 2;
+                }
+                return 1;
+            }
+            break;
     }
     return 0;
 }
