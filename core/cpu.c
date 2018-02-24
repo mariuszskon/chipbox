@@ -54,6 +54,7 @@ int chipbox_cpu_jump(struct chipbox_chip8_state *state, dbyte address) {
    returns 1 on success, 0 on error */
 int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
     int i, j;
+    state->log_level = CHIPBOX_LOG_LEVEL_NONE;
 
     switch ((opcode & 0xF000) >> 12) { /* get highest/left-most nybble */
         case 0:
@@ -111,5 +112,9 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
             }
             break;
     }
+
+    /* if we are here, then no implemented instruction was run */
+    state->log_level = CHIPBOX_LOG_LEVEL_ERROR;
+    state->log_msg = CHIPBOX_LOG_UNIMPL;
     return 0;
 }
