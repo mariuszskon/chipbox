@@ -311,6 +311,19 @@ int main() {
     chipbox_cpu_eval_opcode(&state, 0x864E);
     test(state.V[0xF] == 0, "0x8XYE (SHL VX, VY) should set VF to 0 if most significant bit of VX is 0 (COWGOD)");
 
+    state = chipbox_init_state();
+    state.V[0xA] = 81;
+    state.V[0xC] = 81;
+    state.PC = 0x404;
+    test(chipbox_cpu_eval_opcode(&state, 0x9AC0), "0x9XY0 (SNE VX, VY) should succeed");
+    test(state.PC == 0x404, "0x9XY0 (SNE VX, VY) should not modify PC if VX == VY");
+    state = chipbox_init_state();
+    state.V[0x6] = 99;
+    state.V[0x1] = 98;
+    state.PC = 0x404;
+    chipbox_cpu_eval_opcode(&state, 0x9610);
+    test(state.PC == 0x406, "0x9XY0 (SNE VX, VY) should  increment PC by 2 if VX != VY");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
