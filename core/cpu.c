@@ -140,6 +140,10 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                     state->V[0xF] = i > 255 ? 1 : 0;
                     state->V[x] = i;
                     return 1;
+                case 5: /* 8XY5 (SUB VX, VY): set VX to VX - VY, VF = not borrow */
+                    state->V[0xF] = state->V[x] < state->V[y] ? 0 : 1;
+                    state->V[x] -= state->V[y];
+                    return 1;
             }
     }
 
