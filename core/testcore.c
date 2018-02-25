@@ -285,6 +285,39 @@ int main() {
     test(state.V[0x0] == (byte)(11 - 42), "0x8XY7 (SUBN VX, VY) should wrap on underflow");
     test(state.V[0xF] == 0, "0x8XY7 (SUBN VX, VY) should set VF to 0 if borrow/underflow occurs");
 
+    state = chipbox_init_state();
+    state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_MATTMIK;
+    state.V[4] = 0xF0;
+    state.V[6] = 42;
+    state.V[0xF] = 50;
+    test(chipbox_cpu_eval_opcode(&state, 0x864E), "0x8XYE (SHL VX, VY) should succeed (MATTMIK mode)");
+    test(state.V[4] == 0xF0, "0x8XYE (SHL VX, VY) should leave VY unchanged in MATTMIK compatibility mode");
+    test(state.V[6] == 0xF0 << 1, "0x8XYE (SHL VX, VY) should set VX to VY << 1 in MATTMIK compatibility mode");
+    test(state.V[0xF] == 1, "0x8XYE (SHL VX, VY) should set VF to 1 if most significant bit of VY is 1 (MATTMIK)");
+    state = chipbox_init_state();
+    state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_MATTMIK;
+    state.V[4] = 0x0F;
+    state.V[6] = 42;
+    state.V[0xF] = 50;
+    chipbox_cpu_eval_opcode(&state, 0x864E);
+    test(state.V[0xF] == 0, "0x8XYE (SHL VX, VY) should set VF to 0 if most significant bit of VY is 0 (MATTMIK)");
+    state = chipbox_init_state();
+    state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
+    state.V[4] = 0xF0;
+    state.V[6] = 0xE0;
+    state.V[0xF] = 50;
+    test(chipbox_cpu_eval_opcode(&state, 0x864E), "0x8XYE (SHL VX, VY) should succeed (COWGOD mode)");
+    test(state.V[4] == 0xF0, "0x8XYE (SHL VX, VY) should leave VY unchanged in COWGOD compatibility mode");
+    test(state.V[6] == 0xE0 << 1, "0x8XYE (SHL VX, VY) should set VX to VX << 1 in COWGOD compatibility mode");
+    test(state.V[0xF] == 1, "0x8XYE (SHL VX, VY) should set VF to 1 if most significant bit of VX is 1 (COWGOD)");
+    state = chipbox_init_state();
+    state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
+    state.V[4] = 0x0F;
+    state.V[6] = 0xE0;
+    state.V[0xF] = 50;
+    chipbox_cpu_eval_opcode(&state, 0x864E);
+    test(state.V[0xF] == 0, "0x8XYE (SHL VX, VY) should set VF to 0 if most significant bit of VX is 0 (COWGOD)");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
