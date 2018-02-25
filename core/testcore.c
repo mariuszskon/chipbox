@@ -270,6 +270,21 @@ int main() {
     chipbox_cpu_eval_opcode(&state, 0x8646);
     test(state.V[0xF] == 1, "0x8XY6 (SHR VX, VY) should set VF to 1 if least significant bit of VY is 1 (COWGOD)");
 
+    state = chipbox_init_state();
+    state.V[0x0] = 42;
+    state.V[0xB] = 11;
+    state.V[0xF] = 99;
+    test(chipbox_cpu_eval_opcode(&state, 0x8B07), "0x8XY7 (SUBN VX, VY) should succeed");
+    test(state.V[0xB] == 31, "0x8XY7 (SUBN VX, VY) should set VX to VY - VX");
+    test(state.V[0xF] == 1, "0x8XY7 (SUBN VX, VY) should set VF to 1 if no borrow/underflow occurs");
+    state = chipbox_init_state();
+    state.V[0x0] = 42;
+    state.V[0xB] = 11;
+    state.V[0xF] = 99;
+    chipbox_cpu_eval_opcode(&state, 0x80B7);
+    test(state.V[0x0] == (byte)(11 - 42), "0x8XY7 (SUBN VX, VY) should wrap on underflow");
+    test(state.V[0xF] == 0, "0x8XY7 (SUBN VX, VY) should set VF to 0 if borrow/underflow occurs");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
