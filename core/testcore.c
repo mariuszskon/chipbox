@@ -324,6 +324,11 @@ int main() {
     chipbox_cpu_eval_opcode(&state, 0x9610);
     test(state.PC == 0x406, "0x9XY0 (SNE VX, VY) should  increment PC by 2 if VX != VY");
 
+    state = chipbox_init_state();
+    state.I = 0x802;
+    test(chipbox_cpu_eval_opcode(&state, 0xAAB2), "0xANNN (LD I, NNN) should succeed");
+    test(state.I == 0xAAB2, "0xANNN (LD I, NNN) should set I to NNN");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
