@@ -53,7 +53,7 @@ int chipbox_cpu_jump(struct chipbox_chip8_state *state, dbyte address) {
    this is where the bulk of the logic for the chip-8 interpreter/emulator lies
    returns 1 on success, 0 on error */
 int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
-    int i, j;
+    unsigned int i, j;
     byte x, y;
 
     chipbox_cpu_opcode_xy(opcode, &x, &y);
@@ -134,6 +134,11 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                     return 1;
                 case 3: /* 8XY3 (XOR VX, VY): set VX to VX XOR VY */
                     state->V[x] ^= state->V[y];
+                    return 1;
+                case 4: /* 8XY4 (ADD VX, VY): set VX to VX + VY, VF = carry */
+                    i = state->V[x] + state->V[y];
+                    state->V[0xF] = i > 255 ? 1 : 0;
+                    state->V[x] = i;
                     return 1;
             }
     }
