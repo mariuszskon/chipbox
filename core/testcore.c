@@ -258,7 +258,7 @@ int main() {
     state = chipbox_init_state();
     state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
     state.V[4] = 0xF0;
-    state.V[6] = 0x0E;
+    state.V[6] = 0x0D;
     state.V[0xF] = 50;
     chipbox_cpu_eval_opcode(&state, 0x8646);
     test(state.V[0xF] == 1, "0x8XY6 (SHR VX, VY) should set VF to 1 if least significant bit of VX is 1 (COWGOD)");
