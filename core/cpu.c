@@ -144,6 +144,19 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                     state->V[0xF] = state->V[x] < state->V[y] ? 0 : 1;
                     state->V[x] -= state->V[y];
                     return 1;
+                case 6: /* 8XY6 (SHR VX, VY): set VX to VY >> 1 (in MATTMIK compatibility mode)
+                           set VX to VX >> 1 (ignoring VY) (in COWGOD compatibility mode)
+                           in both modes, VF = least significant bit of shifted register */
+                    if (x != y) {
+                        state->log_level = CHIPBOX_LOG_LEVEL_WARN;
+                        state->log_msg = CHIPBOX_LOG_IMPL_DEFINED; /* because of differences between MATTMIK and COWGOD for X != Y */
+                    }
+                    if (state->compat_mode == CHIPBOX_COMPATIBILITY_MODE_COWGOD) {
+                        y = x;
+                    }
+                    state->V[0xF] = state->V[y] & 1;
+                    state->V[x] = state->V[y] >> 1;
+                    return 1;
             }
     }
 
