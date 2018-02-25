@@ -126,6 +126,15 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                 case 0: /* 8XY0 (LD VX, VY): set VX to VY */
                     state->V[x] = state->V[y];
                     return 1;
+                case 1: /* 8XY1 (OR VX, VY): set VX to VX OR VY */
+                    state->V[x] |= state->V[y];
+                    return 1;
+                case 2: /* 8XY2 (AND VX, VY): set VX to VX AND VY */
+                    state->V[x] &= state->V[y];
+                    return 1;
+                case 3: /* 8XY3 (XOR VX, VY): set VX to VX XOR VY */
+                    state->V[x] ^= state->V[y];
+                    return 1;
             }
     }
 
