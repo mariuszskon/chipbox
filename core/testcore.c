@@ -186,7 +186,7 @@ int main() {
     state.V[0x3] = 0xAB;
     state.V[0x8] = 0x1D;
     test(chipbox_cpu_eval_opcode(&state, 0x8381), "0x8XY1 (OR VX, VY) should succeed");
-    test(state.V[0x3] == (0xAB & 0x1D), "0x8XY1 (OR VX, VY) should set VX to VX OR VY");
+    test(state.V[0x3] == (0xAB | 0x1D), "0x8XY1 (OR VX, VY) should set VX to VX OR VY");
 
     state = chipbox_init_state();
     state.V[0xE] = 0x15;
