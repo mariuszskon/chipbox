@@ -335,6 +335,14 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0xB210), "0xBNNN (JP V0, NNN) should succeed");
     test(state.PC == 0x270, "0xBNNN (JP V0, NNN) should set PC to NNN + V0");
 
+    state = chipbox_init_state();
+    test(chipbox_cpu_eval_opcode(&state, 0xC0AB), "0xCXNN (RND VX, NN) should succeed");
+    chipbox_cpu_eval_opcode(&state, 0xC1AB);
+    chipbox_cpu_eval_opcode(&state, 0xC2AB);
+    chipbox_cpu_eval_opcode(&state, 0xC3AB);
+    test(!all_equal(state.V, 4, 0), "0xCXNN (RND VX, NN) should set VX to a random number");
+    test((state.V[4] & 0xAB) == 0, "0xCXNN (RND VX, NN) should mask random value in VN with NN (in other words, VX = rand() & 0xNN)");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
