@@ -230,6 +230,46 @@ int main() {
     test(state.V[0x3] == 255, "0x8XY5 (SUB VX, VY) should wrap on underflow");
     test(state.V[0xF] == 0, "0x8XY5 (SUB VX, VY) should set VF to 0 if a borrow/underflow occurs");
 
+    state = chipbox_init_state();
+    state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_MATTMIK;
+    state.V[4] = 0xF0;
+    state.V[6] = 42;
+    state.V[0xF] = 50;
+    test(chipbox_cpu_eval_opcode(&state, 0x8646), "0x8XY6 (SHR VX, VY) should succeed (MATTMIK mode)");
+    test(state.V[4] == 0xF0, "0x8XY6 (SHR VX, VY) should leave VY unchanged in MATTMIK compatibility mode");
+    test(state.V[6] == 0xF0 >> 1, "0x8XY6 (SHR VX, VY) should set VX to VY >> 1 in MATTMIK compatibility mode");
+    test(state.V[0xF] == 0, "0x8XY6 (SHR VX, VY) should set VF to 0 if least significant bit of VY is 0 (MATTMIK)");
+    state = chipbox_init_state();
+    state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_MATTMIK;
+    state.V[4] = 0x0F;
+    state.V[6] = 42;
+    state.V[0xF] = 50;
+    chipbox_cpu_eval_opcode(&state, 0x8646);
+    test(state.V[0xF] == 1, "0x8XY6 (SHR VX, VY) should set VF to 1 if least significant bit of VY is 1 (MATTMIK)");
+    state = chipbox_init_state();
+    state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
+    state.V[4] = 0xF0;
+    state.V[6] = 0xE0;
+    state.V[0xF] = 50;
+    test(chipbox_cpu_eval_opcode(&state, 0x8646), "0x8XY6 (SHR VX, VY) should succeed (COWGOD mode)");
+    test(state.V[4] == 0xF0, "0x8XY6 (SHR VX, VY) should leave VY unchanged in COWGOD compatibility mode");
+    test(state.V[6] == 0xE0 >> 1, "0x8XY6 (SHR VX, VY) should set VX to VX >> 1 in COWGOD compatibility mode");
+    test(state.V[0xF] == 0, "0x8XY6 (SHR VX, VY) should set VF to 0 if least significant bit of VY is 0");
+    state = chipbox_init_state();
+    state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
+    state.V[4] = 0xF0;
+    state.V[6] = 0xE0;
+    state.V[0xF] = 50;
+    chipbox_cpu_eval_opcode(&state, 0x8646);
+    test(state.V[0xF] == 0, "0x8XY6 (SHR VX, VY) should set VF to 0 if least significant bit of VY is 0 (COWGOD)");
+    state = chipbox_init_state();
+    state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
+    state.V[4] = 0xF0;
+    state.V[6] = 0x0E;
+    state.V[0xF] = 50;
+    chipbox_cpu_eval_opcode(&state, 0x8646);
+    test(state.V[0xF] == 1, "0x8XY6 (SHR VX, VY) should set VF to 1 if least significant bit of VY is 1 (COWGOD)");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
