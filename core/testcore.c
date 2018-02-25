@@ -329,6 +329,12 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0xAAB2), "0xANNN (LD I, NNN) should succeed");
     test(state.I == 0xAAB2, "0xANNN (LD I, NNN) should set I to NNN");
 
+    state = chipbox_init_state();
+    state.PC = 0x300;
+    state.V[0] = 0x60;
+    test(chipbox_cpu_eval_opcode(&state, 0xB210), "0xBNNN (JP V0, NNN) should succeed");
+    test(state.PC == 0x270, "0xBNNN (JP V0, NNN) should set PC to NNN + V0");
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
