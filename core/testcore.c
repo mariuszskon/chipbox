@@ -341,7 +341,7 @@ int main() {
     chipbox_cpu_eval_opcode(&state, 0xC2AB);
     chipbox_cpu_eval_opcode(&state, 0xC3AB);
     test(!all_equal(state.V, 4, 0), "0xCXNN (RND VX, NN) should set VX to a random number");
-    test((state.V[4] & 0xAB) == 0, "0xCXNN (RND VX, NN) should mask random value in VN with NN (in other words, VX = rand() & 0xNN)");
+    test((state.V[4] & ~0xAB) == 0, "0xCXNN (RND VX, NN) should mask random value in VN with NN (in other words, VX = rand() & 0xNN)");
 
     state = chipbox_init_state();
     state.memory[0x300] = 0xFE;
