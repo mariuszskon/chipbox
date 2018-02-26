@@ -343,6 +343,46 @@ int main() {
     test(!all_equal(state.V, 4, 0), "0xCXNN (RND VX, NN) should set VX to a random number");
     test((state.V[4] & 0xAB) == 0, "0xCXNN (RND VX, NN) should mask random value in VN with NN (in other words, VX = rand() & 0xNN)");
 
+    state = chipbox_init_state();
+    state.memory[0x300] = 0xFE;
+    state.I = 0x300;
+    state.V[7] = 16;
+    state.V[0xB] = 3;
+    state.V[0xF] = 99;
+    test(chipbox_cpu_eval_opcode(&state, 0xD7B1), "0xDXYN (DRW VX, VY, N) should succeed");
+    test(state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 3 + 2] == 0xFE, "0xDXYN (DRW VX, VY, N) should draw a perfectly aligned 1 byte sprite correctly");
+    test(state.V[0xF] == 0, "0xDXYN (DRW VX, VY, N) should set VF to 0 if no collision occurred");
+    state.memory[0x301] = 0x02;
+    state.I = 0x301;
+    state.V[0xF] = 99;
+    chipbox_cpu_eval_opcode(&state, 0xD7B1);
+    test(state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 3 + 2] == 0xFC, "0xDXYN (DRW VX, VY, N) should XOR sprites");
+    test(state.V[0xF] == 1, "0xDXYN (DRW VX, VY, N) should set VF to 1 if a collision occurred");
+    state = chipbox_init_state();
+    state.memory[0x300] = 0xFE;
+    state.I = 0x300;
+    state.V[7] = 19;
+    state.V[0xB] = 5;
+    chipbox_cpu_eval_opcode(&state, 0xD7B1);
+    test(state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 5 + 2] == (0xFE >> 3) && state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 5 + 3] == (byte)(0xFE << 5), "0xDXYN (DRW VX, VY, N) should draw a non-aligned 1 byte sprite correctly");
+    state = chipbox_init_state();
+    state.I = 0x300;
+    state.V[7] = 16;
+    state.V[0xB] = 3;
+    state.memory[0x300] = 0xFE;
+    state.memory[0x301] = 0x12;
+    chipbox_cpu_eval_opcode(&state, 0xD7B2);
+    test(state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 3 + 2] == 0xFE && state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 4 + 2] == 0x12, "0xDXYN (DRW VX, VY, N) should draw a perfectly aligned multi-byte sprite correctly");
+    state = chipbox_init_state();
+    state.I = 0x300;
+    state.V[7] = 19;
+    state.V[0xB] = 5;
+    state.memory[0x300] = 0xFE;
+    state.memory[0x301] = 0x12;
+    chipbox_cpu_eval_opcode(&state, 0xD7B2);
+    test(state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 5 + 2] == (0xFE >> 3) && state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 5 + 3] == (byte)(0xFE << 5) && state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 6 + 2] == (0x12 >> 3) && state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 6 + 3] == (byte)(0x12 << 5), "0xDXYN (DRW VX, VY, N) should draw a non-aligned multi-byte sprite correctly");
+
+
     /* END */
     printf("== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
