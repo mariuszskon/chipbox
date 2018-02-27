@@ -161,6 +161,17 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                     state->V[0xF] = state->V[y] < state->V[x] ? 0 : 1;
                     state->V[x] = state->V[y] - state->V[x];
                     return 1;
+                case 0xE: /* 8XYE (SHL VX, VY): see 8XY6 (SHR VX, VY) - this is left instead of right */
+                    if (x != y) {
+                        state->log_level = CHIPBOX_LOG_LEVEL_WARN;
+                        state->log_msg = CHIPBOX_LOG_IMPL_DEFINED;
+                    }
+                    if (state->compat_mode == CHIPBOX_COMPATIBILITY_MODE_COWGOD) {
+                        y = x;
+                    }
+                    state->V[0xF] = (state->V[y] >> 7)& 1;
+                    state->V[x] = state->V[y] << 1;
+                    return 1;
             }
     }
 
