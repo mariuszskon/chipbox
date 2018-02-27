@@ -33,12 +33,21 @@ void chipbox_cpu_opcode_xy(dbyte opcode, byte *x, byte *y) {
     *x = (opcode >> 8) & 0x0F;
 }
 
-/* chipbox_cpu_jump: a safe function that sets PC to address, given that it is safe for this implementation,
-   returning 1 for success and 0 for failure */
-int chipbox_cpu_jump(struct chipbox_chip8_state *state, dbyte address) {
+/* chipbox_cpu_validate_address: returns 1 on valid address, 0 on invalid (and raises error in log) */
+int chipbox_cpu_validate_address(struct chipbox_chip8_state *state, dbyte address) {
     if (address >= CHIPBOX_MEMORY_SIZE) {
         state->log_level = CHIPBOX_LOG_LEVEL_ERROR;
         state->log_msg = CHIPBOX_LOG_ILLEGAL;
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+/* chipbox_cpu_jump: a safe function that sets PC to address, given that it is safe for this implementation,
+   returning 1 for success and 0 for failure */
+int chipbox_cpu_jump(struct chipbox_chip8_state *state, dbyte address) {
+    if (!chipbox_cpu_validate_address(state, address)) {
         return 0;
     }
     if (address < CHIPBOX_PROGRAM_START) {
@@ -58,6 +67,23 @@ void chipbox_cpu_srand(struct chipbox_chip8_state *state, dbyte seed) {
 /* chipbox_cpu_rand: returns a random byte */
 byte chipbox_cpu_rand() {
     return rand();
+}
+
+/* chipbox_cpu_mem_read: safely read a byte from Chip 8 RAM - caller responsible for checking if we sent an error */
+byte chipbox_cpu_mem_read(struct chipbox_chip8_state *state, dbyte address) {
+    if(!chipbox_cpu_validate_address(state, address)) {
+        return 0;
+    }
+    return state->memory[address];
+}
+
+/* chipbox_cpu_mem_write: set memory[address] to value safely, returning 1 on success, 0 on error */
+int chipbox_cpu_mem_write(struct chipbox_chip8_state *state, dbyte address, byte value) {
+    if (!chipbox_cpu_validate_address(state, address)) {
+        return 0;
+    }
+    state->memory[address] = value;
+    return 1;
 }
 
 /* chipbox_cpu_eval_opcode: evaluates an opcode by manipulating state
