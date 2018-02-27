@@ -185,7 +185,8 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
         case 0xA: /* ANNN (LD I, NNN): set I to NNN */
             state->I = opcode & 0x0FFF;
             return 1;
-
+        case 0xB: /* BNNN (JP V0, NNN): set PC (jump) to NNN + V0 */
+            return chipbox_cpu_jump(state, (opcode & 0x0FFF) + state->V[0]);
     }
 
     /* if we are here, then no implemented instruction was run */
