@@ -398,6 +398,18 @@ int main() {
     chipbox_cpu_eval_opcode(&state, 0xE19E);
     test(state.PC == 0x406, "0xE19E (SKP VX) should increment PC by 2 if key corresponding to value of VX is pressed");
 
+    state = chipbox_init_state();
+    state.PC = 0x404;
+    state.V[1] = 0xB;
+    state.input[0xB] = 0;
+    test(chipbox_cpu_eval_opcode(&state, 0xE1A1), "0xE1A1 (SKNP VX) should succeed");
+    test(state.PC == 0x406, "0xE1A1 (SKNP VX) should increment PC by 2 if key corresponding to value of VX is not pressed");
+    state = chipbox_init_state();
+    state.PC = 0x404;
+    state.V[1] = 0xB;
+    state.input[0xB] = 1;
+    chipbox_cpu_eval_opcode(&state, 0xE1A1);
+    test(state.PC == 0x404, "0xE1A1 (SKNP VX) should not change PC if key corresponding to value of VX is pressed");
 
     /* END */
     printf("\n== END ==\n");
