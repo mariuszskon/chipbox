@@ -173,6 +173,7 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                     state->V[x] = state->V[y] << 1;
                     return 1;
             }
+            break; /* no 8XYN instruction (N invalid) */
     }
 
     /* if we are here, then no implemented instruction was run */
