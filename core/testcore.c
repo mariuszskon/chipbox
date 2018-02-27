@@ -8,6 +8,7 @@
 
 void test(int condition, char* name);
 int all_equal(byte array[], int size, int value);
+void print_section(int section_num);
 
 int tests = 0;
 int failed = 0;
@@ -18,12 +19,12 @@ int main() {
     byte x, y;
 
     /* SECTION 1: typedefs and other low-level administrative stuff */
-    printf("== SECTION 1 ==\n");
+    print_section(1);
     test(sizeof(byte) == 1, "byte type should be one byte in length");
     test(sizeof(dbyte) == 2, "dbyte type should be two bytes in length");
 
     /* SECTION 2: validating initial state */
-    printf("== SECTION 2 ==\n");
+    print_section(2);
     state = chipbox_init_state();
     test(sizeof(state.screen) == CHIPBOX_SCREEN_WIDTH_PIXELS * CHIPBOX_SCREEN_HEIGHT / 8, "screen should have appropriate size");
     test(all_equal(state.screen, CHIPBOX_SCREEN_WIDTH_BYTES * CHIPBOX_SCREEN_HEIGHT, 0), "screen should be initialised to all zeroes (off)");
@@ -39,7 +40,7 @@ int main() {
     test(state.log_level == CHIPBOX_LOG_LEVEL_NONE, "log level for initial message should be set to none");
 
     /* SECTION 3: validating internal cpu functions */
-    printf("== SECTION 3 ==\n");
+    print_section(3);
     state = chipbox_init_state();
     test(chipbox_cpu_load_program(&state, example_data, 7), "chipbox_cpu_load_program should return a true value on valid input");
     test(memcmp(&(state.memory[CHIPBOX_PROGRAM_START]), example_data, 7) == 0, "program should be loaded into appropriate memory location");
@@ -79,7 +80,7 @@ int main() {
     test(state.log_level == CHIPBOX_LOG_LEVEL_ERROR && state.log_msg == CHIPBOX_LOG_ILLEGAL, "chipbox_cpu_jump should raise an illegal error on an invalid (too high) address");
 
     /* SECTION 4: opcode testing - the good part */
-    printf("== SECTION 4 ==\n");
+    print_section(4);
     state = chipbox_init_state();
     test(chipbox_cpu_eval_opcode(&state, 0x0123), "0x0NNN (SYS NNN) should succeed");
     test(state.log_level == CHIPBOX_LOG_LEVEL_WARN && state.log_msg == CHIPBOX_LOG_UNIMPL, "0x0NNN (SYS NNN) should raise an unimplemented warning");
@@ -386,17 +387,17 @@ int main() {
 
 
     /* END */
-    printf("== END ==\n");
+    printf("\n== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
     return 0;
 }
 
 void test(int condition, char* name) {
     if (!condition) {
-        printf("%4d FAILED: '%s'\n", tests, name);
+        printf("\n%4d FAILED: '%s'\n", tests, name);
         failed++;
     } else {
-        printf("%4d OK\n", tests);
+        printf(".");
     }
     tests++;
 }
@@ -409,4 +410,8 @@ int all_equal(byte array[], int size, int value) {
         }
     }
     return 1;
+}
+
+void print_section(int section_num) {
+    printf("\n===== SECTION %d =====\n", section_num);
 }
