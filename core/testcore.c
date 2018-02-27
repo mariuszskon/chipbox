@@ -385,6 +385,19 @@ int main() {
     chipbox_cpu_eval_opcode(&state, 0xD7B2);
     test(state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 5 + 2] == (0xFE >> 3) && state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 5 + 3] == (byte)(0xFE << 5) && state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 6 + 2] == (0x12 >> 3) && state.screen[CHIPBOX_SCREEN_WIDTH_BYTES * 6 + 3] == (byte)(0x12 << 5), "0xDXYN (DRW VX, VY, N) should draw a non-aligned multi-byte sprite correctly");
 
+    state = chipbox_init_state();
+    state.PC = 0x404;
+    state.V[1] = 0xB;
+    state.input[0xB] = 0;
+    test(chipbox_cpu_eval_opcode(&state, 0xE19E), "0xE19E (SKP VX) should succeed");
+    test(state.PC == 0x404, "0xE19E (SKP VX) should not change PC if key corresponding to value of VX is not pressed");
+    state = chipbox_init_state();
+    state.PC = 0x404;
+    state.V[1] = 0xB;
+    state.input[0xB] = 1;
+    chipbox_cpu_eval_opcode(&state, 0xE19E);
+    test(state.PC == 0x406, "0xE19E (SKP VX) should increment PC by 2 if key corresponding to value of VX is pressed");
+
 
     /* END */
     printf("\n== END ==\n");
