@@ -15,6 +15,7 @@ byte chipbox_cpu_rand();
 int chipbox_cpu_validate_address(struct chipbox_chip8_state *state, dbyte address);
 byte chipbox_cpu_mem_read(struct chipbox_chip8_state *state, dbyte address);
 int chipbox_cpu_mem_write(struct chipbox_chip8_state *state, dbyte address, byte value);
+int chipbox_cpu_draw(struct chipbox_chip8_state *state, dbyte opcode);
 int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode);
 
 #endif

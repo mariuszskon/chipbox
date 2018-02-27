@@ -86,6 +86,40 @@ int chipbox_cpu_mem_write(struct chipbox_chip8_state *state, dbyte address, byte
     return 1;
 }
 
+int chipbox_cpu_draw(struct chipbox_chip8_state *state, dbyte opcode) {
+    byte sprite_byte, draw_byte;
+    byte bytes_to_draw;
+    byte row = state->V[(opcode >> 4) & 0xF] % CHIPBOX_SCREEN_HEIGHT;
+    byte col_start = state->V[(opcode >> 8) & 0xF] % CHIPBOX_SCREEN_WIDTH_PIXELS;
+    byte col;
+    dbyte read_address = state->I;
+    for (bytes_to_draw = opcode & 0x000F; bytes_to_draw > 0; bytes_to_draw--) {
+        sprite_byte = chipbox_cpu_mem_read(state, read_address);
+        if (state->log_level != CHIPBOX_LOG_LEVEL_NONE) {
+            return 0;
+        }
+        col = col_start;
+        while (sprite_byte) { /* draw a sprite row */
+            draw_byte = sprite_byte >> (col % 8);
+            sprite_byte <<= (8 - (col % 8)); /* remove sprite bits which we will draw and setup next sprite_byte */
+            if (row < CHIPBOX_SCREEN_HEIGHT && col < CHIPBOX_SCREEN_WIDTH_PIXELS) {
+                /* in bytes, not pixels */
+                if (state->screen[CHIPBOX_SCREEN_WIDTH_BYTES * row + (col / 8)] & draw_byte) { /* check for collision */
+                    state->V[0xF] = 1;
+                } else {
+                    state->V[0xF] = 0;
+                }
+                state->screen[CHIPBOX_SCREEN_WIDTH_BYTES * row + (col / 8)] ^= draw_byte;
+            } /* else clip the sprite */
+            col = col - (col % 8); /* round col to nearest multiple of 8 (byte) */
+            col += 8; /* go to next byte column */
+        }
+        row++;
+        read_address++;
+    }
+    return 1;
+}
+
 /* chipbox_cpu_eval_opcode: evaluates an opcode by manipulating state
    this is where the bulk of the logic for the chip-8 interpreter/emulator lies
    returns 1 on success, 0 on error */
@@ -227,6 +261,9 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
         case 0xC: /* CXNN (RND VX, NN): set VX to a random number AND NN */
             state->V[x] = chipbox_cpu_rand() & (opcode & 0x00FF);
             return 1;
+        case 0xD: /* DXYN (DRW VX, VY, N): draw N bytes of sprite data starting from I,
+                     at the position VX, VY */
+            return chipbox_cpu_draw(state, opcode);
     }
 
     /* if we are here, then no implemented instruction was run */
