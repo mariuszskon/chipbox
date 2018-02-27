@@ -174,6 +174,15 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                     return 1;
             }
             break; /* no 8XYN instruction (N invalid) */
+        case 9: /* 9XY0 (SNE VX, VY): skip next instruction if VX != VY */
+            if ((opcode & 0x000F) == 0) {
+                if (state->V[x] != state->V[y]) {
+                    state->PC += 2;
+                }
+                return 1;
+            }
+            break;
+
     }
 
     /* if we are here, then no implemented instruction was run */
