@@ -182,6 +182,9 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                 return 1;
             }
             break;
+        case 0xA: /* ANNN (LD I, NNN): set I to NNN */
+            state->I = opcode & 0x0FFF;
+            return 1;
 
     }
 
