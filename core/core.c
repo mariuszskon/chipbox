@@ -37,5 +37,8 @@ struct chipbox_chip8_state chipbox_init_state() {
     /* set 'none' log level for current message */
     state.log_level = CHIPBOX_LOG_LEVEL_NONE;
 
+    /* seed should be changed every runtime using chipbox_cpu_srand */
+    state.seed = 0;
+
     return state;
 }

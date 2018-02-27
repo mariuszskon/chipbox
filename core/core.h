@@ -57,6 +57,7 @@ struct chipbox_chip8_state {
     byte compat_mode;
     byte log_level; /* level of current message (info, warning, error) */
     byte log_msg; /* message code (see log.h) */
+    dbyte seed; /* seed used for random number generation */
 };
 
 struct chipbox_chip8_state chipbox_init_state();

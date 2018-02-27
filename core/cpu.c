@@ -49,6 +49,17 @@ int chipbox_cpu_jump(struct chipbox_chip8_state *state, dbyte address) {
     return 1;
 }
 
+/* chipbox_cpu_srand: seeds the random number generator */
+void chipbox_cpu_srand(struct chipbox_chip8_state *state, dbyte seed) {
+    state->seed = seed;
+    srand(seed);
+}
+
+/* chipbox_cpu_rand: returns a random byte */
+byte chipbox_cpu_rand() {
+    return rand();
+}
+
 /* chipbox_cpu_eval_opcode: evaluates an opcode by manipulating state
    this is where the bulk of the logic for the chip-8 interpreter/emulator lies
    returns 1 on success, 0 on error */
@@ -187,6 +198,9 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
             return 1;
         case 0xB: /* BNNN (JP V0, NNN): set PC (jump) to NNN + V0 */
             return chipbox_cpu_jump(state, (opcode & 0x0FFF) + state->V[0]);
+        case 0xC: /* CXNN (RND VX, NN): set VX to a random number AND NN */
+            state->V[x] = chipbox_cpu_rand() & (opcode & 0x00FF);
+            return 1;
     }
 
     /* if we are here, then no implemented instruction was run */
