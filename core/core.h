@@ -4,6 +4,9 @@
 typedef unsigned char byte;
 typedef unsigned short dbyte; /* double byte - 16 bits */
 
+#include "fonts.h"
+#include "log.h"
+
 /* set the dimensions of chip8 screens, in pixels */
 #define CHIPBOX_SCREEN_WIDTH_PIXELS 64
 #define CHIPBOX_SCREEN_HEIGHT 32

@@ -1,6 +1,4 @@
 #include "core.h"
-#include "fonts.h"
-#include "log.h"
 
 struct chipbox_chip8_state chipbox_init_state() {
     struct chipbox_chip8_state state;
