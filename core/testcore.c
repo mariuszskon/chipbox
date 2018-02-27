@@ -327,7 +327,7 @@ int main() {
     state = chipbox_init_state();
     state.I = 0x802;
     test(chipbox_cpu_eval_opcode(&state, 0xAAB2), "0xANNN (LD I, NNN) should succeed");
-    test(state.I == 0xAAB2, "0xANNN (LD I, NNN) should set I to NNN");
+    test(state.I == 0xAB2, "0xANNN (LD I, NNN) should set I to NNN");
 
     state = chipbox_init_state();
     state.PC = 0x300;
