@@ -432,6 +432,11 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0xF915), "0xFX15 (LD DT, VX) should succeed");
     test(state.DT == 70, "0xFX15 (LD DT, VX) should set DT to value of VX");
 
+    state = chipbox_init_state();
+    state.V[0xD] = 23;
+    test(chipbox_cpu_eval_opcode(&state, 0xFD18), "0xFX18 (LD ST, VX) should succeed");
+    test(state.ST == 23, "0xFX18 (LD ST, VX) should set ST to value of VX");
+
     /* END */
     printf("\n== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
