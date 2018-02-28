@@ -443,6 +443,16 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0xF31E), "0xFX1E (ADD I, VX) should succeed");
     test(state.I == 0x405, "0xFX1E (ADD I, VX) should add the value of VX to I");
 
+    state = chipbox_init_state();
+    state.V[6] = 0xB;
+    state.I = 0x500;
+    test(chipbox_cpu_eval_opcode(&state, 0xF629), "0xFX29 (LD F, VX) should succeed on a valid value in VX");
+    test(state.I == CHIPBOX_PROGRAM_START - CHIPBOX_FONT_TOTAL_BYTES + (CHIPBOX_FONT_SIZE * 0xB), "0xFX29 (LD F, VX) should set I to the memory address corresponding to the font character based on the value of VX");
+    state = chipbox_init_state();
+    state.V[6] = 0x10;
+    test(!chipbox_cpu_eval_opcode(&state, 0xF629), "0xFX29 (LD F, VX) should fail on invalid value of VX");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_ERROR && state.log_msg == CHIPBOX_LOG_RANGE, "0xFX29 (LD F, VX) should raise a range error on invalid value of VX");
+
     /* END */
     printf("\n== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
