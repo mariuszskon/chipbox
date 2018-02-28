@@ -459,6 +459,15 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0xFA33), "0xFX33 (LD B, VX) should succeed");
     test(state.memory[0x301] == 2 && state.memory[0x302] == 5 && state.memory[0x303] == 3, "0xFX33 (LD B, VX) should store the binary coded decimal value of VX at memory[I], memory[I+1] and memory[I+3], highest to lowest significance");
 
+    state = chipbox_init_state();
+    state.V[0] = 2;
+    state.V[1] = 99;
+    state.V[2] = 42;
+    state.V[3] = 255;
+    state.I = 0x304;
+    test(chipbox_cpu_eval_opcode(&state, 0xF355), "0xFX55 (LD [I], VX) should succeed");
+    test(state.memory[0x304] == 2 && state.memory[0x305] == 99 && state.memory[0x306] == 42 && state.memory[3] == 255, "0xFX55 (LD [I], VX) should store registers V0 to VX in memory starting from address stored in I");
+
     /* END */
     printf("\n== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
