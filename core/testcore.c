@@ -427,6 +427,11 @@ int main() {
     chipbox_cpu_eval_opcode(&state, 0xF10A);
     test(state.V[1] == 0xA, "0xFX0A (LD VX, K) should store the key that is pressed in VX");
 
+    state = chipbox_init_state();
+    state.V[9] = 70;
+    test(chipbox_cpu_eval_opcode(&state, 0xF915), "0xFX15 (LD DT, VX) should succeed");
+    test(state.DT == 70, "0xFX15 (LD DT, VX) should set DT to value of VX");
+
     /* END */
     printf("\n== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
