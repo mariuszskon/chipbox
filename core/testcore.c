@@ -411,6 +411,12 @@ int main() {
     chipbox_cpu_eval_opcode(&state, 0xE1A1);
     test(state.PC == 0x404, "0xE1A1 (SKNP VX) should not change PC if key corresponding to value of VX is pressed");
 
+    state = chipbox_init_state();
+    state.DT = 50;
+    state.V[4] = 99;
+    test(chipbox_cpu_eval_opcode(&state, 0xF407), "0xFX07 (LD VX, DT) should succeed");
+    test(state.V[4] == 50, "0xFX07 (LD VX, DT) should set VX to DT");
+
     /* END */
     printf("\n== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
