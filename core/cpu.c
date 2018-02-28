@@ -86,6 +86,7 @@ int chipbox_cpu_mem_write(struct chipbox_chip8_state *state, dbyte address, byte
     return 1;
 }
 
+/* TODO: rewrite */
 int chipbox_cpu_draw(struct chipbox_chip8_state *state, dbyte opcode) {
     byte sprite_byte, draw_byte;
     byte bytes_to_draw;
