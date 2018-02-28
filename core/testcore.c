@@ -466,7 +466,7 @@ int main() {
     state.V[3] = 255;
     state.I = 0x304;
     test(chipbox_cpu_eval_opcode(&state, 0xF355), "0xFX55 (LD [I], VX) should succeed");
-    test(state.memory[0x304] == 2 && state.memory[0x305] == 99 && state.memory[0x306] == 42 && state.memory[3] == 255, "0xFX55 (LD [I], VX) should store registers V0 to VX in memory starting from address stored in I");
+    test(state.memory[0x304] == 2 && state.memory[0x305] == 99 && state.memory[0x306] == 42 && state.memory[0x307] == 255, "0xFX55 (LD [I], VX) should store registers V0 to VX in memory starting from address stored in I");
 
     state = chipbox_init_state();
     state.memory[0x404] = 77;
