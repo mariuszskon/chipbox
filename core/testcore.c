@@ -453,6 +453,12 @@ int main() {
     test(!chipbox_cpu_eval_opcode(&state, 0xF629), "0xFX29 (LD F, VX) should fail on invalid value of VX");
     test(state.log_level == CHIPBOX_LOG_LEVEL_ERROR && state.log_msg == CHIPBOX_LOG_RANGE, "0xFX29 (LD F, VX) should raise a range error on invalid value of VX");
 
+    state = chipbox_init_state();
+    state.V[0xA] = 253;
+    state.I = 0x301;
+    test(chipbox_cpu_eval_opcode(&state, 0xFA33), "0xFX33 (LD B, VX) should succeed");
+    test(state.memory[0x301] == 2 && state.memory[0x302] == 5 && state.memory[0x303] == 3, "0xFX33 (LD B, VX) should store the binary coded decimal value of VX at memory[I], memory[I+1] and memory[I+3], highest to lowest significance");
+
     /* END */
     printf("\n== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
