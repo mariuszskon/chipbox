@@ -468,6 +468,14 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0xF355), "0xFX55 (LD [I], VX) should succeed");
     test(state.memory[0x304] == 2 && state.memory[0x305] == 99 && state.memory[0x306] == 42 && state.memory[3] == 255, "0xFX55 (LD [I], VX) should store registers V0 to VX in memory starting from address stored in I");
 
+    state = chipbox_init_state();
+    state.memory[0x404] = 77;
+    state.memory[0x405] = 123;
+    state.memory[0x406] = 222;
+    state.I = 0x404;
+    test(chipbox_cpu_eval_opcode(&state, 0xF265), "0xFX65 (LD VX, [I]) should succeed");
+    test(state.V[0] == 77 && state.V[1] == 123 && state.V[2] == 222, "0xFX65 (LD VX, [I]) should fill registers V0 to VX with memory starting from address in I");
+
     /* END */
     printf("\n== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
