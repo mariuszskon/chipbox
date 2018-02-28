@@ -13,5 +13,6 @@
 #define CHIPBOX_LOG_UNSAFE 2 /* instruction does something unsafe/undefined for original hardware/implementation */
 #define CHIPBOX_LOG_ILLEGAL 3 /* instruction attempts to do something that could lead to undefined behaviour in this implementation */
 #define CHIPBOX_LOG_RANGE 4 /* an input value was out of range of valid inputs */
+#define CHIPBOX_LOG_WAIT 5 /* waiting on input */
 
 #endif

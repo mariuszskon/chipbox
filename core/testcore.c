@@ -417,6 +417,16 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0xF407), "0xFX07 (LD VX, DT) should succeed");
     test(state.V[4] == 50, "0xFX07 (LD VX, DT) should set VX to DT");
 
+    state = chipbox_init_state();
+    state.PC = 0x404;
+    state.V[1] = 99;
+    test(chipbox_cpu_eval_opcode(&state, 0xF10A), "0xFX0A (LD VX, K) should succeed");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_INFO && state.log_msg == CHIPBOX_LOG_WAIT, "0xFX0A (LD VX, K) should log that it is waiting if no keys are pressed");
+    test(state.PC == 0x402, "0xFX0A (LD VX, K) should decrement PC by 2 to ensure it is run again when a key is pressed");
+    state.input[0xA] = 1;
+    chipbox_cpu_eval_opcode(&state, 0xF10A);
+    test(state.V[1] == 0xA, "0xFX0A (LD VX, K) should store the key that is pressed in VX");
+
     /* END */
     printf("\n== END ==\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
