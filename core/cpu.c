@@ -323,6 +323,7 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                     state->I += state->V[x];
                     return 1;
             }
+            break;
     }
 
     /* if we are here, then no implemented instruction was run */
