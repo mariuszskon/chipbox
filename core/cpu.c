@@ -291,6 +291,12 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                     }
             }
             break;
+        case 0xF:
+            switch (opcode & 0x00FF) {
+                case 0x07: /* FX07 (LD VX, DT): set VX to value of DT */
+                    state->V[x] = state->DT;
+                    return 1;
+            }
     }
 
     /* if we are here, then no implemented instruction was run */
