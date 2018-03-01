@@ -267,7 +267,7 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
             return chipbox_cpu_draw(state, opcode);
         case 0xE:
             switch (opcode & 0x00FF) {
-                case 0x9E: /* 0xEX9E (SKP VX): skips the next instruction if key corresponding to value of VX i pressed */
+                case 0x9E: /* 0xEX9E (SKP VX): skips the next instruction if key corresponding to value of VX is pressed */
                     if (state->V[x] <= 0xF) {
                         if (state->input[state->V[x]] == 1) {
                             state->PC += 2;
