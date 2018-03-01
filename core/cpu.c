@@ -278,6 +278,17 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                         state->log_msg = CHIPBOX_LOG_RANGE;
                         return 0;
                     }
+                case 0xA1: /* 0xEXA1 (SKNP VX): skips the next instruction if key corresponding to value of VX is NOT pressed */
+                    if (state->V[x] <= 0xF) {
+                        if (state->input[state->V[x]] == 0) {
+                            state->PC += 2;
+                        }
+                        return 1;
+                    } else {
+                        state->log_level = CHIPBOX_LOG_LEVEL_ERROR;
+                        state->log_msg = CHIPBOX_LOG_RANGE;
+                        return 0;
+                    }
             }
             break;
     }
