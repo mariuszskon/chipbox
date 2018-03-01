@@ -125,7 +125,7 @@ int chipbox_cpu_draw(struct chipbox_chip8_state *state, dbyte opcode) {
    this is where the bulk of the logic for the chip-8 interpreter/emulator lies
    returns 1 on success, 0 on error */
 int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
-    unsigned int i, j;
+    int i, j;
     byte x, y;
 
     chipbox_cpu_opcode_xy(opcode, &x, &y);
@@ -295,6 +295,23 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
             switch (opcode & 0x00FF) {
                 case 0x07: /* FX07 (LD VX, DT): set VX to value of DT */
                     state->V[x] = state->DT;
+                    return 1;
+                case 0x0A: /* FX0A (LD VX, K): wait for a keypress, and set VX to the value of the key */
+                    j = -1;
+                    for (i = 0; i < CHIPBOX_INPUT_KEYS; i++) {
+                        if (state->input[i] == 1) {
+                            j = i;
+                            break;
+                        }
+                    }
+                    if (j == -1) {
+                        /* no key pressed, so wait for it */
+                        state->log_level = CHIPBOX_LOG_LEVEL_INFO;
+                        state->log_msg = CHIPBOX_LOG_WAIT;
+                        state->PC -= 2;
+                    } else {
+                        state->V[x] = j;
+                    }
                     return 1;
             }
     }
