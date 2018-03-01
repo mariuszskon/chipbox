@@ -316,6 +316,9 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                 case 0x15: /* FX15 (LD DT, VX): set value of DT to value of VX */
                     state->DT = state->V[x];
                     return 1;
+                case 0x18: /* FX18 (LD ST, VX): set value of ST to VX */
+                    state->ST = state->V[x];
+                    return 1;
             }
     }
 
