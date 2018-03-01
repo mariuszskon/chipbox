@@ -265,6 +265,21 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
         case 0xD: /* DXYN (DRW VX, VY, N): draw N bytes of sprite data starting from I,
                      at the position VX, VY */
             return chipbox_cpu_draw(state, opcode);
+        case 0xE:
+            switch (opcode & 0x00FF) {
+                case 0x9E: /* 0xEX9E (SKP VX): skips the next instruction if key corresponding to value of VX i pressed */
+                    if (state->V[x] <= 0xF) {
+                        if (state->input[state->V[x]] == 1) {
+                            state->PC += 2;
+                        }
+                        return 1;
+                    } else {
+                        state->log_level = CHIPBOX_LOG_LEVEL_ERROR;
+                        state->log_msg = CHIPBOX_LOG_RANGE;
+                        return 0;
+                    }
+            }
+            break;
     }
 
     /* if we are here, then no implemented instruction was run */
