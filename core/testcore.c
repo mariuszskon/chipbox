@@ -414,6 +414,10 @@ int main() {
     state.input[0xB] = 1;
     chipbox_cpu_eval_opcode(&state, 0xE1A1);
     test(state.PC == 0x404, "0xE1A1 (SKNP VX) should not change PC if key corresponding to value of VX is pressed");
+    state = chipbox_init_state();
+    state.V[1] = 0x10;
+    test(chipbox_cpu_eval_opcode(&state, 0xE1A1) == 0, "0xE1A1 (SKNP VX) should fail if value of VX is out of range");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_ERROR && state.log_msg == CHIPBOX_LOG_RANGE, "0xE1A1 (SKNP VX) should raise a range error if value of VX is out of range");
 
     state = chipbox_init_state();
     state.DT = 50;
