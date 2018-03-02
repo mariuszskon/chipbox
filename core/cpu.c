@@ -331,6 +331,15 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                         state->log_msg = CHIPBOX_LOG_RANGE;
                         return 0;
                     }
+                case 0x33: /* FX33 (LD B, VX): store individual decimal digits of value of VX in memory[I], memory[I+1], memory[I+2]
+                              this is also known as the BCD (binary coded decimal) instruction */
+                    j = state->V[x];
+                    for (i = 0; i < 3; i++) { /* three digits must be stored because register VX is 8 bits in size */
+                        state->memory[state->I + 2 - i] = j % 10;
+                        j /= 10;
+                    }
+                    return 1;
+
             }
             break;
     }
