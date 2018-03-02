@@ -322,6 +322,15 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                 case 0x1E: /* FX1E (ADD I, VX): add VX to I */
                     state->I += state->V[x];
                     return 1;
+                case 0x29: /* FX29 (LD F, VX): set I to address for font sprite corresponding to value of VX */
+                    if (state->V[x] <= 0xF) {
+                        state->I = CHIPBOX_PROGRAM_START - CHIPBOX_FONT_TOTAL_BYTES + (state->V[x] * CHIPBOX_FONT_SIZE);
+                        return 1;
+                    } else {
+                        state->log_level = CHIPBOX_LOG_LEVEL_ERROR;
+                        state->log_msg = CHIPBOX_LOG_RANGE;
+                        return 0;
+                    }
             }
             break;
     }
