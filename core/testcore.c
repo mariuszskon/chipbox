@@ -397,6 +397,10 @@ int main() {
     state.input[0xB] = 1;
     chipbox_cpu_eval_opcode(&state, 0xE19E);
     test(state.PC == 0x406, "0xE19E (SKP VX) should increment PC by 2 if key corresponding to value of VX is pressed");
+    state = chipbox_init_state();
+    state.V[1] = 0x10;
+    test(chipbox_cpu_eval_opcode(&state, 0xE19E) == 0, "0xE19E (SKP VX) should fail if value of VX is out of range");
+    test(state.log_level == CHIPBOX_LOG_LEVEL_ERROR && state.log_msg == CHIPBOX_LOG_RANGE, "0xE19E (SKP VX) should raise a range error if value of VX is out of range");
 
     state = chipbox_init_state();
     state.PC = 0x404;
