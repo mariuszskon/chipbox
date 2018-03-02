@@ -458,7 +458,7 @@ int main() {
     test(state.I == CHIPBOX_PROGRAM_START - CHIPBOX_FONT_TOTAL_BYTES + (CHIPBOX_FONT_SIZE * 0xB), "0xFX29 (LD F, VX) should set I to the memory address corresponding to the font character based on the value of VX");
     state = chipbox_init_state();
     state.V[6] = 0x10;
-    test(!chipbox_cpu_eval_opcode(&state, 0xF629), "0xFX29 (LD F, VX) should fail on invalid value of VX");
+    test(chipbox_cpu_eval_opcode(&state, 0xF629) == 0, "0xFX29 (LD F, VX) should fail on invalid value of VX");
     test(state.log_level == CHIPBOX_LOG_LEVEL_ERROR && state.log_msg == CHIPBOX_LOG_RANGE, "0xFX29 (LD F, VX) should raise a range error on invalid value of VX");
 
     state = chipbox_init_state();
