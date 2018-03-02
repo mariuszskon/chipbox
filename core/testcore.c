@@ -477,7 +477,14 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0xF355), "0xFX55 (LD [I], VX) should succeed");
     test(state.memory[0x304] == 2 && state.memory[0x305] == 99 && state.memory[0x306] == 42 && state.memory[0x307] == 255, "0xFX55 (LD [I], VX) should store registers V0 to VX in memory starting from address stored in I");
     test(state.I == 0x308, "0xFX55 (LD [I], VX) should set I to I + X + 1 in MATTMIK compatiblity mode");
+    state = chipbox_init_state();
     state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
+    state.V[0] = 2;
+    state.V[1] = 99;
+    state.V[2] = 42;
+    state.V[3] = 255;
+    state.I = 0x304;
+    chipbox_cpu_eval_opcode(&state, 0xF355);
     test(state.I == 0x304, "0xFX55 (LD [I], VX) should leave I untouched in COWGOD compatibltiy mode");
 
     state = chipbox_init_state();
@@ -489,7 +496,13 @@ int main() {
     test(chipbox_cpu_eval_opcode(&state, 0xF265), "0xFX65 (LD VX, [I]) should succeed");
     test(state.V[0] == 77 && state.V[1] == 123 && state.V[2] == 222, "0xFX65 (LD VX, [I]) should fill registers V0 to VX with memory starting from address in I");
     test(state.I == 0x407, "0xFX65 (LD VX, [I]) should set I to I + X + 1 in MATTMIK compatiblity mode");
+    state = chipbox_init_state();
     state.compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
+    state.memory[0x404] = 77;
+    state.memory[0x405] = 123;
+    state.memory[0x406] = 222;
+    state.I = 0x404;
+    chipbox_cpu_eval_opcode(&state, 0xF265);
     test(state.I == 0x404, "0xFX65 (LD VX, [I]) should leave I untouched in COWGOD compatiblity mode");
 
     /* END */
