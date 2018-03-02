@@ -350,6 +350,17 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                     }
 
                     return 1;
+                case 0x65: /* FX65 (LD VX, [I]): fill registers V0 through to VX with memory starting from address I.
+                              Just like in FX55, in MATTMIK, I = I + X + 1 after the operation */
+                    for (i = 0; i <= x; i++) {
+                        state->V[i] = state->memory[state->I + i];
+                    }
+
+                    if (state->compat_mode == CHIPBOX_COMPATIBILITY_MODE_MATTMIK) {
+                        state->I += x + 1;
+                    }
+
+                    return 1;
             }
             break;
     }
