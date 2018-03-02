@@ -339,7 +339,17 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
                         j /= 10;
                     }
                     return 1;
+                case 0x55: /* FX55 (LD [I], VX): store registers V0 through to VX in memory, starting from address I.
+                              In MATTMIK compatibility mode, I = I + X + 1 after the operation */
+                    for (i = 0; i <= x; i++) {
+                        state->memory[state->I + i] = state->V[i];
+                    }
 
+                    if (state->compat_mode == CHIPBOX_COMPATIBILITY_MODE_MATTMIK) {
+                        state->I += x + 1;
+                    }
+
+                    return 1;
             }
             break;
     }
