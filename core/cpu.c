@@ -17,6 +17,7 @@ dbyte chipbox_cpu_get_opcode(struct chipbox_chip8_state *state) {
     if (state->PC >= CHIPBOX_MEMORY_SIZE) {
         state->log_level = CHIPBOX_LOG_LEVEL_ERROR;
         state->log_msg = CHIPBOX_LOG_ILLEGAL;
+        state->PC += 2; /* increment PC for logging purposes (consistent for normal operation) */
         return 0;
     }
     opcode = state->memory[state->PC] << 8 | state->memory[state->PC + 1];
