@@ -53,5 +53,5 @@ void chipbox_print_log(struct chipbox_chip8_state* state) {
             break;
     }
 
-    printf("%s @ 0x%04X: %s\n", level, state->PC, message);
+    fprintf(stderr, "%s @ 0x%04X: %s\n", level, state->PC, message);
 }
