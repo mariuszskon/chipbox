@@ -2,9 +2,10 @@
 #include "chipbox_sdl.h"
 #include <string.h>
 
-int chipbox_vm_step(struct chipbox_chip8_state* state) {
+int chipbox_vm_step(struct chipbox_chip8_state* state, unsigned long *last_timer_change_time) {
     dbyte opcode;
     dbyte log_PC = state->PC;
+    unsigned long elapsed;
     int eval_result;
     opcode = chipbox_cpu_get_opcode(state);
     if (state->log_level != CHIPBOX_LOG_LEVEL_NONE) {
@@ -15,7 +16,16 @@ int chipbox_vm_step(struct chipbox_chip8_state* state) {
     } else {
         eval_result = chipbox_cpu_eval_opcode(state, opcode);
         chipbox_print_log(state, log_PC, opcode);
-        /* TODO: manage DT and ST */
+        elapsed = SDL_GetTicks() - *last_timer_change_time;
+        if (elapsed >= CHIPBOX_TIMER_DEC_INTERVAL) {
+            if (state->DT > 0) {
+                state->DT -= elapsed / CHIPBOX_TIMER_DEC_INTERVAL;
+            }
+            if (state->ST > 0) {
+                state->ST -= elapsed / CHIPBOX_TIMER_DEC_INTERVAL;
+            }
+            *last_timer_change_time += elapsed;
+        }
         return eval_result;
     }
 }

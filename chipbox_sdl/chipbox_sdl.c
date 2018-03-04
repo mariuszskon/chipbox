@@ -16,6 +16,7 @@ int main(int argc, char* argv[]) {
     Sint64 file_size;
     int size_to_read = CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START;
     byte file_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START];
+    unsigned long last_timer_change_time;
     int running = 1;
 
     if (argc < 2) {
@@ -54,6 +55,7 @@ int main(int argc, char* argv[]) {
 
     state = chipbox_init_state();
     chipbox_cpu_load_program(&state, file_data, size_to_read);
+    last_timer_change_time = SDL_GetTicks();
     while (running) {
         while(SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
@@ -61,7 +63,7 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        if (!chipbox_vm_step(&state)) {
+        if (!chipbox_vm_step(&state, &last_timer_change_time)) {
             running = 0;
         }
         chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
