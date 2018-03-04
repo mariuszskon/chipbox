@@ -17,6 +17,10 @@ int main(int argc, char* argv[]) {
     int size_to_read = CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START;
     byte file_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START];
     unsigned long last_timer_change_time;
+    unsigned long last_time;
+    int ticks;
+    int ticks_per_second = 500;
+    int ms_per_tick = 1000 / ticks_per_second;
     int running = 1;
 
     if (argc < 2) {
@@ -63,11 +67,18 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        if (!chipbox_vm_step(&state, &last_timer_change_time)) {
-            running = 0;
-        }
-        chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
-        chipbox_render(renderer, pixel_rects, pixel_count, CHIPBOX_SCREEN_WIDTH_PIXELS, CHIPBOX_SCREEN_HEIGHT, scale);
+        ticks = 0;
+        do {
+            if (!chipbox_vm_step(&state, &last_timer_change_time)) {
+                running = 0;
+                break;
+            }
+            chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
+            chipbox_render(renderer, pixel_rects, pixel_count, CHIPBOX_SCREEN_WIDTH_PIXELS, CHIPBOX_SCREEN_HEIGHT, scale);
+            ticks++;
+            last_time = SDL_GetTicks();
+            while (SDL_GetTicks() - last_time < ms_per_tick); /* busy wait because sleep does not have enough precision */
+        } while (ticks < ticks_per_second);
     }
 
     SDL_DestroyWindow(window);
