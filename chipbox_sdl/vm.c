@@ -4,13 +4,18 @@
 
 int chipbox_vm_step(struct chipbox_chip8_state* state) {
     dbyte opcode;
-    if (!((opcode = chipbox_cpu_get_opcode(state)) && chipbox_cpu_eval_opcode(state, opcode))) {
+    int eval_result;
+    opcode = chipbox_cpu_get_opcode(state);
+    if (state->log_level != CHIPBOX_LOG_LEVEL_NONE) {
         chipbox_print_log(state);
+    }
+    if (state->log_level == CHIPBOX_LOG_LEVEL_ERROR) {
         return 0;
     } else {
+        eval_result = chipbox_cpu_eval_opcode(state, opcode);
         chipbox_print_log(state);
         /* TODO: manage DT and ST */
-        return 1;
+        return eval_result;
     }
 }
 

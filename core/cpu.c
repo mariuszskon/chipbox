@@ -14,6 +14,7 @@ int chipbox_cpu_load_program(struct chipbox_chip8_state *state, byte *program_da
 
 dbyte chipbox_cpu_get_opcode(struct chipbox_chip8_state *state) {
     dbyte opcode = 0;
+    state->log_level = CHIPBOX_LOG_LEVEL_NONE;
     if (state->PC >= CHIPBOX_MEMORY_SIZE) {
         state->log_level = CHIPBOX_LOG_LEVEL_ERROR;
         state->log_msg = CHIPBOX_LOG_ILLEGAL;
