@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 
-int main(int argc, char* args[]) {
+int main(int argc, char* argv[]) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
     SDL_Event e;
@@ -12,7 +12,29 @@ int main(int argc, char* args[]) {
     int pixel_count;
     SDL_Rect pixel_rects[CHIPBOX_SCREEN_WIDTH_PIXELS * CHIPBOX_SCREEN_HEIGHT];
     int scale = 8;
+    SDL_RWops *file = NULL;
+    Sint64 file_size;
+    int size_to_read = CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START;
+    byte file_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START];
     int running = 1;
+
+    if (argc < 2) {
+        printf("Please specify a ROM file\n");
+        return 1;
+    } else {
+        file = SDL_RWFromFile(argv[argc - 1], "rb");
+        if (file == NULL) {
+            printf("File read error: %s\n", SDL_GetError());
+            return 1;
+        }
+        file_size = SDL_RWsize(file);
+        if (file_size < 0) {
+            printf("File size detection error: %s\n", SDL_GetError());
+            return 1;
+        }
+        size_to_read = (size_to_read < file_size) ? size_to_read : file_size; /* read no more than max size or size of file */
+        SDL_RWread(file, file_data, sizeof(byte), size_to_read);
+    }
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL failed to initialise: %s\n", SDL_GetError());
@@ -31,6 +53,7 @@ int main(int argc, char* args[]) {
     }
 
     state = chipbox_init_state();
+    chipbox_cpu_load_program(&state, file_data, size_to_read);
     while (running) {
         while(SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
