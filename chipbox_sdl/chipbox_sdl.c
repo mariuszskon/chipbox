@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
         if (!chipbox_vm_step(&state)) {
             running = 0;
         }
-        chipbox_screen_to_sdl_rects(state.memory, pixel_rects, &pixel_count);
+        chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
         chipbox_render(renderer, pixel_rects, pixel_count, CHIPBOX_SCREEN_WIDTH_PIXELS, CHIPBOX_SCREEN_HEIGHT, scale);
     }
 
