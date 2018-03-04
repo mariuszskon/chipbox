@@ -8,6 +8,6 @@
 #define CHIPBOX_MAX_LOG_MSG_LENGTH 256
 
 int chipbox_vm_step(struct chipbox_chip8_state* state);
-void chipbox_print_log(struct chipbox_chip8_state* state);
+void chipbox_print_log(struct chipbox_chip8_state* state, dbyte PC, dbyte opcode);
 
 #endif

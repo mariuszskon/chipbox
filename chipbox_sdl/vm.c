@@ -4,22 +4,23 @@
 
 int chipbox_vm_step(struct chipbox_chip8_state* state) {
     dbyte opcode;
+    dbyte log_PC = state->PC;
     int eval_result;
     opcode = chipbox_cpu_get_opcode(state);
     if (state->log_level != CHIPBOX_LOG_LEVEL_NONE) {
-        chipbox_print_log(state);
+        chipbox_print_log(state, log_PC, opcode);
     }
     if (state->log_level == CHIPBOX_LOG_LEVEL_ERROR) {
         return 0;
     } else {
         eval_result = chipbox_cpu_eval_opcode(state, opcode);
-        chipbox_print_log(state);
+        chipbox_print_log(state, log_PC, opcode);
         /* TODO: manage DT and ST */
         return eval_result;
     }
 }
 
-void chipbox_print_log(struct chipbox_chip8_state* state) {
+void chipbox_print_log(struct chipbox_chip8_state* state, dbyte PC, dbyte opcode) {
     char level[CHIPBOX_MAX_LOG_LEVEL_LENGTH], message[CHIPBOX_MAX_LOG_MSG_LENGTH];
     if (state->log_level == CHIPBOX_LOG_LEVEL_NONE) {
         return;
@@ -58,5 +59,5 @@ void chipbox_print_log(struct chipbox_chip8_state* state) {
             break;
     }
 
-    fprintf(stderr, "%s @ 0x%04X: %s\n", level, state->PC-2, message);
+    fprintf(stderr, "%s @ 0x%04X (%04X): %s\n", level, PC, opcode, message);
 }
