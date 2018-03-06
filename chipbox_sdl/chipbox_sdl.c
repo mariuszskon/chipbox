@@ -61,15 +61,15 @@ int main(int argc, char* argv[]) {
     chipbox_cpu_load_program(&state, file_data, size_to_read);
     last_timer_change_time = SDL_GetTicks();
     while (running) {
-        while(SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT) {
-                running = 0;
-            }
-        }
-        chipbox_vm_update_input(&state);
-
         ticks = 0;
         do {
+            while(SDL_PollEvent(&e) != 0) {
+                if (e.type == SDL_QUIT) {
+                    running = 0;
+                }
+            }
+            chipbox_vm_update_input(&state);
+
             if (!chipbox_vm_step(&state, &last_timer_change_time)) {
                 running = 0;
                 break;
