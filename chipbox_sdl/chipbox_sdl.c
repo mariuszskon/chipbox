@@ -66,6 +66,7 @@ int main(int argc, char* argv[]) {
                 running = 0;
             }
         }
+        chipbox_vm_update_input(&state);
 
         ticks = 0;
         do {
