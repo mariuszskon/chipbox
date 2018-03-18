@@ -19,11 +19,12 @@ int main(int argc, char* argv[]) {
     unsigned long last_timer_change_time;
     unsigned long new_time;
     unsigned long current_time;
-    unsigned long delta_time;
+    unsigned long delta_time = 0;
     int ticks_per_second = 500;
     int ms_per_tick = 1000 / ticks_per_second;
     int running = 1;
     int i;
+    int ticks_to_do;
 
     if (argc < 2) {
         printf("Please specify a ROM file\n");
@@ -65,7 +66,7 @@ int main(int argc, char* argv[]) {
     current_time = SDL_GetTicks();
     while (running) {
         new_time = SDL_GetTicks();
-        delta_time = new_time - current_time;
+        delta_time += new_time - current_time;
         current_time = new_time;
         while(SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
@@ -74,12 +75,14 @@ int main(int argc, char* argv[]) {
         }
         chipbox_vm_update_input(&state);
 
-        for (i = (delta_time * ticks_per_second) / 1000; i > 0; i--) {
+        for (ticks_to_do = i = (delta_time * ticks_per_second) / 1000; i > 0; i--) {
             if (!chipbox_vm_step(&state, &last_timer_change_time)) {
                 running = 0;
                 break;
             }
         }
+        delta_time -= ticks_to_do * ms_per_tick; /* account for left over time */
+
         chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
         chipbox_render(renderer, pixel_rects, pixel_count, CHIPBOX_SCREEN_WIDTH_PIXELS, CHIPBOX_SCREEN_HEIGHT, scale);
     }
