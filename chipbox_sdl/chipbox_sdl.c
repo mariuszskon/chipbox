@@ -60,6 +60,7 @@ int main(int argc, char* argv[]) {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == NULL) {
         printf("Renderer creation failure: %s\n", SDL_GetError());
+        return 1;
     }
 
     audio_device = init_audio();
