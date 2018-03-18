@@ -6,7 +6,7 @@ CORE_DIR = core
 CHIPBOX_SDL_DIR = chipbox_sdl
 BUILD_DIR = bin
 
-HEADERS = $(CORE_DIR)/core.h $(CORE_DIR)/cpu.h $(CORE_DIR)/fonts.h $(CORE_DIR)/log.h $(CHIPBOX_SDL_DIR)/chipbox_sdl.h $(CHIPBOX_SDL_DIR)/vm.h $(CHIPBOX_SDL_DIR)/render.h
+HEADERS = $(CORE_DIR)/core.h $(CORE_DIR)/cpu.h $(CORE_DIR)/fonts.h $(CORE_DIR)/log.h $(CHIPBOX_SDL_DIR)/chipbox_sdl.h $(CHIPBOX_SDL_DIR)/vm.h $(CHIPBOX_SDL_DIR)/render.h $(CHIPBOX_SDL_DIR)/audio.h
 
 all: $(BUILD_DIR)/testcore $(BUILD_DIR)/chipbox_sdl
 
@@ -20,7 +20,7 @@ $(BUILD_DIR)/testcore: testcore.o core.o cpu.o fonts.o
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $@ $^
 
-$(BUILD_DIR)/chipbox_sdl: $(CHIPBOX_SDL_DIR)/chipbox_sdl.o $(CHIPBOX_SDL_DIR)/vm.o $(CHIPBOX_SDL_DIR)/render.o core.o cpu.o fonts.o
+$(BUILD_DIR)/chipbox_sdl: $(CHIPBOX_SDL_DIR)/chipbox_sdl.o $(CHIPBOX_SDL_DIR)/vm.o $(CHIPBOX_SDL_DIR)/render.o $(CHIPBOX_SDL_DIR)/audio.o core.o cpu.o fonts.o
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) $(SDL_FLAGS) -o $@ $^
 

@@ -1,6 +1,7 @@
 #include "chipbox_sdl.h"
 #include "vm.h"
 #include "render.h"
+#include "audio.h"
 #include <stdio.h>
 
 
@@ -8,6 +9,7 @@ int main(int argc, char* argv[]) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
     SDL_Event e;
+    SDL_AudioDeviceID audio_device;
     struct chipbox_chip8_state state;
     int pixel_count;
     SDL_Rect pixel_rects[CHIPBOX_SCREEN_WIDTH_PIXELS * CHIPBOX_SCREEN_HEIGHT];
@@ -44,7 +46,7 @@ int main(int argc, char* argv[]) {
         SDL_RWread(file, file_data, sizeof(byte), size_to_read);
     }
 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
         printf("SDL failed to initialise: %s\n", SDL_GetError());
         return 1;
     }
@@ -58,6 +60,12 @@ int main(int argc, char* argv[]) {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == NULL) {
         printf("Renderer creation failure: %s\n", SDL_GetError());
+    }
+
+    audio_device = init_audio();
+    if (audio_device == 0) {
+        printf("Audio device initialisation failure: %s\n", SDL_GetError());
+        return 1;
     }
 
     state = chipbox_init_state();
@@ -79,6 +87,8 @@ int main(int argc, char* argv[]) {
             if (!chipbox_vm_step(&state, &last_timer_change_time)) {
                 running = 0;
                 break;
+            } else {
+                handle_sound(audio_device, state.ST);
             }
         }
         delta_time -= ticks_to_do * ms_per_tick; /* account for left over time */
@@ -86,6 +96,8 @@ int main(int argc, char* argv[]) {
         chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
         chipbox_render(renderer, pixel_rects, pixel_count, CHIPBOX_SCREEN_WIDTH_PIXELS, CHIPBOX_SCREEN_HEIGHT, scale);
     }
+
+    close_audio(audio_device);
 
     SDL_DestroyWindow(window);
     SDL_Quit();
