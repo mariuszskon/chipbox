@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
         SDL_RWread(file, file_data, sizeof(byte), size_to_read);
     }
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) < 0) {
         printf("SDL failed to initialise: %s\n", SDL_GetError());
         return 1;
     }
