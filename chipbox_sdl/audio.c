@@ -1,4 +1,6 @@
+#include "SDL.h"
 #include "audio.h"
+#include "core.h"
 
 void generate_beep(void *userdata, Uint8 *stream, int len) {
     int i;

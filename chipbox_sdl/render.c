@@ -1,3 +1,4 @@
+#include "SDL.h"
 #include "render.h"
 
 /* chipbox_screen_to_sdl_rects: takes in screen data (from chipbox_chip8_state) and write on pixels as SDL_Rect to rects[],

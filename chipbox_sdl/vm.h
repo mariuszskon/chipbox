@@ -1,8 +1,7 @@
 #ifndef CHIPBOX_VM_H
 #define CHIPBOX_VM_H
 
-#include "../core/core.h"
-#include "../core/cpu.h"
+#include "core.h"
 
 #define CHIPBOX_MAX_LOG_LEVEL_LENGTH 10
 #define CHIPBOX_MAX_LOG_MSG_LENGTH 256

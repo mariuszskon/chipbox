@@ -1,9 +1,10 @@
-#include "chipbox_sdl.h"
+#include "SDL.h"
+#include "core.h"
+#include "cpu.h"
 #include "vm.h"
 #include "render.h"
 #include "audio.h"
 #include <stdio.h>
-
 
 int main(int argc, char* argv[]) {
     SDL_Window* window = NULL;

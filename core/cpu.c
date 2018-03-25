@@ -1,6 +1,9 @@
 #include "cpu.h"
 #include "core.h"
 #include "log.h"
+#include "fonts.h"
+#include <stdlib.h>
+#include <string.h>
 
 int chipbox_cpu_load_program(struct chipbox_chip8_state *state, byte *program_data, size_t size) {
     if (size > CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START) {

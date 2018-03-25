@@ -2,7 +2,7 @@
 #define CHIPBOX_AUDIO_H
 
 #include "SDL.h"
-#include "../core/core.h"
+#include "core.h"
 
 #define CHIPBOX_BEEP_FREQUENCY 44100 /* for the CD quality beep */
 #define CHIPBOX_BEEP_SAMPLES 256 /* number of SDL sound samples */

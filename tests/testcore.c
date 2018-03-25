@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-#include "../core/core.h"
-#include "../core/cpu.h"
-#include "../core/fonts.h"
-#include "../core/log.h"
+#include "core.h"
+#include "cpu.h"
+#include "fonts.h"
+#include "log.h"
 
 void test(int condition, char* name);
 int all_equal(byte array[], int size, int value);

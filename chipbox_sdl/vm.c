@@ -1,5 +1,7 @@
+#include "SDL.h"
 #include "vm.h"
-#include "chipbox_sdl.h"
+#include "cpu.h"
+#include "log.h"
 #include <string.h>
 #include <stdio.h>
 
