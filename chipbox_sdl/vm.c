@@ -1,6 +1,7 @@
 #include "vm.h"
 #include "chipbox_sdl.h"
 #include <string.h>
+#include <stdio.h>
 
 int chipbox_vm_step(struct chipbox_chip8_state* state, unsigned long *last_timer_change_time) {
     dbyte opcode;
