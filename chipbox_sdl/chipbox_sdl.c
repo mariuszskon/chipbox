@@ -1,4 +1,5 @@
 #include "SDL.h"
+#include "chipbox_sdl.h"
 #include "core.h"
 #include "cpu.h"
 #include "vm.h"
@@ -47,26 +48,8 @@ int main(int argc, char* argv[]) {
         SDL_RWread(file, file_data, sizeof(byte), size_to_read);
     }
 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
-        printf("SDL failed to initialise: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    window = SDL_CreateWindow("chipbox_sdl", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, CHIPBOX_SCREEN_WIDTH_PIXELS * scale, CHIPBOX_SCREEN_HEIGHT * scale, SDL_WINDOW_SHOWN);
-    if (window == NULL) {
-        printf("Window creation failure: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (renderer == NULL) {
-        printf("Renderer creation failure: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    audio_device = init_audio();
-    if (audio_device == 0) {
-        printf("Audio device initialisation failure: %s\n", SDL_GetError());
+    if (setup_sdl(&window, &renderer, &audio_device, scale) == 1) {
+        /* there was an error in the initialisation of SDL */
         return 1;
     }
 
@@ -103,5 +86,32 @@ int main(int argc, char* argv[]) {
 
     SDL_DestroyWindow(window);
     SDL_Quit();
+    return 0;
+}
+
+int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *audio_device, int scale) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
+        printf("SDL failed to initialise: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    *window = SDL_CreateWindow("chipbox_sdl", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, CHIPBOX_SCREEN_WIDTH_PIXELS * scale, CHIPBOX_SCREEN_HEIGHT * scale, SDL_WINDOW_SHOWN);
+    if (*window == NULL) {
+        printf("Window creation failure: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (*renderer == NULL) {
+        printf("Renderer creation failure: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    *audio_device = init_audio();
+    if (audio_device == 0) {
+        printf("Audio device initialisation failure: %s\n", SDL_GetError());
+        return 1;
+    }
+
     return 0;
 }
