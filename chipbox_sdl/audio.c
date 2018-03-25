@@ -2,6 +2,8 @@
 
 void generate_beep(void *userdata, Uint8 *stream, int len) {
     int i;
+    (void)(userdata); /* unused but required to be in function signature for SDL */
+
     for (i = 0; i < len; i++) {
         stream[i] = (i % CHIPBOX_BEEP_PERIOD < CHIPBOX_BEEP_PERIOD / 2) * CHIPBOX_BEEP_AMPLITUDE;
     }

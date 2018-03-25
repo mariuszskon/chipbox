@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
         delta_time -= ticks_to_do * ms_per_tick; /* account for left over time */
 
         chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
-        chipbox_render(renderer, pixel_rects, pixel_count, CHIPBOX_SCREEN_WIDTH_PIXELS, CHIPBOX_SCREEN_HEIGHT, scale);
+        chipbox_render(renderer, pixel_rects, pixel_count, scale);
     }
 
     close_audio(audio_device);

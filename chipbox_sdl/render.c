@@ -20,8 +20,8 @@ void chipbox_screen_to_sdl_rects(byte screen[], SDL_Rect rects[], int *count) {
     }
 }
 
-/* chipbox_render: render chip8 screen to window of size width * scale by height * scale */
-void chipbox_render(SDL_Renderer* renderer, SDL_Rect rects[], int count, int width, int height, int scale) {
+/* chipbox_render: render chip8 screen, scaling each pixel by scale */
+void chipbox_render(SDL_Renderer* renderer, SDL_Rect rects[], int count, int scale) {
     SDL_RenderSetScale(renderer, scale, scale);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
