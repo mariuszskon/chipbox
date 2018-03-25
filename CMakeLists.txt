@@ -16,7 +16,7 @@ endif()
 # build core
 set(CHIPBOX_CORE_DIR ${CMAKE_SOURCE_DIR}/core)
 file(GLOB CHIPBOX_CORE_SOURCES ${CHIPBOX_CORE_DIR}/*)
-add_library(chipbox_core SHARED ${CHIPBOX_CORE_SOURCES})
+add_library(chipbox_core STATIC ${CHIPBOX_CORE_SOURCES})
 target_include_directories(chipbox_core PRIVATE ${CHIPBOX_CORE_DIR})
 
 # build tests
