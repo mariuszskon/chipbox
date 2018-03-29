@@ -10,25 +10,12 @@
 int main(int argc, char* argv[]) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
-    SDL_Event e;
     SDL_AudioDeviceID audio_device;
-    struct chipbox_chip8_state state;
-    int pixel_count;
-    SDL_Rect pixel_rects[CHIPBOX_SCREEN_WIDTH_PIXELS * CHIPBOX_SCREEN_HEIGHT];
     int scale = 8;
     SDL_RWops *file = NULL;
     Sint64 file_size;
     int size_to_read = CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START;
     byte file_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START];
-    unsigned long last_timer_change_time;
-    unsigned long new_time;
-    unsigned long current_time;
-    unsigned long delta_time = 0;
-    int ticks_per_second = 500;
-    int ms_per_tick = 1000 / ticks_per_second;
-    int running = 1;
-    int i;
-    int ticks_to_do;
 
     if (argc < 2) {
         printf("Please specify a ROM file\n");
@@ -52,6 +39,53 @@ int main(int argc, char* argv[]) {
         /* there was an error in the initialisation of SDL */
         return 1;
     }
+
+    run_chipbox(renderer, audio_device, scale, file_data, size_to_read);
+
+    quit_sdl(window, renderer, audio_device);
+    return 0;
+}
+
+int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *audio_device, int scale) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
+        printf("SDL failed to initialise: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    *window = SDL_CreateWindow("chipbox_sdl", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, CHIPBOX_SCREEN_WIDTH_PIXELS * scale, CHIPBOX_SCREEN_HEIGHT * scale, SDL_WINDOW_SHOWN);
+    if (*window == NULL) {
+        printf("Window creation failure: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (*renderer == NULL) {
+        printf("Renderer creation failure: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    *audio_device = init_audio();
+    if (audio_device == 0) {
+        printf("Audio device initialisation failure: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    return 0;
+}
+
+int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scale, byte file_data[], int size_to_read) {
+    SDL_Event e;
+    struct chipbox_chip8_state state;
+    int pixel_count;
+    SDL_Rect pixel_rects[CHIPBOX_SCREEN_WIDTH_PIXELS * CHIPBOX_SCREEN_HEIGHT];    unsigned long last_timer_change_time;
+    unsigned long new_time;
+    unsigned long current_time;
+    unsigned long delta_time = 0;
+    int ticks_per_second = 500;
+    int ms_per_tick = 1000 / ticks_per_second;
+    int running = 1;
+    int i;
+    int ticks_to_do;
 
     state = chipbox_init_state();
     chipbox_cpu_load_program(&state, file_data, size_to_read);
@@ -80,34 +114,6 @@ int main(int argc, char* argv[]) {
 
         chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
         chipbox_render(renderer, pixel_rects, pixel_count, scale);
-    }
-
-    quit_sdl(window, renderer, audio_device);
-    return 0;
-}
-
-int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *audio_device, int scale) {
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
-        printf("SDL failed to initialise: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    *window = SDL_CreateWindow("chipbox_sdl", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, CHIPBOX_SCREEN_WIDTH_PIXELS * scale, CHIPBOX_SCREEN_HEIGHT * scale, SDL_WINDOW_SHOWN);
-    if (*window == NULL) {
-        printf("Window creation failure: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (*renderer == NULL) {
-        printf("Renderer creation failure: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    *audio_device = init_audio();
-    if (audio_device == 0) {
-        printf("Audio device initialisation failure: %s\n", SDL_GetError());
-        return 1;
     }
 
     return 0;
