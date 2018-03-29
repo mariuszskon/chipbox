@@ -82,10 +82,7 @@ int main(int argc, char* argv[]) {
         chipbox_render(renderer, pixel_rects, pixel_count, scale);
     }
 
-    close_audio(audio_device);
-
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    quit_sdl(window, renderer, audio_device);
     return 0;
 }
 
@@ -114,4 +111,11 @@ int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *a
     }
 
     return 0;
+}
+
+void quit_sdl(SDL_Window *window, SDL_Renderer *renderer, SDL_AudioDeviceID audio_device) {
+    close_audio(audio_device);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
