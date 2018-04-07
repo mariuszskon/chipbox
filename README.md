@@ -20,7 +20,7 @@ Firstly make sure you have all of the above dependencies installed! Then you can
 1. Make sure you have CMake in your PATH. If you can run `cmake --help` from cmd without errors, you should be good. The CMake installer for Windows should offer to do this automatically.
 2. Make sure you have downloaded and extracted the development libraries for SDL2 in a location you know, in this example, `X:\absolute\path\to\SDL2`
 3. Open up a [Developer Command Prompt](https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line#developer-command-prompt-shortcuts) to ensure you have all of the right environmental variables set.
-4. Run the following commands:
+4. Run the following https://github.com/mir3z/chip8-emucommands:
 
 <!-- please ignore -->
 
@@ -58,3 +58,7 @@ to run the tests, or
     bin/chipbox_sdl "../roms/Pong [Paul Vervalin, 1990].ch8"
 
 to run the included Pong ROM.
+
+## ROMs
+
+For your convenience, a large pack of ROMs sourced from [mir3z/chip8-emu](https://github.com/mir3z/chip8-emu) (who in turn got it from the now defunct [chip8.com](http://chip8.com/)) has been included. The `roms.json` file provides metadata for the ROMs, such as their author, and possibly instructions for use.
