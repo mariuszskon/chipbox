@@ -12,10 +12,24 @@ int main(int argc, char* argv[]) {
     SDL_Renderer* renderer = NULL;
     SDL_AudioDeviceID audio_device;
     int scale = 8;
-    SDL_RWops *file = NULL;
-    Sint64 file_size;
     int size_to_read = CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START;
     byte file_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START];
+
+    if (handle_args(argc, argv, size_to_read, file_data) || setup_sdl(&window, &renderer, &audio_device, scale) == 1) {
+        /* there was an error in handling command-line argumetns or in the initialisation of SDL */
+        return 1;
+    }
+
+    run_chipbox(renderer, audio_device, scale, file_data, size_to_read);
+
+    quit_sdl(window, renderer, audio_device);
+    return 0;
+}
+
+/* parse and "execute" command line arguments, reading up to size_to_read bytes into file_data */
+int handle_args(int argc, char *argv[], int size_to_read, byte file_data[]) {
+    SDL_RWops *file = NULL;
+    Sint64 file_size;
 
     if (argc < 2) {
         printf("Please specify a ROM file\n");
@@ -35,14 +49,6 @@ int main(int argc, char* argv[]) {
         SDL_RWread(file, file_data, sizeof(byte), size_to_read);
     }
 
-    if (setup_sdl(&window, &renderer, &audio_device, scale) == 1) {
-        /* there was an error in the initialisation of SDL */
-        return 1;
-    }
-
-    run_chipbox(renderer, audio_device, scale, file_data, size_to_read);
-
-    quit_sdl(window, renderer, audio_device);
     return 0;
 }
 
@@ -77,7 +83,8 @@ int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scal
     SDL_Event e;
     struct chipbox_chip8_state state;
     int pixel_count;
-    SDL_Rect pixel_rects[CHIPBOX_SCREEN_WIDTH_PIXELS * CHIPBOX_SCREEN_HEIGHT];    unsigned long last_timer_change_time;
+    SDL_Rect pixel_rects[CHIPBOX_SCREEN_WIDTH_PIXELS * CHIPBOX_SCREEN_HEIGHT];
+    unsigned long last_timer_change_time;
     unsigned long new_time;
     unsigned long current_time;
     unsigned long delta_time = 0;
