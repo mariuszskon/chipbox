@@ -22,6 +22,8 @@ Firstly make sure you have all of the above dependencies installed! Then you can
 3. Open up a [Developer Command Prompt](https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line#developer-command-prompt-shortcuts) to ensure you have all of the right environmental variables set.
 4. Run the following commands:
 
+<!-- please ignore -->
+
     cd path\to\chipbox-master
     mkdir build && cd build
     set SDL2DIR=X:\absolute\path\to\SDL2
