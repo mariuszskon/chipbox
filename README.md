@@ -1,4 +1,4 @@
-# Chipbox
+# chipbox
 
 A work-in-progress [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter/emulator, written in ANSI C and utilising the wonderful [SDL2](https://libsdl.org/) library for input, graphics and sound.
 
@@ -20,7 +20,7 @@ Firstly make sure you have all of the above dependencies installed! Then you can
 1. Make sure you have CMake in your PATH. If you can run `cmake --help` from cmd without errors, you should be good. The CMake installer for Windows should offer to do this automatically.
 2. Make sure you have downloaded and extracted the development libraries for SDL2 in a location you know, in this example, `X:\absolute\path\to\SDL2`
 3. Open up a [Developer Command Prompt](https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line#developer-command-prompt-shortcuts) to ensure you have all of the right environmental variables set.
-4. Run the following https://github.com/mir3z/chip8-emucommands:
+4. Run the following commands:
 
 <!-- please ignore -->
 
