@@ -1,5 +1,7 @@
 # chipbox
 
+[GitHub](https://github.com/mariuszskon/chipbox/)
+
 A work-in-progress [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter/emulator, written in ANSI C and utilising the wonderful [SDL2](https://libsdl.org/) library for input, graphics and sound.
 
 ## Dependencies
