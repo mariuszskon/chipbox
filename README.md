@@ -4,6 +4,14 @@
 
 A work-in-progress [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter/emulator, written in ANSI C and utilising the wonderful [SDL2](https://libsdl.org/) library for input, graphics and sound.
 
+## Prebuilt binaries
+
+[Prebuilt binaries for Windows are available here.](https://github.com/mariuszskon/chipbox/releases)
+
+**NOTE:** This is a _command line application_ meaning double-clicking on the exe will not do what you want - you must run the application from the command line.
+
+If you want a more up to date version, or for any other platform, you must compile it yourself (see below for details).
+
 ## Dependencies
 For runtime, you need:
 
