@@ -13,7 +13,7 @@ For building, you need:
 * [CMake](https://cmake.org/)
 * SDL2 development libraries
 
-## Build instructions (debug)
+## Build instructions (release)
 Firstly make sure you have all of the above dependencies installed! Then you can download this project, either via `git clone` or the Download ZIP option.
 
 ### Windows (Visual Studio)
@@ -28,17 +28,21 @@ Firstly make sure you have all of the above dependencies installed! Then you can
     mkdir build && cd build
     set SDL2DIR=X:\absolute\path\to\SDL2
     cmake ..
-    msbuild ALL_BUILD.vcxproj
+    cmake --build . --config Release
 
-5. Now you must make the SDL2.dll in the lib directory of the SDL2 development libraries accessible to the binaries. This can be done by copying it to the bin\Debug directory of chipbox (where the .exe files are).
+5. Now you must make the SDL2.dll in the lib directory of the SDL2 development libraries accessible to the binaries. This can be done by copying it to the bin\Release directory of chipbox (where the .exe files are).
+
+Assuming an x86 build
+
+    copy %SDL2DIR%\lib\x86\SDL2.dll bin\Release\
 
 Then you can run
 
-    bin\Debug\testcore
+    bin\Release\testcore
 
 to run the tests, or
 
-    bin\Debug\chipbox_sdl "..\roms\Pong [Paul Vervalin, 1990].ch8"
+    bin\Release\chipbox_sdl "..\roms\Pong [Paul Vervalin, 1990].ch8"
 
 to run the included Pong ROM.
 
@@ -46,7 +50,7 @@ to run the included Pong ROM.
 
     cd path/to/chipbox-master
     mkdir build && cd build
-    cmake ..
+    cmake -DCMAKE_BUILD_TYPE=Release ..
     make
 
 Then you can run
