@@ -3,6 +3,10 @@
 
 #include "core.h"
 
+#define MAX_LONG_ARG_LENGTH 256
+#define MAX_SHORT_ARG_LENGTH 8
+
 int handle_args(int argc, char *argv[], int size_to_read, byte file_data[]);
+int find_arg(int argc, char *argv[], char *string);
 
 #endif
