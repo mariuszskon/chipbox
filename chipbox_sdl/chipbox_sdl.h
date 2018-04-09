@@ -4,7 +4,6 @@
 #include "SDL.h"
 #include "core.h"
 
-int handle_args(int argc, char *argv[], int size_to_read, byte file_data[]);
 int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *audio_device, int scale);
 int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scale, byte file_data[], int size_to_read);
 void quit_sdl(SDL_Window *window, SDL_Renderer *renderer, SDL_AudioDeviceID audio_device);
