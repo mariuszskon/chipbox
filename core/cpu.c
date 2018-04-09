@@ -90,39 +90,58 @@ int chipbox_cpu_mem_write(struct chipbox_chip8_state *state, dbyte address, byte
     return 1;
 }
 
-/* TODO: rewrite */
 int chipbox_cpu_draw(struct chipbox_chip8_state *state, dbyte opcode) {
-    byte sprite_byte, draw_byte;
-    byte bytes_to_draw;
-    byte row = state->V[(opcode >> 4) & 0xF] % CHIPBOX_SCREEN_HEIGHT;
-    byte col_start = state->V[(opcode >> 8) & 0xF] % CHIPBOX_SCREEN_WIDTH_PIXELS;
-    byte col;
-    dbyte read_address = state->I;
-    for (bytes_to_draw = opcode & 0x000F; bytes_to_draw > 0; bytes_to_draw--) {
-        sprite_byte = chipbox_cpu_mem_read(state, read_address);
+    byte pixel_row = state->V[(opcode >> 4) & 0x0F] % CHIPBOX_SCREEN_HEIGHT;
+    byte pixel_col = state->V[(opcode >> 8) & 0x0F] % CHIPBOX_SCREEN_WIDTH_PIXELS;
+    byte sprite_byte;
+    byte draw_byte;
+    byte bytes_to_draw = opcode & 0x000F;
+    byte left_collision, right_collision;
+    byte collision = 0;
+    int i;
+    for (i = 0; i < bytes_to_draw; i++, pixel_row++) {
+        sprite_byte = chipbox_cpu_mem_read(state, state->I + i); /* get the next byte of sprite */
         if (state->log_level != CHIPBOX_LOG_LEVEL_NONE) {
+            /* error reading sprite */
             return 0;
         }
-        col = col_start;
-        while (sprite_byte) { /* draw a sprite row */
-            draw_byte = sprite_byte >> (col % 8);
-            sprite_byte <<= (8 - (col % 8)); /* remove sprite bits which we will draw and setup next sprite_byte */
-            if (row < CHIPBOX_SCREEN_HEIGHT && col < CHIPBOX_SCREEN_WIDTH_PIXELS) {
-                /* in bytes, not pixels */
-                if (state->screen[CHIPBOX_SCREEN_WIDTH_BYTES * row + (col / 8)] & draw_byte) { /* check for collision */
-                    state->V[0xF] = 1;
-                } else {
-                    state->V[0xF] = 0;
-                }
-                state->screen[CHIPBOX_SCREEN_WIDTH_BYTES * row + (col / 8)] ^= draw_byte;
-            } /* else clip the sprite */
-            col = col - (col % 8); /* round col to nearest multiple of 8 (byte) */
-            col += 8; /* go to next byte column */
-        }
-        row++;
-        read_address++;
+
+        /* draw the left portion */
+        draw_byte = sprite_byte >> (pixel_col % 8);
+        left_collision = chipbox_cpu_raw_byte_draw(state, draw_byte, pixel_row, pixel_col / 8);
+
+        /* and the right */
+        draw_byte = sprite_byte << (8 - (pixel_col % 8));
+        right_collision = chipbox_cpu_raw_byte_draw(state, draw_byte, pixel_row, pixel_col / 8 + 1);
+
+        /* if a collision occured, flip bit to 1 */
+        collision |= left_collision || right_collision;
     }
+
+    /* report to state if the entire sprite had any collisions */
+    state->V[0xF] = collision;
+
     return 1;
+}
+
+byte chipbox_cpu_raw_byte_draw(struct chipbox_chip8_state *state, byte draw_byte, byte row, byte byte_col) {
+    byte collision;
+    if (row < CHIPBOX_SCREEN_HEIGHT && byte_col < CHIPBOX_SCREEN_WIDTH_BYTES) {
+        /* test for collision before drawing */
+        if (state->screen[CHIPBOX_SCREEN_WIDTH_BYTES * row + byte_col] & draw_byte) {
+            collision = 1;
+        } else {
+            collision = 0;
+        }
+
+        /* draw by XORing */
+        state->screen[CHIPBOX_SCREEN_WIDTH_BYTES * row + byte_col] ^= draw_byte;
+    } else {
+        /* tried to draw sprite outside of screen, so clip it and report no collision */
+        collision = 0;
+    }
+
+    return collision;
 }
 
 /* chipbox_cpu_eval_opcode: evaluates an opcode by manipulating state
