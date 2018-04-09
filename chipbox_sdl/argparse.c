@@ -9,7 +9,7 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[]) {
     Sint64 file_size;
 
     if (argc < 2 || find_arg(argc, argv, "help") != -1) {
-        printf("Please specify a ROM file\n");
+        printf("Usage: %s [options...] <file>\n", argv[0]);
         return 1;
     } else {
         file = SDL_RWFromFile(argv[argc - 1], "rb");
