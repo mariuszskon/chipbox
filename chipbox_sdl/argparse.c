@@ -35,10 +35,9 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[]) {
 int find_arg(int argc, char *argv[], char *string) {
     int index = -1;
     int i;
-    char long_arg[MAX_LONG_ARG_LENGTH] = "--";
-    char short_arg[MAX_SHORT_ARG_LENGTH] = "-";
-    strcat(long_arg, string);
-    short_arg[1] = string[0];
+    char long_arg[MAX_LONG_ARG_LENGTH];
+    char short_arg[MAX_SHORT_ARG_LENGTH];
+    string_to_short_long_args(string, short_arg, long_arg);
 
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], long_arg) == 0 || strcmp(argv[i], short_arg) == 0) {
@@ -48,4 +47,11 @@ int find_arg(int argc, char *argv[], char *string) {
     }
 
     return index;
+}
+
+void string_to_short_long_args(char *string, char *short_arg, char *long_arg) {
+    strcpy(long_arg, "--");
+    short_arg[0] = '-';
+    strcat(long_arg, string);
+    short_arg[1] = string[0];
 }

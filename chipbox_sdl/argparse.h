@@ -8,5 +8,6 @@
 
 int handle_args(int argc, char *argv[], int size_to_read, byte file_data[]);
 int find_arg(int argc, char *argv[], char *string);
+void string_to_short_long_args(char *string, char *short_arg, char *long_arg);
 
 #endif
