@@ -34,12 +34,12 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int 
     /* read the desired file */
     file = SDL_RWFromFile(argv[argc - 1], "rb");
     if (file == NULL) {
-        printf("File read error: %s\n", SDL_GetError());
+        fprintf(stderr, "File read error: %s\n", SDL_GetError());
         return 0;
     }
     file_size = SDL_RWsize(file);
     if (file_size < 0) {
-        printf("File size detection error: %s\n", SDL_GetError());
+        fprintf(stderr, "File size detection error: %s\n", SDL_GetError());
         return 0;
     }
     size_to_read = (size_to_read < file_size) ? size_to_read : file_size; /* read no more than max size or size of file */
