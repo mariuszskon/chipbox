@@ -28,19 +28,19 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int 
             string_to_short_long_args(args_list[i], short_arg, long_arg);
             printf(" %*s, %-*s %-*s\n", MAX_SHORT_ARG_LENGTH, short_arg, MAX_LONG_ARG_LENGTH, long_arg, MAX_HELPTEXT_LENGTH, args_helptext[i]);
         }
-        return 1;
+        return 0;
     }
 
     /* read the desired file */
     file = SDL_RWFromFile(argv[argc - 1], "rb");
     if (file == NULL) {
         printf("File read error: %s\n", SDL_GetError());
-        return 1;
+        return 0;
     }
     file_size = SDL_RWsize(file);
     if (file_size < 0) {
         printf("File size detection error: %s\n", SDL_GetError());
-        return 1;
+        return 0;
     }
     size_to_read = (size_to_read < file_size) ? size_to_read : file_size; /* read no more than max size or size of file */
     SDL_RWread(file, file_data, sizeof(byte), size_to_read);
@@ -48,8 +48,8 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int 
     *scale = get_int_arg_or_default(argc, argv, "scale", CHIPBOX_SDL_DEFAULT_SCALE);
     if (*scale < 1) {
         fprintf(stderr, "Argument error: must set scale to a positive non-zero integer\n");
-        return 1;
+        return 0;
     }
 
-    return 0;
+    return 1;
 }

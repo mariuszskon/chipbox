@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     int size_to_read = CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START;
     byte file_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START];
 
-    if (handle_args(argc, argv, size_to_read, file_data, &scale) || setup_sdl(&window, &renderer, &audio_device, scale) == 1) {
+    if (!handle_args(argc, argv, size_to_read, file_data, &scale) || !setup_sdl(&window, &renderer, &audio_device, scale)) {
         /* there was an error in handling command-line argumetns or in the initialisation of SDL */
         return 1;
     }
@@ -31,28 +31,28 @@ int main(int argc, char* argv[]) {
 int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *audio_device, int scale) {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
         printf("SDL failed to initialise: %s\n", SDL_GetError());
-        return 1;
+        return 0;
     }
 
     *window = SDL_CreateWindow("chipbox_sdl", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, CHIPBOX_SCREEN_WIDTH_PIXELS * scale, CHIPBOX_SCREEN_HEIGHT * scale, SDL_WINDOW_SHOWN);
     if (*window == NULL) {
         printf("Window creation failure: %s\n", SDL_GetError());
-        return 1;
+        return 0;
     }
 
     *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (*renderer == NULL) {
         printf("Renderer creation failure: %s\n", SDL_GetError());
-        return 1;
+        return 0;
     }
 
     *audio_device = init_audio();
     if (audio_device == 0) {
         printf("Audio device initialisation failure: %s\n", SDL_GetError());
-        return 1;
+        return 0;
     }
 
-    return 0;
+    return 1;
 }
 
 int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scale, byte file_data[], int size_to_read) {
