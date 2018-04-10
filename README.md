@@ -37,7 +37,7 @@ Firstly make sure you have all of the above dependencies installed! Then you can
     cd path\to\chipbox-master
     mkdir build && cd build
     set SDL2DIR=X:\absolute\path\to\SDL2
-    cmake ..
+    cmake ..\src
     cmake --build . --config Release
 
 5. Now you must make the SDL2.dll in the lib directory of the SDL2 development libraries accessible to the binaries. This can be done by copying it to the bin\Release directory of chipbox (where the .exe files are).
@@ -60,7 +60,7 @@ to run the included Pong ROM.
 
     cd path/to/chipbox-master
     mkdir build && cd build
-    cmake -DCMAKE_BUILD_TYPE=Release ..
+    cmake -DCMAKE_BUILD_TYPE=Release ../src
     make
 
 Then you can run
