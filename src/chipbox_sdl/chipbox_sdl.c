@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     int size_to_read = CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START;
     byte file_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START];
 
-    if (handle_args(argc, argv, size_to_read, file_data) || setup_sdl(&window, &renderer, &audio_device, scale) == 1) {
+    if (handle_args(argc, argv, size_to_read, file_data, &scale) || setup_sdl(&window, &renderer, &audio_device, scale) == 1) {
         /* there was an error in handling command-line argumetns or in the initialisation of SDL */
         return 1;
     }

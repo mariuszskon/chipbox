@@ -1,4 +1,5 @@
 #include "argparse.h"
+#include <stdio.h>
 #include <string.h>
 
 /* find_arg: looks in command line arguments for short or long version of "string" as an argument
@@ -27,4 +28,25 @@ void string_to_short_long_args(char *string, char *short_arg, char *long_arg) {
     strcat(long_arg, string);
     short_arg[1] = string[0];
     short_arg[2] = '\0';
+}
+
+int get_int_arg_or_default(int argc, char *argv[], char *string, int default_value) {
+    int index = find_arg(argc, argv, string);
+    int result;
+
+    if (index == -1) {
+        return default_value;
+    }
+
+    /* do not try to read next argument if we are already on the last one */
+    if (index > argc - 1 - 1) {
+        return default_value;
+    }
+
+    if (sscanf(argv[index + 1], "%d", &result) != 1) {
+        fprintf(stderr, "Argument error: '%s' could not be converted to an integer\n", argv[index + 1]);
+        return default_value;
+    }
+
+    return result;
 }

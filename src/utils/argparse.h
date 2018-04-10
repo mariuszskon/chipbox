@@ -7,5 +7,6 @@
 
 int find_arg(int argc, char *argv[], char *string);
 void string_to_short_long_args(char *string, char *short_arg, char *long_arg);
+int get_int_arg_or_default(int argc, char *argv[], char *string, int default_value);
 
 #endif
