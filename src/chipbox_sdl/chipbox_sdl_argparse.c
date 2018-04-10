@@ -27,20 +27,21 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[]) {
             printf(" %*s, %-*s %-*s\n", MAX_SHORT_ARG_LENGTH, short_arg, MAX_LONG_ARG_LENGTH, long_arg, MAX_HELPTEXT_LENGTH, args_helptext[i]);
         }
         return 1;
-    } else {
-        file = SDL_RWFromFile(argv[argc - 1], "rb");
-        if (file == NULL) {
-            printf("File read error: %s\n", SDL_GetError());
-            return 1;
-        }
-        file_size = SDL_RWsize(file);
-        if (file_size < 0) {
-            printf("File size detection error: %s\n", SDL_GetError());
-            return 1;
-        }
-        size_to_read = (size_to_read < file_size) ? size_to_read : file_size; /* read no more than max size or size of file */
-        SDL_RWread(file, file_data, sizeof(byte), size_to_read);
     }
+
+    /* read the desired file */
+    file = SDL_RWFromFile(argv[argc - 1], "rb");
+    if (file == NULL) {
+        printf("File read error: %s\n", SDL_GetError());
+        return 1;
+    }
+    file_size = SDL_RWsize(file);
+    if (file_size < 0) {
+        printf("File size detection error: %s\n", SDL_GetError());
+        return 1;
+    }
+    size_to_read = (size_to_read < file_size) ? size_to_read : file_size; /* read no more than max size or size of file */
+    SDL_RWread(file, file_data, sizeof(byte), size_to_read);
 
     return 0;
 }
