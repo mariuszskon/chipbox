@@ -6,6 +6,7 @@
 #include "render.h"
 #include "audio.h"
 #include "argparse.h"
+#include "chipbox_sdl_argparse.h"
 #include <stdio.h>
 
 int main(int argc, char* argv[]) {

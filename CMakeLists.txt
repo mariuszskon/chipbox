@@ -28,9 +28,15 @@ add_executable(testcore ${CHIPBOX_TESTS_SOURCES})
 target_include_directories(testcore PRIVATE ${CHIPBOX_CORE_DIR})
 target_link_libraries(testcore chipbox_core)
 
+# build utils
+set(CHIPBOX_UTILS_DIR ${CMAKE_SOURCE_DIR}/utils)
+file(GLOB CHIPBOX_UTILS_SOURCES ${CHIPBOX_UTILS_DIR}/*)
+add_library(chipbox_utils STATIC ${CHIPBOX_UTILS_SOURCES})
+target_include_directories(chipbox_utils PRIVATE ${CHIPBOX_UTILS_DIR})
+
 # build chipbox_sdl
 set(CHIPBOX_SDL_DIR ${CMAKE_SOURCE_DIR}/chipbox_sdl)
 file(GLOB CHIPBOX_SDL_SOURCES ${CHIPBOX_SDL_DIR}/*)
 add_executable(chipbox_sdl ${CHIPBOX_SDL_SOURCES})
-target_include_directories(chipbox_sdl PRIVATE ${CHIPBOX_CORE_DIR} ${CHIPBOX_SDL_DIR} ${SDL2_INCLUDE_DIR})
-target_link_libraries(chipbox_sdl chipbox_core ${SDL2_LIBRARY})
+target_include_directories(chipbox_sdl PRIVATE ${CHIPBOX_CORE_DIR} ${CHIPBOX_SDL_DIR} ${CHIPBOX_UTILS_DIR} ${SDL2_INCLUDE_DIR})
+target_link_libraries(chipbox_sdl chipbox_core chipbox_utils ${SDL2_LIBRARY})
