@@ -7,8 +7,8 @@
 int find_arg(int argc, char *argv[], char *string) {
     int index = -1;
     int i;
-    char long_arg[MAX_LONG_ARG_LENGTH];
-    char short_arg[MAX_SHORT_ARG_LENGTH];
+    char long_arg[MAX_LONG_ARG_LENGTH+1];
+    char short_arg[MAX_SHORT_ARG_LENGTH+1];
     string_to_short_long_args(string, short_arg, long_arg);
 
     for (i = 1; i < argc; i++) {
@@ -26,4 +26,5 @@ void string_to_short_long_args(char *string, char *short_arg, char *long_arg) {
     short_arg[0] = '-';
     strcat(long_arg, string);
     short_arg[1] = string[0];
+    short_arg[2] = '\0';
 }

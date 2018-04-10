@@ -7,9 +7,25 @@
 int handle_args(int argc, char *argv[], int size_to_read, byte file_data[]) {
     SDL_RWops *file = NULL;
     Sint64 file_size;
+    int i;
+    char long_arg[MAX_LONG_ARG_LENGTH+1];
+    char short_arg[MAX_SHORT_ARG_LENGTH+1];
+
+    char args_list[CHIPBOX_SDL_ARG_NUM][MAX_LONG_ARG_LENGTH+1 - 2] = {
+        "help"
+    };
+
+    char args_helptext[CHIPBOX_SDL_ARG_NUM][MAX_HELPTEXT_LENGTH] = {
+        "show this help message"
+    };
 
     if (argc < 2 || find_arg(argc, argv, "help") != -1) {
         printf("Usage: %s [options...] <file>\n", argv[0]);
+        printf("\nOptions:\n");
+        for (i = 0; i < CHIPBOX_SDL_ARG_NUM; i++) {
+            string_to_short_long_args(args_list[i], short_arg, long_arg);
+            printf(" %*s, %-*s %-*s\n", MAX_SHORT_ARG_LENGTH, short_arg, MAX_LONG_ARG_LENGTH, long_arg, MAX_HELPTEXT_LENGTH, args_helptext[i]);
+        }
         return 1;
     } else {
         file = SDL_RWFromFile(argv[argc - 1], "rb");
