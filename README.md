@@ -78,3 +78,11 @@ to run the included Pong ROM.
 For your convenience, a large pack of ROMs sourced from [mir3z/chip8-emu](https://github.com/mir3z/chip8-emu) (who in turn got it from the now defunct [chip8.com](http://chip8.com/)) has been included. The `roms.json` file provides metadata for the ROMs, such as their author, and possibly instructions for use.
 
 You can grab just the ROMs (without chipbox) from [here](https://github.com/mariuszskon/chipbox/releases/tag/roms).
+
+## References
+
+Cowgod's nice, influential, but unfortunately inaccurate reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+
+Mattmik's nice, accurate but less popular reference: http://mattmik.com/files/chip8/mastering/chip8.html
+
+Wikipedia's information which is less detailed but uses footnotes to highlight common differences in implementations: https://en.wikipedia.org/wiki/CHIP-8#Opcode_table
