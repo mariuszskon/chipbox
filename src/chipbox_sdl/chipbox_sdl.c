@@ -93,7 +93,6 @@ int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scal
             }
         }
         delta_time -= (ticks_to_do * 1000) / tps; /* account for left over time */
-        printf("%d\n", (ticks_to_do * 1000) / tps);
 
         chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
         chipbox_render(renderer, pixel_rects, pixel_count, scale);
