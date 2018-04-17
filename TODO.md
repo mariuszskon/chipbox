@@ -1,6 +1,6 @@
 # TODOs
 
-* Take command-line arguments for graphics scaling, speed for processing etc.
+* Take command-line arguments for compatibility mode etc.
 * Make waiting for input not spam stderr
 * Add disassembler
 * Add debugger
