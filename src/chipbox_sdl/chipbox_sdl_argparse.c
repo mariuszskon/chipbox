@@ -4,7 +4,7 @@
 #include "chipbox_sdl_argparse.h"
 
 /* parse and "execute" command line arguments, reading up to size_to_read bytes into file_data */
-int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int *scale) {
+int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int *scale, int *tps) {
     SDL_RWops *file = NULL;
     Sint64 file_size;
     int i;
@@ -13,12 +13,14 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int 
 
     char args_list[CHIPBOX_SDL_ARG_NUM][MAX_LONG_ARG_LENGTH+1 - 2] = {
         "help",
-        "scale"
+        "scale",
+        "tps"
     };
 
     char args_helptext[CHIPBOX_SDL_ARG_NUM][MAX_HELPTEXT_LENGTH] = {
         "show this help message",
-        "set scaling of display"
+        "set scaling of display",
+        "set CHIP-8 ticks/instructions per second"
     };
 
     if (argc < 2 || find_arg(argc, argv, "help") != -1) {
@@ -46,10 +48,9 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int 
     SDL_RWread(file, file_data, sizeof(byte), size_to_read);
 
     *scale = get_int_arg_or_default(argc, argv, "scale", CHIPBOX_SDL_DEFAULT_SCALE);
-    if (*scale < 1) {
-        fprintf(stderr, "Argument error: must set scale to a positive non-zero integer\n");
-        return 0;
-    }
+    if (!nonzero_positive(*scale, "scale")) return 0;
+    *tps = get_int_arg_or_default(argc, argv, "tps", CHIPBOX_SDL_DEFAULT_TPS);
+    if (!nonzero_positive(*tps, "tps")) return 0;
 
     return 1;
 }

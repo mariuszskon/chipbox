@@ -50,3 +50,12 @@ int get_int_arg_or_default(int argc, char *argv[], char *string, int default_val
 
     return result;
 }
+
+int nonzero_positive(int x, char *name) {
+    if (x < 1) {
+        fprintf(stderr, "Argument error: must set %s to a positive non-zero integer\n", name);
+        return 0;
+    } else {
+        return 1;
+    }
+}
