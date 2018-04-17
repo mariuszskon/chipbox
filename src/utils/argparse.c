@@ -13,8 +13,9 @@ int find_arg(int argc, char *argv[], char *string) {
     string_to_short_long_args(string, short_arg, long_arg);
 
     for (i = 1; i < argc; i++) {
-        if (strcmp(argv[i], long_arg) == 0 || strcmp(argv[i], short_arg) == 0) {
+        if (argv[i] != NULL && (strcmp(argv[i], long_arg) == 0 || strcmp(argv[i], short_arg) == 0)) {
             index = i;
+            argv[i] = NULL; /* mark argument as 'found' */
             break;
         }
     }
@@ -38,15 +39,19 @@ int get_int_arg_or_default(int argc, char *argv[], char *string, int default_val
         return default_value;
     }
 
-    /* do not try to read next argument if we are already on the last one */
-    if (index > argc - 1 - 1) {
+    /* already interpreted as an argument elsewhere */
+    if (argv[index + 1] == NULL) {
+        fprintf(stderr, "Argument error: no integer value provided\n");
         return default_value;
     }
 
     if (sscanf(argv[index + 1], "%d", &result) != 1) {
         fprintf(stderr, "Argument error: '%s' could not be converted to an integer\n", argv[index + 1]);
+        argv[index + 1] = NULL;
         return default_value;
     }
+
+    argv[index + 1] = NULL;
 
     return result;
 }
@@ -58,4 +63,17 @@ int nonzero_positive(int x, char *name) {
     } else {
         return 1;
     }
+}
+
+int unfound_args(int argc, char *argv[]) {
+    int unfound = 0;
+    int i;
+    for (i = 1; i < argc; i++) {
+        if (argv[i] != NULL) {
+            fprintf(stderr, "Argument error: unknown option '%s'\n", argv[i]);
+            unfound = 1;
+        }
+    }
+
+    return unfound;
 }

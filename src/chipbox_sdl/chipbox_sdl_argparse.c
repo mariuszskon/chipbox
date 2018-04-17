@@ -39,6 +39,7 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int 
         fprintf(stderr, "File read error: %s\n", SDL_GetError());
         return 0;
     }
+    argv[argc - 1] = NULL; /* do not interpret as argument */
     file_size = SDL_RWsize(file);
     if (file_size < 0) {
         fprintf(stderr, "File size detection error: %s\n", SDL_GetError());
@@ -51,6 +52,10 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int 
     if (!nonzero_positive(*scale, "scale")) return 0;
     *tps = get_int_arg_or_default(argc, argv, "tps", CHIPBOX_SDL_DEFAULT_TPS);
     if (!nonzero_positive(*tps, "tps")) return 0;
+
+    if (unfound_args(argc, argv)) {
+        return 0;
+    }
 
     return 1;
 }
