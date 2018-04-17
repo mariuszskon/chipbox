@@ -65,8 +65,6 @@ int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scal
     unsigned long new_time;
     unsigned long current_time;
     unsigned long delta_time = 0;
-    int ticks_per_second = tps;
-    int ms_per_tick = 1000 / ticks_per_second;
     int running = 1;
     int i;
     int ticks_to_do;
@@ -86,7 +84,7 @@ int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scal
         }
         chipbox_vm_update_input(&state);
 
-        for (ticks_to_do = i = (delta_time * ticks_per_second) / 1000; i > 0; i--) {
+        for (ticks_to_do = i = (delta_time * tps) / 1000; i > 0; i--) {
             if (!chipbox_vm_step(&state, &last_timer_change_time)) {
                 running = 0;
                 break;
@@ -94,7 +92,8 @@ int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scal
                 handle_sound(audio_device, state.ST);
             }
         }
-        delta_time -= ticks_to_do * ms_per_tick; /* account for left over time */
+        delta_time -= (ticks_to_do * 1000) / tps; /* account for left over time */
+        printf("%d\n", (ticks_to_do * 1000) / tps);
 
         chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
         chipbox_render(renderer, pixel_rects, pixel_count, scale);
