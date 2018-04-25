@@ -31,17 +31,24 @@ void string_to_short_long_args(char *string, char *short_arg, char *long_arg) {
     short_arg[2] = '\0';
 }
 
-int get_int_arg_or_default(int argc, char *argv[], char *string, int default_value) {
+/* sees if it is safe to interpret a "--argument parameter" pair, returning -1 index if not */
+int validate_arg_with_parameter(int argc, char *argv[], char *string) {
     int index = find_arg(argc, argv, string);
-    int result;
-
-    if (index == -1) {
-        return default_value;
-    }
 
     /* already interpreted as an argument elsewhere */
     if (argv[index + 1] == NULL) {
-        fprintf(stderr, "Argument error: no integer value provided\n");
+        fprintf(stderr, "Argument error: no parameter for %s provided\n", string);
+        return -1;
+    }
+
+    return index;
+}
+
+int get_int_arg_or_default(int argc, char *argv[], char *string, int default_value) {
+    int index = validate_arg_with_parameter(argc, argv, string);
+    int result;
+
+    if (index == -1) {
         return default_value;
     }
 
@@ -54,6 +61,35 @@ int get_int_arg_or_default(int argc, char *argv[], char *string, int default_val
     argv[index + 1] = NULL;
 
     return result;
+}
+
+/* writes at most "dest_len" characters + null terminator to "dest" from
+   either parameter to argument "string", or "default_value" */
+int get_str_arg_or_default(int argc, char *argv[], char *string, char *dest, int dest_len, char *default_value) {
+    int index = validate_arg_with_parameter(argc, argv, string);
+    int input_len;
+    int default_len = strlen(default_value);
+    int count;
+    dest[0] = '\0';
+
+    if (index == -1) {
+        count = (default_len < dest_len) ? default_len : dest_len;
+        strncat(dest, default_value, count);
+        return 0;
+    } else {
+        input_len = strlen(argv[index + 1]);
+        if (input_len > dest_len) {
+            fprintf(stderr, "Argument error: '%s' is too long of a parameter for %s\n", argv[index + 1], string);
+            count = (default_len < dest_len) ? default_len : dest_len;
+            strncat(dest, default_value, count);
+            argv[index + 1] = NULL;
+            return 0;
+        }
+        count = input_len;
+        strncat(dest, argv[index + 1], count);
+        argv[index + 1] = NULL;
+        return 1;
+    }
 }
 
 int nonzero_positive(int x, char *name) {

@@ -4,23 +4,26 @@
 #include "chipbox_sdl_argparse.h"
 
 /* parse and "execute" command line arguments, reading up to size_to_read bytes into file_data */
-int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int *scale, int *tps) {
+int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int *scale, int *tps, byte *compat_mode) {
     SDL_RWops *file = NULL;
     Sint64 file_size;
     int i;
     char long_arg[MAX_LONG_ARG_LENGTH+1];
     char short_arg[MAX_SHORT_ARG_LENGTH+1];
+    char compat_str[MAX_COMPAT_LENGTH+1];
 
     char args_list[CHIPBOX_SDL_ARG_NUM][MAX_LONG_ARG_LENGTH+1 - 2] = {
         "help",
         "scale",
-        "tps"
+        "tps",
+        "mode"
     };
 
     char args_helptext[CHIPBOX_SDL_ARG_NUM][MAX_HELPTEXT_LENGTH] = {
         "show this help message",
         "set scaling of display",
-        "set CHIP-8 ticks/instructions per second"
+        "set CHIP-8 ticks/instructions per second",
+        "set 'mattmik' or 'cowgod' compatibility mode"
     };
 
     if (argc < 2 || find_arg(argc, argv, "help") != -1) {
@@ -52,6 +55,16 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int 
     if (!nonzero_positive(*scale, "scale")) return 0;
     *tps = get_int_arg_or_default(argc, argv, "tps", CHIPBOX_SDL_DEFAULT_TPS);
     if (!nonzero_positive(*tps, "tps")) return 0;
+
+    get_str_arg_or_default(argc, argv, "mode", compat_str, MAX_COMPAT_LENGTH, "mattmik");
+    if (strcmp(compat_str, "mattmik") == 0 || strcmp(compat_str, "MATTMIK") == 0) {
+        *compat_mode = CHIPBOX_COMPATIBILITY_MODE_MATTMIK;
+    } else if (strcmp(compat_str, "cowgod") == 0 || strcmp(compat_str, "COWGOD") == 0) {
+        *compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
+    } else {
+        fprintf(stderr, "Unrecognised compatiblity mode '%s'\n", compat_str);
+        *compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
+    }
 
     if (unfound_args(argc, argv)) {
         return 0;

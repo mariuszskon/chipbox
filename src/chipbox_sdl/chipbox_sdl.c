@@ -17,13 +17,14 @@ int main(int argc, char* argv[]) {
     int tps = CHIPBOX_SDL_DEFAULT_TPS;
     int size_to_read = CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START;
     byte file_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START];
+    byte compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
 
-    if (!handle_args(argc, argv, size_to_read, file_data, &scale, &tps) || !setup_sdl(&window, &renderer, &audio_device, scale)) {
+    if (!handle_args(argc, argv, size_to_read, file_data, &scale, &tps, &compat_mode) || !setup_sdl(&window, &renderer, &audio_device, scale)) {
         /* there was an error in handling command-line argumetns or in the initialisation of SDL */
         return 1;
     }
 
-    run_chipbox(renderer, audio_device, scale, tps, file_data, size_to_read);
+    run_chipbox(renderer, audio_device, scale, tps, compat_mode, file_data, size_to_read);
 
     quit_sdl(window, renderer, audio_device);
     return 0;
@@ -56,7 +57,7 @@ int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *a
     return 1;
 }
 
-int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scale, int tps, byte file_data[], int size_to_read) {
+int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scale, int tps, byte compat_mode, byte file_data[], int size_to_read) {
     SDL_Event e;
     struct chipbox_chip8_state state;
     int pixel_count;
@@ -70,6 +71,7 @@ int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scal
     int ticks_to_do;
 
     state = chipbox_init_state();
+    state.compat_mode = compat_mode;
     chipbox_cpu_load_program(&state, file_data, size_to_read);
     last_timer_change_time = SDL_GetTicks();
     current_time = SDL_GetTicks();
