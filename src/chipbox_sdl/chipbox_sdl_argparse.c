@@ -61,7 +61,7 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], stru
     config->tps = get_int_arg_or_default(argc, argv, "tps", CHIPBOX_SDL_DEFAULT_TPS);
     if (!nonzero_positive(config->tps, "tps")) return 0;
 
-    get_str_arg_or_default(argc, argv, "mode", compat_str, MAX_COMPAT_LENGTH, "mattmik");
+    get_str_arg_or_default(argc, argv, "mode", compat_str, MAX_COMPAT_LENGTH, CHIPBOX_SDL_DEFAULT_COMPAT_MODE_STR);
     if (strcmp(compat_str, "mattmik") == 0 || strcmp(compat_str, "MATTMIK") == 0) {
         config->compat_mode = CHIPBOX_COMPATIBILITY_MODE_MATTMIK;
     } else if (strcmp(compat_str, "cowgod") == 0 || strcmp(compat_str, "COWGOD") == 0) {
