@@ -7,24 +7,26 @@
 #include "audio.h"
 #include "argparse.h"
 #include "chipbox_sdl_argparse.h"
+#include "chipbox_sdl_config.h"
 #include <stdio.h>
 
 int main(int argc, char* argv[]) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
     SDL_AudioDeviceID audio_device;
-    int scale = CHIPBOX_SDL_DEFAULT_SCALE;
-    int tps = CHIPBOX_SDL_DEFAULT_TPS;
+    struct chipbox_sdl_config config;
     int size_to_read = CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START;
     byte file_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START];
-    byte compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
+    config.scale = CHIPBOX_SDL_DEFAULT_SCALE;
+    config.tps = CHIPBOX_SDL_DEFAULT_TPS;
+    config.compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
 
-    if (!handle_args(argc, argv, size_to_read, file_data, &scale, &tps, &compat_mode) || !setup_sdl(&window, &renderer, &audio_device, scale)) {
+    if (!handle_args(argc, argv, size_to_read, file_data, &config) || !setup_sdl(&window, &renderer, &audio_device, config.scale)) {
         /* there was an error in handling command-line argumetns or in the initialisation of SDL */
         return 1;
     }
 
-    run_chipbox(renderer, audio_device, scale, tps, compat_mode, file_data, size_to_read);
+    run_chipbox(renderer, audio_device, file_data, size_to_read, &config);
 
     quit_sdl(window, renderer, audio_device);
     return 0;
@@ -57,7 +59,7 @@ int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *a
     return 1;
 }
 
-int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scale, int tps, byte compat_mode, byte file_data[], int size_to_read) {
+int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, byte file_data[], int size_to_read, struct chipbox_sdl_config *config) {
     SDL_Event e;
     struct chipbox_chip8_state state;
     int pixel_count;
@@ -71,7 +73,7 @@ int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scal
     int ticks_to_do;
 
     state = chipbox_init_state();
-    state.compat_mode = compat_mode;
+    state.compat_mode = config->compat_mode;
     chipbox_cpu_load_program(&state, file_data, size_to_read);
     last_timer_change_time = SDL_GetTicks();
     current_time = SDL_GetTicks();
@@ -86,7 +88,7 @@ int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scal
         }
         chipbox_vm_update_input(&state);
 
-        for (ticks_to_do = i = (delta_time * tps) / 1000; i > 0; i--) {
+        for (ticks_to_do = i = (delta_time * config->tps) / 1000; i > 0; i--) {
             if (!chipbox_vm_step(&state, &last_timer_change_time)) {
                 running = 0;
                 break;
@@ -94,10 +96,10 @@ int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scal
                 handle_sound(audio_device, state.ST);
             }
         }
-        delta_time -= (ticks_to_do * 1000) / tps; /* account for left over time */
+        delta_time -= (ticks_to_do * 1000) / config->tps; /* account for left over time */
 
         chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
-        chipbox_render(renderer, pixel_rects, pixel_count, scale);
+        chipbox_render(renderer, pixel_rects, pixel_count, config->scale);
     }
 
     return 0;

@@ -2,9 +2,10 @@
 #include "core.h"
 #include "argparse.h"
 #include "chipbox_sdl_argparse.h"
+#include "chipbox_sdl_config.h"
 
 /* parse and "execute" command line arguments, reading up to size_to_read bytes into file_data */
-int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int *scale, int *tps, byte *compat_mode) {
+int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], struct chipbox_sdl_config *config) {
     SDL_RWops *file = NULL;
     Sint64 file_size;
     int i;
@@ -51,19 +52,19 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int 
     size_to_read = (size_to_read < file_size) ? size_to_read : file_size; /* read no more than max size or size of file */
     SDL_RWread(file, file_data, sizeof(byte), size_to_read);
 
-    *scale = get_int_arg_or_default(argc, argv, "scale", CHIPBOX_SDL_DEFAULT_SCALE);
-    if (!nonzero_positive(*scale, "scale")) return 0;
-    *tps = get_int_arg_or_default(argc, argv, "tps", CHIPBOX_SDL_DEFAULT_TPS);
-    if (!nonzero_positive(*tps, "tps")) return 0;
+    config->scale = get_int_arg_or_default(argc, argv, "scale", CHIPBOX_SDL_DEFAULT_SCALE);
+    if (!nonzero_positive(config->scale, "scale")) return 0;
+    config->tps = get_int_arg_or_default(argc, argv, "tps", CHIPBOX_SDL_DEFAULT_TPS);
+    if (!nonzero_positive(config->tps, "tps")) return 0;
 
     get_str_arg_or_default(argc, argv, "mode", compat_str, MAX_COMPAT_LENGTH, "mattmik");
     if (strcmp(compat_str, "mattmik") == 0 || strcmp(compat_str, "MATTMIK") == 0) {
-        *compat_mode = CHIPBOX_COMPATIBILITY_MODE_MATTMIK;
+        config->compat_mode = CHIPBOX_COMPATIBILITY_MODE_MATTMIK;
     } else if (strcmp(compat_str, "cowgod") == 0 || strcmp(compat_str, "COWGOD") == 0) {
-        *compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
+        config->compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
     } else {
         fprintf(stderr, "Unrecognised compatiblity mode '%s'\n", compat_str);
-        *compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
+        config->compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
     }
 
     if (unfound_args(argc, argv)) {

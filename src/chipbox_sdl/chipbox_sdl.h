@@ -3,9 +3,10 @@
 
 #include "SDL.h"
 #include "core.h"
+#include "chipbox_sdl_config.h"
 
 int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *audio_device, int scale);
-int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, int scale, int tps, byte compat_mode, byte file_data[], int size_to_read);
+int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, byte file_data[], int size_to_read, struct chipbox_sdl_config *config);
 void quit_sdl(SDL_Window *window, SDL_Renderer *renderer, SDL_AudioDeviceID audio_device);
 
 #endif

@@ -7,6 +7,8 @@
 #define CHIPBOX_SDL_DEFAULT_SCALE 8
 #define CHIPBOX_SDL_DEFAULT_TPS 500
 
-int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], int *scale, int *tps, byte *compat_mode);
+#include "chipbox_sdl_config.h"
+
+int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], struct chipbox_sdl_config *config);
 
 #endif
