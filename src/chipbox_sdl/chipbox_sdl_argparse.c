@@ -1,5 +1,6 @@
 #include "SDL.h"
 #include "core.h"
+#include "log.h"
 #include "argparse.h"
 #include "chipbox_sdl_argparse.h"
 #include "chipbox_sdl_config.h"
@@ -12,19 +13,22 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], stru
     char long_arg[MAX_LONG_ARG_LENGTH+1];
     char short_arg[MAX_SHORT_ARG_LENGTH+1];
     char compat_str[MAX_COMPAT_LENGTH+1];
+    char log_level_str[MAX_LOG_LEVEL_LENGTH+1];
 
     char args_list[CHIPBOX_SDL_ARG_NUM][MAX_LONG_ARG_LENGTH+1 - 2] = {
         "help",
         "scale",
         "tps",
-        "mode"
+        "mode",
+        "log"
     };
 
     char args_helptext[CHIPBOX_SDL_ARG_NUM][MAX_HELPTEXT_LENGTH] = {
         "show this help message",
         "set scaling of display",
         "set CHIP-8 ticks/instructions per second",
-        "set 'mattmik' or 'cowgod' compatibility mode"
+        "set 'mattmik' or 'cowgod' compatibility mode",
+        "set logging level (none, error, warn (default), info)"
     };
 
     if (argc < 2 || find_arg(argc, argv, "help") != -1) {
@@ -65,6 +69,24 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], stru
     } else {
         fprintf(stderr, "Unrecognised compatiblity mode '%s'\n", compat_str);
         config->compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
+    }
+
+    get_str_arg_or_default(argc, argv, "log", log_level_str, MAX_LOG_LEVEL_LENGTH, CHIPBOX_SDL_DEFAULT_LOG_LEVEL_STR);
+    if (strcmp(log_level_str, "warn") == 0 || strcmp(log_level_str, "WARN") == 0 ||
+        strcmp(log_level_str, "w") == 0 || strcmp(log_level_str, "W") == 0) {
+        config->min_log_level = CHIPBOX_LOG_LEVEL_WARN;
+    } else if (strcmp(log_level_str, "error") == 0 || strcmp(log_level_str, "ERROR") == 0 ||
+               strcmp(log_level_str, "e") == 0 || strcmp(log_level_str, "E") == 0) {
+        config->min_log_level = CHIPBOX_LOG_LEVEL_ERROR;
+    } else if (strcmp(log_level_str, "info") == 0 || strcmp(log_level_str, "INFO") == 0 ||
+               strcmp(log_level_str, "i") == 0 || strcmp(log_level_str, "I") == 0) {
+        config->min_log_level = CHIPBOX_LOG_LEVEL_INFO;
+    } else if (strcmp(log_level_str, "none") == 0 || strcmp(log_level_str, "NONE") == 0 ||
+               strcmp(log_level_str, "n") == 0 || strcmp(log_level_str, "N") == 0) {
+        config->min_log_level = CHIPBOX_LOG_LEVEL_ERROR + 1;
+    } else {
+        fprintf(stderr, "Unrecognised log level '%s'\n", log_level_str);
+        config->min_log_level = CHIPBOX_LOG_LEVEL_DEFAULT;
     }
 
     if (unfound_args(argc, argv)) {

@@ -7,6 +7,7 @@ struct chipbox_sdl_config {
     int scale; /* how much in both horizontal and vertical direction pixels should be stretched */
     int tps; /* ticks/instructions per second */
     byte compat_mode; /* cpu compatibility mode (e.g. mattmik or cowgod) */
+    byte min_log_level; /* log messages must be CHIPBOX_LOG_LEVEL_* or higher to be printed */
 };
 
 #endif

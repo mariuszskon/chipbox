@@ -89,7 +89,7 @@ int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, byte fil
         chipbox_vm_update_input(&state);
 
         for (ticks_to_do = i = (delta_time * config->tps) / 1000; i > 0; i--) {
-            if (!chipbox_vm_step(&state, &last_timer_change_time)) {
+            if (!chipbox_vm_step(&state, config->min_log_level, &last_timer_change_time)) {
                 running = 0;
                 break;
             } else {

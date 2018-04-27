@@ -5,20 +5,20 @@
 #include <string.h>
 #include <stdio.h>
 
-int chipbox_vm_step(struct chipbox_chip8_state* state, unsigned long *last_timer_change_time) {
+int chipbox_vm_step(struct chipbox_chip8_state* state, byte min_log_level, unsigned long *last_timer_change_time) {
     dbyte opcode;
     dbyte log_PC = state->PC;
     unsigned long elapsed;
     int eval_result;
     opcode = chipbox_cpu_get_opcode(state);
     if (state->log_level != CHIPBOX_LOG_LEVEL_NONE) {
-        chipbox_print_log(state, log_PC, opcode);
+        chipbox_print_log(state, log_PC, opcode, min_log_level);
     }
     if (state->log_level == CHIPBOX_LOG_LEVEL_ERROR) {
         return 0;
     } else {
         eval_result = chipbox_cpu_eval_opcode(state, opcode);
-        chipbox_print_log(state, log_PC, opcode);
+        chipbox_print_log(state, log_PC, opcode, min_log_level);
         elapsed = SDL_GetTicks() - *last_timer_change_time;
         if (elapsed >= CHIPBOX_TIMER_DEC_INTERVAL) {
             if (state->DT > 0) {
@@ -70,9 +70,9 @@ void chipbox_vm_update_input(struct chipbox_chip8_state *state) {
     state->input[0xF] = keys[SDL_SCANCODE_V];
 }
 
-void chipbox_print_log(struct chipbox_chip8_state* state, dbyte PC, dbyte opcode) {
+void chipbox_print_log(struct chipbox_chip8_state* state, dbyte PC, dbyte opcode, byte min_log_level) {
     char level[CHIPBOX_MAX_LOG_LEVEL_LENGTH], message[CHIPBOX_MAX_LOG_MSG_LENGTH];
-    if (state->log_level == CHIPBOX_LOG_LEVEL_NONE) {
+    if (state->log_level < min_log_level) {
         return;
     }
 

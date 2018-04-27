@@ -7,6 +7,8 @@
 #define CHIPBOX_LOG_LEVEL_WARN 2
 #define CHIPBOX_LOG_LEVEL_ERROR 3
 
+#define CHIPBOX_LOG_LEVEL_DEFAULT CHIPBOX_LOG_LEVEL_WARN
+
 /* possible log message symbols */
 #define CHIPBOX_LOG_UNIMPL 0 /* unimplemented */
 #define CHIPBOX_LOG_IMPL_DEFINED 1 /* implementation-defined state - other implementations may be different */
