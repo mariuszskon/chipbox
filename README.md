@@ -59,17 +59,16 @@ to run the included Pong ROM.
 ### Linux
 
     cd path/to/chipbox-master
-    mkdir build && cd build
-    cmake -DCMAKE_BUILD_TYPE=Release ../src
-    make
+    chmod +x build_linux.sh
+    ./build_linux.sh
 
 Then you can run
 
-    bin/testcore
+    dist/bin/testcore
 
 to run the tests, or
 
-    bin/chipbox_sdl "../roms/Pong [Paul Vervalin, 1990].ch8"
+    dist/bin/chipbox_sdl "roms/Pong [Paul Vervalin, 1990].ch8"
 
 to run the included Pong ROM.
 
