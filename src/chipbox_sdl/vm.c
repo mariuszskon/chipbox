@@ -11,9 +11,7 @@ int chipbox_vm_step(struct chipbox_chip8_state* state, byte min_log_level, unsig
     unsigned long elapsed;
     int eval_result;
     opcode = chipbox_cpu_get_opcode(state);
-    if (state->log_level != CHIPBOX_LOG_LEVEL_NONE) {
-        chipbox_print_log(state, log_PC, opcode, min_log_level);
-    }
+    chipbox_print_log(state, log_PC, opcode, min_log_level);
     if (state->log_level == CHIPBOX_LOG_LEVEL_ERROR) {
         return 0;
     } else {
