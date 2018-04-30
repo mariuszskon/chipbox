@@ -7,7 +7,7 @@
 
 int chipbox_vm_step(struct chipbox_chip8_state* state, byte min_log_level, unsigned long *last_timer_change_time) {
     dbyte opcode;
-    dbyte log_PC = state->PC;
+    dbyte log_PC = state->PC; /* get the PC before we actually do anything (like modify it) */
     unsigned long elapsed;
     int eval_result;
     opcode = chipbox_cpu_get_opcode(state);
