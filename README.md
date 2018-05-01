@@ -12,6 +12,20 @@ A work-in-progress [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter/em
 
 If you want a more up to date version, or for any other platform, you must compile it yourself (see below for details).
 
+## Quick start
+
+chipbox can be simply called in the form `chipbox_sdl rompath` from the command line to use default settings.
+
+The quick start instructions assume you have your command prompt/emulator/terminal open in a directory with a `bin` directory a `roms` directory. The `bin` directory has `chipbox_sdl` and the `roms` directory has `Pong [Paul Vervalin, 1990].ch8`. If you are using the prebuilt binaries and rom pack, make sure you adjust the paths based on where you extracted those.
+
+On Windows:
+
+    bin\chipbox_sdl "roms\Pong [Paul Vervalin, 1990].ch8"
+
+On Linux/Unix-like systems:
+
+    bin/chipbox_sdl "roms/Pong [Paul Vervalin, 1990].ch8"
+
 ## Dependencies
 For runtime, you need:
 
