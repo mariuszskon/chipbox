@@ -25,24 +25,15 @@ Firstly make sure you have all of the above dependencies installed! Then you can
 <!-- please ignore -->
 
     cd path\to\chipbox-master
-    mkdir build && cd build
-    set SDL2DIR=X:\absolute\path\to\SDL2
-    cmake ..\src
-    cmake --build . --config Release
-
-5. Now you must make the SDL2.dll in the lib directory of the SDL2 development libraries accessible to the binaries. This can be done by copying it to the bin\Release directory of chipbox (where the .exe files are).
-
-Assuming an x86 build
-
-    copy %SDL2DIR%\lib\x86\SDL2.dll bin\Release\
+    build_windows.bat X:\absolute\path\to\SDL2
 
 Then you can run
 
-    bin\Release\testcore
+    dist\bin\testcore
 
 to run the tests, or
 
-    bin\Release\chipbox_sdl "..\roms\Pong [Paul Vervalin, 1990].ch8"
+    dist\bin\chipbox_sdl "roms\Pong [Paul Vervalin, 1990].ch8"
 
 to run the included Pong ROM.
 
