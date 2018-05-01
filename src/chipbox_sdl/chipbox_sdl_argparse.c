@@ -4,6 +4,7 @@
 #include "argparse.h"
 #include "chipbox_sdl_argparse.h"
 #include "chipbox_sdl_config.h"
+#include <stdio.h>
 
 /* parse and "execute" command line arguments, reading up to size_to_read bytes into file_data */
 int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], struct chipbox_sdl_config *config) {
