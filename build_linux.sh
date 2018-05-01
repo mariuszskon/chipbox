@@ -1,5 +1,6 @@
+#!/bin/sh
 build_type=Release
-if [ "$1" == "debug" ]
+if [ "$1" = "debug" ]
 then
    build_type=Debug
 fi
@@ -11,7 +12,7 @@ cmake --build .
 
 cd ..
 rm -rf dist/
-mkdir -p dist/{bin,lib}
-cp build/bin/{chipbox_sdl,testcore} dist/bin
+mkdir -p dist/bin dist/lib
+cp build/bin/chipbox_sdl build/bin/testcore dist/bin
 cp build/lib/libchipbox*.a dist/lib
 cp README.md LICENSE TODO.md dist/

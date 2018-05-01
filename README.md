@@ -59,8 +59,7 @@ to run the included Pong ROM.
 ### Linux
 
     cd path/to/chipbox-master
-    chmod +x build_linux.sh
-    ./build_linux.sh
+    sh build_linux.sh
 
 Then you can run
 
