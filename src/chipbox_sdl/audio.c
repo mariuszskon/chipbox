@@ -4,14 +4,21 @@
 
 void generate_beep(void *userdata, Uint8 *stream, int len) {
     int i;
-    (void)(userdata); /* unused but required to be in function signature for SDL */
+    byte *play_sound = (byte *)(userdata);
 
-    for (i = 0; i < len; i++) {
-        stream[i] = (i % CHIPBOX_BEEP_PERIOD < CHIPBOX_BEEP_PERIOD / 2) * CHIPBOX_BEEP_AMPLITUDE;
+    if (*play_sound) {
+        for (i = 0; i < len; i++) {
+            stream[i] = (i % CHIPBOX_BEEP_PERIOD < CHIPBOX_BEEP_PERIOD / 2) * CHIPBOX_BEEP_AMPLITUDE;
+        }
+    } else {
+        /* fill with silence */
+        for (i = 0; i < len; i++) {
+            stream[i] = 0;
+        }
     }
 }
 
-SDL_AudioDeviceID init_audio() {
+SDL_AudioDeviceID init_audio(byte *play_sound) {
     SDL_AudioSpec want, have;
     SDL_AudioDeviceID dev;
 
@@ -21,8 +28,12 @@ SDL_AudioDeviceID init_audio() {
     want.channels = CHIPBOX_BEEP_CHANNELS;
     want.samples = CHIPBOX_BEEP_SAMPLES;
     want.callback = generate_beep;
+    /* provide a pointer to a boolean (actual type "byte")
+       for whether a sound should be played or not */
+    want.userdata = play_sound;
 
     dev = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
+    SDL_PauseAudioDevice(dev, 0); /* play */
     return dev;
 }
 
@@ -30,11 +41,7 @@ void close_audio(SDL_AudioDeviceID device) {
     SDL_CloseAudioDevice(device);
 }
 
-void handle_sound(SDL_AudioDeviceID device, byte st) {
-    if (st >= CHIPBOX_MINIMUM_ST_FOR_BEEP) {
-        SDL_PauseAudioDevice(device, 0); /* play */
-    } else {
-        SDL_PauseAudioDevice(device, 1); /* pause */
-    }
+byte handle_sound(byte st) {
+    return st >= CHIPBOX_MINIMUM_ST_FOR_BEEP;
 }
 

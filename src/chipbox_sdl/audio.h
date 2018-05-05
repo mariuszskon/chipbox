@@ -16,6 +16,6 @@
 void generate_beep(void *userdata, Uint8 *stream, int len);
 SDL_AudioDeviceID init_audio();
 void close_audio(SDL_AudioDeviceID device);
-void handle_sound(SDL_AudioDeviceID device, byte st);
+byte handle_sound(byte st);
 
 #endif

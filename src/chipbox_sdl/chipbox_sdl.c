@@ -17,22 +17,23 @@ int main(int argc, char* argv[]) {
     struct chipbox_sdl_config config;
     int size_to_read = CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START;
     byte file_data[CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START];
+    byte play_sound = 0; /* boolean for whether a sound should be playing now or not */
     config.scale = CHIPBOX_SDL_DEFAULT_SCALE;
     config.tps = CHIPBOX_SDL_DEFAULT_TPS;
     config.compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
 
-    if (!handle_args(argc, argv, size_to_read, file_data, &config) || !setup_sdl(&window, &renderer, &audio_device, config.scale)) {
+    if (!handle_args(argc, argv, size_to_read, file_data, &config) || !setup_sdl(&window, &renderer, &audio_device, &play_sound, config.scale)) {
         /* there was an error in handling command-line argumetns or in the initialisation of SDL */
         return 1;
     }
 
-    run_chipbox(renderer, audio_device, file_data, size_to_read, &config);
+    run_chipbox(renderer, &play_sound, file_data, size_to_read, &config);
 
     quit_sdl(window, renderer, audio_device);
     return 0;
 }
 
-int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *audio_device, int scale) {
+int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *audio_device, byte *play_sound, int scale) {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "SDL failed to initialise: %s\n", SDL_GetError());
         return 0;
@@ -50,7 +51,7 @@ int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *a
         return 0;
     }
 
-    *audio_device = init_audio();
+    *audio_device = init_audio(play_sound);
     if (audio_device == 0) {
         fprintf(stderr, "Audio device initialisation failure: %s\n", SDL_GetError());
         return 0;
@@ -59,7 +60,7 @@ int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *a
     return 1;
 }
 
-int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, byte file_data[], int size_to_read, struct chipbox_sdl_config *config) {
+int run_chipbox(SDL_Renderer *renderer, byte *play_sound, byte file_data[], int size_to_read, struct chipbox_sdl_config *config) {
     SDL_Event e;
     struct chipbox_chip8_state state;
     int pixel_count;
@@ -93,7 +94,7 @@ int run_chipbox(SDL_Renderer *renderer, SDL_AudioDeviceID audio_device, byte fil
                 running = 0;
                 break;
             } else {
-                handle_sound(audio_device, state.ST);
+                *play_sound = handle_sound(state.ST);
             }
         }
         delta_time -= (ticks_to_do * 1000) / config->tps; /* account for left over time */
