@@ -8,7 +8,7 @@ echo "Building chipbox for linux, type $build_type"
 rm -rf build/
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=$build_type ../src
-cmake --build .
+cmake --build . -- -j `getconf _NPROCESSORS_ONLN`
 
 cd ..
 rm -rf dist/
