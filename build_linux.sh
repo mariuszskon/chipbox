@@ -13,6 +13,6 @@ cmake --build . -- -j `getconf _NPROCESSORS_ONLN`
 cd ..
 rm -rf dist/
 mkdir -p dist/bin dist/lib
-cp build/bin/chipbox_sdl build/bin/testcore dist/bin
+cp build/bin/chipbox_sdl build/bin/testcore build/bin/chipbox_das dist/bin
 cp build/lib/libchipbox*.a dist/lib
 cp README.md LICENSE TODO.md dist/

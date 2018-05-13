@@ -34,6 +34,17 @@ file(GLOB CHIPBOX_UTILS_SOURCES ${CHIPBOX_UTILS_DIR}/*)
 add_library(chipbox_utils STATIC ${CHIPBOX_UTILS_SOURCES})
 target_include_directories(chipbox_utils PRIVATE ${CHIPBOX_UTILS_DIR})
 
+# build disassembler - library
+set(CHIPBOX_DAS_DIR ${CMAKE_SOURCE_DIR}/das)
+set(CHIPBOX_DASCORE_SOURCES ${CHIPBOX_DAS_DIR}/dascore.c)
+add_library(chipbox_dascore STATIC ${CHIPBOX_DASCORE_SOURCES})
+target_include_directories(chipbox_dascore PRIVATE ${CHIPBOX_CORE_DIR} ${CHIPBOX_DAS_DIR})
+# build disassembler - cli utility
+set(CHIPBOX_DASCLI_SOURCES ${CHIPBOX_DAS_DIR}/das.c)
+add_executable(chipbox_das ${CHIPBOX_DASCLI_SOURCES})
+target_include_directories(chipbox_das PRIVATE ${CHIPBOX_CORE_DIR} ${CHIPBOX_DAS_DIR})
+target_link_libraries(chipbox_das chipbox_dascore)
+
 # build chipbox_sdl
 set(CHIPBOX_SDL_DIR ${CMAKE_SOURCE_DIR}/chipbox_sdl)
 file(GLOB CHIPBOX_SDL_SOURCES ${CHIPBOX_SDL_DIR}/*)
