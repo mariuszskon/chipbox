@@ -44,6 +44,17 @@ In chipbox, the keys are mapped to the [scancodes](https://wiki.libsdl.org/SDL_S
       A S D F
       Z X C V
 
+## Options
+
+    Usage: chipbox_sdl [options...] <file>
+
+    Options:
+     -h, --help           show this help message
+     -s, --scale          set scaling of display
+     -t, --tps            set CHIP-8 ticks/instructions per second
+     -m, --mode           set 'mattmik' or 'cowgod' compatibility mode
+     -l, --log            set logging level (none, error, warn (default), info)
+
 ## Building
 
 See `BUILD.md` in the source repository for details.
