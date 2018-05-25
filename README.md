@@ -28,6 +28,22 @@ On Linux/Unix-like systems:
 
     bin/chipbox_sdl "roms/Pong [Paul Vervalin, 1990].ch8"
 
+## Input
+
+The original CHIP-8 keypad looked like this:
+
+      1 2 3 C
+      4 5 6 D
+      7 8 9 E
+      A 0 B F
+
+In chipbox, the keys are mapped to the [scancodes](https://wiki.libsdl.org/SDL_Scancode#Remarks) of the following keys:
+
+      1 2 3 4
+      Q W E R
+      A S D F
+      Z X C V
+
 ## Building
 
 See `BUILD.md` in the source repository for details.
