@@ -33,8 +33,8 @@ dbyte chipbox_cpu_get_opcode(struct chipbox_chip8_state *state) {
    that take different values
    e.g. 0xAXYB, X, Y can be any hexadecimal */
 void chipbox_cpu_opcode_xy(dbyte opcode, byte *x, byte *y) {
-    *y = (opcode >> 4) & 0x0F;
-    *x = (opcode >> 8) & 0x0F;
+    *x = (opcode & 0x0F00) >> 8;
+    *y = (opcode & 0x00F0) >> 4;
 }
 
 /* chipbox_cpu_validate_address: returns 1 on valid address, 0 on invalid (and raises error in log) */
@@ -91,8 +91,8 @@ int chipbox_cpu_mem_write(struct chipbox_chip8_state *state, dbyte address, byte
 }
 
 int chipbox_cpu_draw(struct chipbox_chip8_state *state, dbyte opcode) {
-    byte pixel_row = state->V[(opcode >> 4) & 0x0F] % CHIPBOX_SCREEN_HEIGHT;
-    byte pixel_col = state->V[(opcode >> 8) & 0x0F] % CHIPBOX_SCREEN_WIDTH_PIXELS;
+    byte pixel_col = state->V[(opcode & 0x0F00) >> 8] % CHIPBOX_SCREEN_WIDTH_PIXELS;
+    byte pixel_row = state->V[(opcode & 0x00F0) >> 4] % CHIPBOX_SCREEN_HEIGHT;
     byte sprite_byte;
     byte draw_byte;
     byte bytes_to_draw = opcode & 0x000F;
@@ -155,7 +155,7 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
 
     state->log_level = CHIPBOX_LOG_LEVEL_NONE;
 
-    switch ((opcode & 0xF000) >> 12) { /* get highest/left-most nybble */
+    switch (opcode >> 12) { /* get highest/left-most nybble */
         case 0:
             switch (opcode & 0x00FF) {
                 case 0xE0: /* 00E0 (CLS): clear screen */
