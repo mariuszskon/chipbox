@@ -21,12 +21,16 @@ file(GLOB CHIPBOX_CORE_SOURCES ${CHIPBOX_CORE_DIR}/*)
 add_library(chipbox_core STATIC ${CHIPBOX_CORE_SOURCES})
 target_include_directories(chipbox_core PRIVATE ${CHIPBOX_CORE_DIR})
 
-# build tests
+# build tests - testhelpers (common utility functions)
 set(CHIPBOX_TESTS_DIR ${CMAKE_SOURCE_DIR}/tests)
-set(CHIPBOX_TESTS_SOURCES ${CHIPBOX_TESTS_DIR}/testcore.c)
-add_executable(testcore ${CHIPBOX_TESTS_SOURCES})
-target_include_directories(testcore PRIVATE ${CHIPBOX_CORE_DIR})
-target_link_libraries(testcore chipbox_core)
+set(CHIPBOX_TESTHELPERS_SOURCES ${CHIPBOX_TESTS_DIR}/testhelpers.c)
+add_library(testhelpers STATIC ${CHIPBOX_TESTHELPERS_SOURCES})
+target_include_directories(testhelpers PRIVATE ${CHIPBOX_CORE_DIR} ${CHIPBOX_TEST_DIR})
+# build tests - core
+set(CHIPBOX_TESTCORE_SOURCES ${CHIPBOX_TESTS_DIR}/testcore.c)
+add_executable(testcore ${CHIPBOX_TESTCORE_SOURCES})
+target_include_directories(testcore PRIVATE ${CHIPBOX_CORE_DIR} ${CHIPBOX_TEST_DIR})
+target_link_libraries(testcore chipbox_core testhelpers)
 
 # build utils
 set(CHIPBOX_UTILS_DIR ${CMAKE_SOURCE_DIR}/utils)
