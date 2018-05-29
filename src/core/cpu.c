@@ -157,15 +157,15 @@ int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
 
     switch (opcode >> 12) { /* get highest/left-most nybble */
         case 0:
-            switch (opcode & 0x00FF) {
-                case 0xE0: /* 00E0 (CLS): clear screen */
+            switch (opcode) {
+                case 0x00E0: /* 00E0 (CLS): clear screen */
                     for (i = 0; i < CHIPBOX_SCREEN_HEIGHT; i++) {
                         for (j = 0; j < CHIPBOX_SCREEN_WIDTH_BYTES; j++) {
                             state->screen[CHIPBOX_SCREEN_WIDTH_BYTES * i + j] = 0;
                         }
                     }
                     return 1;
-                case 0xEE: /* 00EE (RET): jump to address popped off stack */
+                case 0x00EE: /* 00EE (RET): jump to address popped off stack */
                     if (state->SP == 0) {
                         state->log_level = CHIPBOX_LOG_LEVEL_ERROR;
                         state->log_msg = CHIPBOX_LOG_ILLEGAL;
