@@ -9,7 +9,7 @@
 
 struct chipbox_instruction_info {
     char mnemonic[CHIPBOX_OPCODE_MNEMONIC_MAX_LENGTH+1];
-    char args[CHIPBOX_INSTRUCTION_MAX_ARGS][CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH];
+    char args[CHIPBOX_INSTRUCTION_MAX_ARGS][CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1];
     int num_args;
 };
 
