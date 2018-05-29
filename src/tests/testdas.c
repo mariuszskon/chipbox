@@ -14,6 +14,10 @@ int main() {
     test(strcmp(info.mnemonic, "RET") == 0, "0x00EE should be RET");
     test(info.num_args == 0, "0x00EE (RET) should have no arguments");
 
+    info = disassemble_instruction(0x01EE);
+    test(strcmp(info.mnemonic, "SYS") == 0, "0x0NNN should be SYS if not CLS or RET");
+    test(info.num_args == 1 && strcmp(info.args[0], "1EE"), "0x0NNN (SYS NNN) should have 1 argument: NNN");
+
     print_end();
     return 0;
 }
