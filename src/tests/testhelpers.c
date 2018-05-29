@@ -30,6 +30,6 @@ void print_section(int section_num) {
 }
 
 void print_end() {
-    printf("\n== END ==\n");
+    printf("\n======== END ========\n");
     printf("Tests: %d, failed: %d\n", tests, failed);
 }
