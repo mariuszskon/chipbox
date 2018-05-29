@@ -500,7 +500,6 @@ int main() {
     test(state.I == 0x404, "0xFX65 (LD VX, [I]) should leave I untouched in COWGOD compatiblity mode");
 
     /* END */
-    printf("\n== END ==\n");
-    printf("Tests: %d, failed: %d\n", tests, failed);
+    print_end();
     return 0;
 }
