@@ -46,7 +46,7 @@ target_link_libraries(testcore chipbox_core testhelpers)
 set(CHIPBOX_TESTDAS_SOURCES ${CHIPBOX_TESTS_DIR}/testdas.c)
 add_executable(testdas ${CHIPBOX_TESTDAS_SOURCES})
 target_include_directories(testdas PRIVATE ${CHIPBOX_CORE_DIR} ${CHIPBOX_TEST_DIR} ${CHIPBOX_DAS_DIR})
-target_link_libraries(testdas chipbox_core testhelpers)
+target_link_libraries(testdas chipbox_core testhelpers chipbox_dascore)
 
 # build utils
 set(CHIPBOX_UTILS_DIR ${CMAKE_SOURCE_DIR}/utils)
