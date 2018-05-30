@@ -33,6 +33,10 @@ int main() {
     test(MEQ("SE"), "0x3XNN should be SE");
     test(info.num_args == 2 && strcmp(info.args[0], "V5") == 0 && strcmp(info.args[1], "AB") == 0, "0x3XNN (SE VX, NN) should have two arguments: VX and NN");
 
+    DASI(0x41DE);
+    test(MEQ("SNE"), "0x4XNN should be SNE");
+    test(info.num_args == 2 && strcmp(info.args[0], "V1") == 0 && strcmp(info.args[1], "DE") == 0, "0x4XNN (SNE VX, NN) should have two arguments: VX and NN");
+
     print_end();
     return 0;
 }
