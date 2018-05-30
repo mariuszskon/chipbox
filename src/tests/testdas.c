@@ -24,6 +24,10 @@ int main() {
     test(MEQ("JP"), "0x1NNN should be JP");
     test(info.num_args == 1 && strcmp(info.args[0], "234"), "0x1NNN (JP NNN) should have one argument: NNN");
 
+    info = disassemble_instruction(0x2456);
+    test(MEQ("CALL"), "0x2NNN should be CALL");
+    test(info.num_args == 1 && strcmp(info.args[0], "456"), "0x2NNN (CALL NNN) should have one argument: NNN");
+
     print_end();
     return 0;
 }
