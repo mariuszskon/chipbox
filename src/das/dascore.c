@@ -5,7 +5,6 @@
 
 struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
     struct chipbox_instruction_info info;
-    char temp_arg[CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1];
 
     switch (instruction >> 12) { /* get highest/left-most nybble */
         case 0:
@@ -20,9 +19,7 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
                     return info;
                 default:
                     strcpy(info.mnemonic, "SYS");
-                    info.num_args = 1;
-                    sprintf(temp_arg, "%X", instruction & 0x0FFF);
-                    strcpy(info.args[0], temp_arg);
+                    get_NNN_arg(&info, instruction);
                     return info;
             }
     }
@@ -31,4 +28,12 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
     strcpy(info.mnemonic, "???");
     info.num_args = 0;
     return info;
+}
+
+void get_NNN_arg(struct chipbox_instruction_info *info, dbyte instruction) {
+    char temp_arg[CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1];
+
+    info->num_args = 1;
+    sprintf(temp_arg, "%X", instruction & 0x0FFF);
+    strcpy(info->args[0], temp_arg);
 }

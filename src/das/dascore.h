@@ -14,5 +14,6 @@ struct chipbox_instruction_info {
 };
 
 struct chipbox_instruction_info disassemble_instruction(dbyte instruction);
+void get_NNN_arg(struct chipbox_instruction_info *info, dbyte instruction);
 
 #endif
