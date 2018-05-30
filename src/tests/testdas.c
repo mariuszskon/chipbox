@@ -28,6 +28,10 @@ int main() {
     test(MEQ("CALL"), "0x2NNN should be CALL");
     test(info.num_args == 1 && strcmp(info.args[0], "456"), "0x2NNN (CALL NNN) should have one argument: NNN");
 
+    info = disassemble_instruction(0x35AB);
+    test(MEQ("SE"), "0x3XNN should be SE");
+    test(info.num_args == 2 && strcmp(info.args[0], "V5") == 0 && strcmp(info.args[1], "AB") == 0, "0x3XNN (SE VX, NN) should have two arguments: VX and NN");
+
     print_end();
     return 0;
 }
