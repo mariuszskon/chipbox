@@ -12,6 +12,10 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
                     strcpy(info.mnemonic, "CLS");
                     info.num_args = 0;
                     return info;
+                case 0x00EE:
+                    strcpy(info.mnemonic, "RET");
+                    info.num_args = 0;
+                    return info;
             }
     }
 
