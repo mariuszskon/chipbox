@@ -18,7 +18,7 @@ int main() {
 
     info = disassemble_instruction(0x01EE);
     test(MEQ("SYS"), "0x0NNN should be SYS if not CLS or RET");
-    test(info.num_args == 1 && strcmp(info.args[0], "1EE"), "0x0NNN (SYS NNN) should have 1 argument: NNN");
+    test(info.num_args == 1 && strcmp(info.args[0], "1EE"), "0x0NNN (SYS NNN) should have one argument: NNN");
 
     info = disassemble_instruction(0x1234);
     test(MEQ("JP"), "0x1NNN should be JP");
