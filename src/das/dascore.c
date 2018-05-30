@@ -1,9 +1,11 @@
 #include "core.h"
 #include "dascore.h"
 #include <string.h>
+#include <stdio.h>
 
 struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
     struct chipbox_instruction_info info;
+    char temp_arg[CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1];
 
     switch (instruction >> 12) { /* get highest/left-most nybble */
         case 0:
@@ -15,6 +17,12 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
                 case 0x00EE:
                     strcpy(info.mnemonic, "RET");
                     info.num_args = 0;
+                    return info;
+                default:
+                    strcpy(info.mnemonic, "SYS");
+                    info.num_args = 1;
+                    sprintf(temp_arg, "%X", instruction & 0x0FFF);
+                    strcpy(info.args[0], temp_arg);
                     return info;
             }
     }
