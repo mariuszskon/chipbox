@@ -37,6 +37,10 @@ int main() {
     test(MEQ("SNE"), "0x4XNN should be SNE");
     test(info.num_args == 2 && strcmp(info.args[0], "V1") == 0 && strcmp(info.args[1], "DE") == 0, "0x4XNN (SNE VX, NN) should have two arguments: VX and NN");
 
+    DASI(0x5AB0);
+    test(MEQ("SE"), "0x5XY0 should be SE");
+    test(info.num_args == 2 && strcmp(info.args[0], "VA") == 0 && strcmp(info.args[1], "VB") == 0, "0x5XY0 (SE VX, VY) should have two arguments: VX and VY");
+
     print_end();
     return 0;
 }
