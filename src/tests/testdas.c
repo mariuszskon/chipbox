@@ -46,7 +46,7 @@ int main() {
 
     DASI(0x61CD);
     test(MEQ("LD"), "0x6XNN should be LD");
-    test(TWOARGS("V1", "CD"), "0x6XNN (LD VX, NN) should have two arguments, VX and NN");
+    test(TWOARGS("V1", "CD"), "0x6XNN (LD VX, NN) should have two arguments: VX and NN");
 
     DASI(0x7242);
     test(MEQ("ADD"), "0x7XNN should be ADD");
