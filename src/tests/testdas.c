@@ -19,47 +19,27 @@ void test_twoargs(dbyte actual_test, char *generic_dbyte, char *mnemonic, char *
 int args_equal(char given_args[CHIPBOX_INSTRUCTION_MAX_ARGS][CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1], char test_args[CHIPBOX_INSTRUCTION_MAX_ARGS][CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1], int num_args);
 
 int main() {
-    struct chipbox_instruction_info info;
-
     test_noargs(0x00E0, "0x00E0", "CLS");
 
-    DASI(0x00EE);
-    test(MEQ("RET"), "0x00EE should be RET");
-    test(NOARGS, "0x00EE (RET) should have no arguments");
+    test_noargs(0x00EE, "0x00EE", "RET");
 
-    DASI(0x01EE);
-    test(MEQ("SYS"), "0x0NNN should be SYS if not CLS or RET");
-    test(ONEARG("1EE"), "0x0NNN (SYS NNN) should have one argument: NNN");
+    test_onearg(0x01EE, "0x0NNN", "SYS", "NNN", "1EE");
 
     test_onearg(0x1234, "0x1NNN", "JP", "NNN", "234");
 
-    DASI(0x2456);
-    test(MEQ("CALL"), "0x2NNN should be CALL");
-    test(ONEARG("456"), "0x2NNN (CALL NNN) should have one argument: NNN");
+    test_onearg(0x2456, "0x2NNN", "CALL", "NNN", "456");
 
-    DASI(0x35AB);
-    test(MEQ("SE"), "0x3XNN should be SE");
-    test(TWOARGS("V5", "AB"), "0x3XNN (SE VX, NN) should have two arguments: VX and NN");
+    test_twoargs(0x35AB, "0x3XNN", "SE", "VX, NN", "V5", "AB");
 
-    DASI(0x41DE);
-    test(MEQ("SNE"), "0x4XNN should be SNE");
-    test(TWOARGS("V1", "DE"), "0x4XNN (SNE VX, NN) should have two arguments: VX and NN");
+    test_twoargs(0x41DE, "0x4XNN", "SNE", "VX, NN", "V1", "DE");
 
-    DASI(0x5AB0);
-    test(MEQ("SE"), "0x5XY0 should be SE");
-    test(TWOARGS("VA", "VB"), "0x5XY0 (SE VX, VY) should have two arguments: VX and VY");
+    test_twoargs(0x5AB0, "0x5XY0", "SE", "VX, VY", "VA", "VB");
 
-    DASI(0x61CD);
-    test(MEQ("LD"), "0x6XNN should be LD");
-    test(TWOARGS("V1", "CD"), "0x6XNN (LD VX, NN) should have two arguments: VX and NN");
+    test_twoargs(0x61CD, "0x6XNN", "LD", "VX, NN", "V1", "CD");
 
-    DASI(0x7242);
-    test(MEQ("ADD"), "0x7XNN should be ADD");
-    test(TWOARGS("V1", "42"), "0x7XNN (ADD VX, NN) should have two argument: VX and NN");
+    test_twoargs(0x7242, "0x7XNN", "ADD", "VX, NN", "V1", "42");
 
-    DASI(0x8AB0);
-    test(MEQ("LD"), "0x8XY0 should be LD");
-    test(TWOARGS("VA", "VB"), "0x8XY0 (LD VX, VY) should have two arguments: VX and VY");
+    test_twoargs(0x8AB0, "0x8XY0", "LD", "VX, VY", "VA", "VB");
 
     print_end();
     return 0;
