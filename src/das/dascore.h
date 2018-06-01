@@ -4,7 +4,7 @@
 #include "core.h"
 
 #define CHIPBOX_OPCODE_MNEMONIC_MAX_LENGTH 4
-#define CHIPBOX_INSTRUCTION_MAX_ARGS 2
+#define CHIPBOX_INSTRUCTION_MAX_ARGS 3
 #define CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH 3
 
 struct chipbox_instruction_info {
