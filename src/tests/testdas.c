@@ -52,6 +52,10 @@ int main() {
     test(MEQ("ADD"), "0x7XNN should be ADD");
     test(TWOARGS("V1", "42"), "0x7XNN (ADD VX, NN) should have two argument: VX and NN");
 
+    DASI(0x8AB0);
+    test(MEQ("LD"), "0x8XY0 should be LD");
+    test(TWOARGS("VA", "VB"), "0x8XY0 (LD VX, VY) should have two arguments: VX and VY");
+
     print_end();
     return 0;
 }
