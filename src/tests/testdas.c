@@ -41,6 +41,8 @@ int main() {
 
     test_twoargs(0x8AB0, "0x8XY0", "LD", "VX, VY", "VA", "VB");
 
+    test_twoargs(0x8421, "0x8XY1", "OR", "VX, VY", "V4", "V2");
+
     print_end();
     return 0;
 }
