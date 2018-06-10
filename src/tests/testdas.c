@@ -16,6 +16,7 @@ void test_instruction(dbyte actual_test, char *generic_dbyte, char *mnemonic, ch
 void test_noargs(dbyte actual_test, char *generic_dbyte, char *mnemonic);
 void test_onearg(dbyte actual_test, char *generic_dbyte, char *mnemonic, char *generic_args, char *arg1);
 void test_twoargs(dbyte actual_test, char *generic_dbyte, char *mnemonic, char *generic_args, char *arg1, char *arg2);
+void test_threeargs(dbyte actual_test, char *generic_dbyte, char *mnemonic, char *generic_args, char *arg1, char *arg2, char *arg3);
 int args_equal(char given_args[CHIPBOX_INSTRUCTION_MAX_ARGS][CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1], char test_args[CHIPBOX_INSTRUCTION_MAX_ARGS][CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1], int num_args);
 
 int main() {
@@ -65,6 +66,8 @@ int main() {
 
     test_twoargs(0xCE0A, "0xCXNN", "RND", "VX, NN", "VE", "0A");
 
+    test_threeargs(0xDAB8, "0xDXYN", "DRW", "VX, VY, N", "VA", "VB", "8");
+
     print_end();
     return 0;
 }
@@ -95,6 +98,14 @@ void test_twoargs(dbyte actual_test, char *generic_dbyte, char *mnemonic, char *
     strcpy(args[0], arg1);
     strcpy(args[1], arg2);
     test_instruction(actual_test, generic_dbyte, mnemonic, generic_args, args, 2);
+}
+
+void test_threeargs(dbyte actual_test, char *generic_dbyte, char *mnemonic, char *generic_args, char *arg1, char *arg2, char *arg3) {
+    char args[3][CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1];
+    strcpy(args[0], arg1);
+    strcpy(args[1], arg2);
+    strcpy(args[2], arg3);
+    test_instruction(actual_test, generic_dbyte, mnemonic, generic_args, args, 3);
 }
 
 int args_equal(char given_args[CHIPBOX_INSTRUCTION_MAX_ARGS][CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1], char test_args[][CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1], int num_args) {
