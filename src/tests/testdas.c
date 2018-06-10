@@ -43,6 +43,20 @@ int main() {
 
     test_twoargs(0x8421, "0x8XY1", "OR", "VX, VY", "V4", "V2");
 
+    test_twoargs(0x8532, "0x8XY2", "AND", "VX, VY", "V5", "V3");
+
+    test_twoargs(0x8643, "0x8XY3", "XOR", "VX, VY", "V6", "V4");
+
+    test_twoargs(0x8094, "0x8XY4", "ADD", "VX, VY", "V0", "V9");
+
+    test_twoargs(0x8BE5, "0x8XY5", "SUB", "VX, VY", "VB", "VE");
+
+    test_twoargs(0x8EF6, "0x8XY6", "SHR", "VX, VY", "VE", "VF");
+
+    test_twoargs(0x8AD7, "0x8XY7", "SUBN", "VX, VY", "VA", "VD");
+
+    test_twoargs(0x8DFE, "0x8XYE", "SHL", "VX, VY", "VD", "VF");
+
     print_end();
     return 0;
 }
