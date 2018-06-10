@@ -68,25 +68,20 @@ int get_int_arg_or_default(int argc, char *argv[], char *string, int default_val
 int get_str_arg_or_default(int argc, char *argv[], char *string, char *dest, int dest_len, char *default_value) {
     int index = validate_arg_with_parameter(argc, argv, string);
     int input_len;
-    int default_len = strlen(default_value);
-    int count;
     dest[0] = '\0';
 
     if (index == -1) {
-        count = (default_len < dest_len) ? default_len : dest_len;
-        strncat(dest, default_value, count);
+        strncat(dest, default_value, dest_len);
         return 0;
     } else {
         input_len = strlen(argv[index + 1]);
         if (input_len > dest_len) {
             fprintf(stderr, "Argument error: '%s' is too long of a parameter for %s\n", argv[index + 1], string);
-            count = (default_len < dest_len) ? default_len : dest_len;
-            strncat(dest, default_value, count);
+            strncat(dest, default_value, dest_len);
             argv[index + 1] = NULL;
             return 0;
         }
-        count = input_len;
-        strncat(dest, argv[index + 1], count);
+        strncat(dest, argv[index + 1], dest_len);
         argv[index + 1] = NULL;
         return 1;
     }
