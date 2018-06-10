@@ -57,6 +57,14 @@ int main() {
 
     test_twoargs(0x8DFE, "0x8XYE", "SHL", "VX, VY", "VD", "VF");
 
+    test_twoargs(0x9AB0, "0x9XY0", "SNE", "VX, VY", "VA", "VB");
+
+    test_twoargs(0xA432, "0xANNN", "LD", "I, NNN", "I", "432");
+
+    test_twoargs(0xB654, "0xBNNN", "JP", "V0, NNN", "V0", "654");
+
+    test_twoargs(0xCE0A, "0xCXNN", "RND", "VX, NN", "VE", "0A");
+
     print_end();
     return 0;
 }
