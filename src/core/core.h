@@ -33,6 +33,9 @@ typedef unsigned short dbyte; /* double byte - 16 bits */
    interpreter on the original platform */
 #define CHIPBOX_PROGRAM_START 512
 
+/* the rate, in hz, that the delay and sound timer decrement */
+#define CHIPBOX_TIMER_RATE 60
+
 /* it seems that there are two slightly differing standards to CHIP-8
    Cowgod's docs: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
    Mattmik's docs: http://mattmik.com/files/chip8/mastering/chip8.html
@@ -58,8 +61,10 @@ struct chipbox_chip8_state {
     byte log_level; /* level of current message (info, warning, error) */
     byte log_msg; /* message code (see log.h) */
     dbyte seed; /* seed used for random number generation */
+    dbyte speed; /* how many instructions executed per second (hz) */
+    unsigned long instruction_count; /* how many instructions executed since start */
 };
 
-struct chipbox_chip8_state chipbox_init_state();
+struct chipbox_chip8_state chipbox_init_state(dbyte speed);
 
 #endif

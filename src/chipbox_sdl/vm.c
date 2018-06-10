@@ -5,10 +5,9 @@
 #include <string.h>
 #include <stdio.h>
 
-int chipbox_vm_step(struct chipbox_chip8_state* state, byte min_log_level, unsigned long *last_timer_change_time) {
+int chipbox_vm_step(struct chipbox_chip8_state* state, byte min_log_level) {
     dbyte opcode;
     dbyte log_PC = state->PC; /* get the PC before we actually do anything (like modify it) */
-    unsigned long elapsed;
     int eval_result;
     opcode = chipbox_cpu_get_opcode(state);
     chipbox_print_log(state, log_PC, opcode, min_log_level);
@@ -17,16 +16,6 @@ int chipbox_vm_step(struct chipbox_chip8_state* state, byte min_log_level, unsig
     } else {
         eval_result = chipbox_cpu_eval_opcode(state, opcode);
         chipbox_print_log(state, log_PC, opcode, min_log_level);
-        elapsed = SDL_GetTicks() - *last_timer_change_time;
-        if (elapsed >= CHIPBOX_TIMER_DEC_INTERVAL) {
-            if (state->DT > 0) {
-                state->DT -= elapsed / CHIPBOX_TIMER_DEC_INTERVAL;
-            }
-            if (state->ST > 0) {
-                state->ST -= elapsed / CHIPBOX_TIMER_DEC_INTERVAL;
-            }
-            *last_timer_change_time += elapsed;
-        }
         return eval_result;
     }
 }

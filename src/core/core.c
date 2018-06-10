@@ -2,7 +2,7 @@
 #include "fonts.h"
 #include "log.h"
 
-struct chipbox_chip8_state chipbox_init_state() {
+struct chipbox_chip8_state chipbox_init_state(dbyte speed) {
     struct chipbox_chip8_state state;
     int i, j;
 
@@ -44,6 +44,10 @@ struct chipbox_chip8_state chipbox_init_state() {
 
     /* seed should be changed every runtime using chipbox_cpu_srand */
     state.seed = 0;
+
+    state.speed = speed;
+
+    state.instruction_count = 0;
 
     return state;
 }

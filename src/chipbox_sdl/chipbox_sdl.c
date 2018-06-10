@@ -65,7 +65,6 @@ int run_chipbox(SDL_Renderer *renderer, byte *play_sound, byte file_data[], int 
     struct chipbox_chip8_state state;
     int pixel_count;
     SDL_Rect pixel_rects[CHIPBOX_SCREEN_WIDTH_PIXELS * CHIPBOX_SCREEN_HEIGHT];
-    unsigned long last_timer_change_time;
     unsigned long new_time;
     unsigned long current_time;
     unsigned long delta_time = 0;
@@ -73,10 +72,9 @@ int run_chipbox(SDL_Renderer *renderer, byte *play_sound, byte file_data[], int 
     int i;
     int ticks_to_do;
 
-    state = chipbox_init_state();
+    state = chipbox_init_state(config->tps);
     state.compat_mode = config->compat_mode;
     chipbox_cpu_load_program(&state, file_data, size_to_read);
-    last_timer_change_time = SDL_GetTicks();
     current_time = SDL_GetTicks();
     while (running) {
         new_time = SDL_GetTicks();
@@ -90,7 +88,7 @@ int run_chipbox(SDL_Renderer *renderer, byte *play_sound, byte file_data[], int 
         chipbox_vm_update_input(&state);
 
         for (ticks_to_do = i = (delta_time * config->tps) / 1000; i > 0; i--) {
-            if (!chipbox_vm_step(&state, config->min_log_level, &last_timer_change_time)) {
+            if (!chipbox_vm_step(&state, config->min_log_level)) {
                 running = 0;
                 break;
             } else {

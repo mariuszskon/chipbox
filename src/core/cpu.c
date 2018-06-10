@@ -150,6 +150,18 @@ byte chipbox_cpu_raw_byte_draw(struct chipbox_chip8_state *state, byte draw_byte
 int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
     int i, j;
     byte x, y;
+    dbyte instructions_per_timer_tick = state->speed / CHIPBOX_TIMER_RATE;
+
+    state->instruction_count++;
+
+    if (state->instruction_count % instructions_per_timer_tick == 0) {
+        if (state->DT > 0) {
+            state->DT--;
+        }
+        if (state->ST > 0) {
+            state->ST--;
+        }
+    }
 
     chipbox_cpu_opcode_xy(opcode, &x, &y);
 
