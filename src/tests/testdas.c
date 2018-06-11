@@ -68,6 +68,28 @@ int main() {
 
     test_threeargs(0xDAB8, "0xDXYN", "DRW", "VX, VY, N", "VA", "VB", "8");
 
+    test_onearg(0xE19E, "0xEX9E", "SKP", "VX", "V1");
+
+    test_onearg(0xE2A1, "0xEXA1", "SKNP", "VX", "V2");
+
+    test_twoargs(0xFA07, "0xFX07", "LD", "VX, DT", "VA", "DT");
+
+    test_twoargs(0xF30A, "0xFX0A", "LD", "VX, K", "V3", "K");
+
+    test_twoargs(0xF515, "0xFX15", "LD", "DT, VX", "DT", "V5");
+
+    test_twoargs(0xFC18, "0xFX18", "LD", "ST, VX", "ST", "VC");
+
+    test_twoargs(0xFD1E, "0xFX1E", "ADD", "I, VX", "I", "VD");
+
+    test_twoargs(0xFB29, "0xFX29", "LD", "F, VX", "F", "VB");
+
+    test_twoargs(0xF733, "0xFX33", "LD", "B, VX", "B", "V7");
+
+    test_twoargs(0xF655, "0xFX55", "LD", "[I], VX", "[I]", "V6");
+
+    test_twoargs(0xF165, "0xFX65", "LD", "VX, [I]", "V1", "[I]");
+
     print_end();
     return 0;
 }
