@@ -44,25 +44,16 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
 }
 
 void get_NNN_arg(struct chipbox_instruction_info *info, dbyte instruction) {
-    char temp_arg[CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1];
-
     info->num_args = 1;
-    sprintf(temp_arg, "%X", instruction & 0x0FFF);
-    strcpy(info->args[0], temp_arg);
+    sprintf(info->args[info->num_args-1], "%X", instruction & 0x0FFF);
 }
 
 void get_X_arg(struct chipbox_instruction_info *info, dbyte instruction) {
-    char temp_arg[CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1];
-
     info->num_args++;
-    sprintf(temp_arg, "V%X", (instruction & 0x0F00) >> 8);
-    strcpy(info->args[info->num_args-1], temp_arg);
+    sprintf(info->args[info->num_args-1], "V%X", (instruction & 0x0F00) >> 8);
 }
 
 void get_NN_arg(struct chipbox_instruction_info *info, dbyte instruction) {
-    char temp_arg[CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1];
-
     info->num_args++;
-    sprintf(temp_arg, "%02X", instruction & 0x00FF);
-    strcpy(info->args[info->num_args-1], temp_arg);
+    sprintf(info->args[info->num_args-1], "%02X", instruction & 0x00FF);
 }
