@@ -5,6 +5,7 @@
 
 struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
     struct chipbox_instruction_info info;
+    info.num_args = 0;
 
     switch (instruction >> 12) { /* get highest/left-most nybble */
         case 0:
@@ -30,11 +31,15 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
             strcpy(info.mnemonic, "CALL");
             get_NNN_arg(&info, instruction);
             return info;
+        case 3:
+            strcpy(info.mnemonic, "SE");
+            get_X_arg(&info, instruction);
+            get_NN_arg(&info, instruction);
+            return info;
     }
 
     /* if we have not returned yet, the instruction was unknown */
     strcpy(info.mnemonic, "???");
-    info.num_args = 0;
     return info;
 }
 
@@ -44,4 +49,20 @@ void get_NNN_arg(struct chipbox_instruction_info *info, dbyte instruction) {
     info->num_args = 1;
     sprintf(temp_arg, "%X", instruction & 0x0FFF);
     strcpy(info->args[0], temp_arg);
+}
+
+void get_X_arg(struct chipbox_instruction_info *info, dbyte instruction) {
+    char temp_arg[CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1];
+
+    info->num_args++;
+    sprintf(temp_arg, "V%X", (instruction & 0x0F00) >> 8);
+    strcpy(info->args[info->num_args-1], temp_arg);
+}
+
+void get_NN_arg(struct chipbox_instruction_info *info, dbyte instruction) {
+    char temp_arg[CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1];
+
+    info->num_args++;
+    sprintf(temp_arg, "%02X", instruction & 0x00FF);
+    strcpy(info->args[info->num_args-1], temp_arg);
 }
