@@ -26,6 +26,10 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
             strcpy(info.mnemonic, "JP");
             get_NNN_arg(&info, instruction);
             return info;
+        case 2:
+            strcpy(info.mnemonic, "CALL");
+            get_NNN_arg(&info, instruction);
+            return info;
     }
 
     /* if we have not returned yet, the instruction was unknown */
