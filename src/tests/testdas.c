@@ -20,6 +20,8 @@ void test_threeargs(dbyte actual_test, char *generic_dbyte, char *mnemonic, char
 int args_equal(char given_args[CHIPBOX_INSTRUCTION_MAX_ARGS][CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1], char test_args[CHIPBOX_INSTRUCTION_MAX_ARGS][CHIPBOX_INSTRUCTION_MAX_ARG_LENGTH+1], int num_args);
 
 int main() {
+    /* test valid instructions */
+
     test_noargs(0x00E0, "0x00E0", "CLS");
 
     test_noargs(0x00EE, "0x00EE", "RET");
@@ -89,6 +91,10 @@ int main() {
     test_twoargs(0xF655, "0xFX55", "LD", "[I], VX", "[I]", "V6");
 
     test_twoargs(0xF165, "0xFX65", "LD", "VX, [I]", "V1", "[I]");
+
+    /* test invalid instructions */
+
+    test_noargs(0x5AB1, "0x5XYZ, Z != 0", "???");
 
     print_end();
     return 0;
