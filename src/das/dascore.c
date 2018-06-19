@@ -33,13 +33,11 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
             return info;
         case 3:
             strcpy(info.mnemonic, "SE");
-            get_X_arg(&info, instruction);
-            get_NN_arg(&info, instruction);
+            get_XNN_args(&info, instruction);
             return info;
         case 4:
             strcpy(info.mnemonic, "SNE");
-            get_X_arg(&info, instruction);
-            get_NN_arg(&info, instruction);
+            get_XNN_args(&info, instruction);
             return info;
         case 5:
             if ((instruction & 0x000F) == 0) {
@@ -68,6 +66,11 @@ void get_X_arg(struct chipbox_instruction_info *info, dbyte instruction) {
 void get_NN_arg(struct chipbox_instruction_info *info, dbyte instruction) {
     info->num_args++;
     sprintf(info->args[info->num_args-1], "%02X", instruction & 0x00FF);
+}
+
+void get_XNN_args(struct chipbox_instruction_info *info, dbyte instruction) {
+    get_X_arg(info, instruction);
+    get_NN_arg(info, instruction);
 }
 
 void get_Y_arg(struct chipbox_instruction_info *info, dbyte instruction) {
