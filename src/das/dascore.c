@@ -36,6 +36,11 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
             get_X_arg(&info, instruction);
             get_NN_arg(&info, instruction);
             return info;
+        case 4:
+            strcpy(info.mnemonic, "SNE");
+            get_X_arg(&info, instruction);
+            get_NN_arg(&info, instruction);
+            return info;
     }
 
     /* if we have not returned yet, the instruction was unknown */
