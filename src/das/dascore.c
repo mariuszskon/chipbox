@@ -74,21 +74,21 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
 
 struct chipbox_instruction_info get_NNN_arg(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic) {
     get_no_args(info, mnemonic);
+    sprintf(info->args[info->num_args], "%X", instruction & 0x0FFF);
     info->num_args++;
-    sprintf(info->args[info->num_args-1], "%X", instruction & 0x0FFF);
     return *info;
 }
 
 struct chipbox_instruction_info get_X_arg(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic) {
     get_no_args(info, mnemonic);
+    sprintf(info->args[info->num_args], "V%X", (instruction & 0x0F00) >> 8);
     info->num_args++;
-    sprintf(info->args[info->num_args-1], "V%X", (instruction & 0x0F00) >> 8);
     return *info;
 }
 
 struct chipbox_instruction_info get_NN_arg(struct chipbox_instruction_info *info, dbyte instruction) {
+    sprintf(info->args[info->num_args], "%02X", instruction & 0x00FF);
     info->num_args++;
-    sprintf(info->args[info->num_args-1], "%02X", instruction & 0x00FF);
     return *info;
 }
 
@@ -99,8 +99,8 @@ struct chipbox_instruction_info get_XNN_args(struct chipbox_instruction_info *in
 }
 
 struct chipbox_instruction_info get_Y_arg(struct chipbox_instruction_info *info, dbyte instruction) {
+    sprintf(info->args[info->num_args], "V%X", (instruction & 0x00F0) >> 4);
     info->num_args++;
-    sprintf(info->args[info->num_args-1], "V%X", (instruction & 0x00F0) >> 4);
     return *info;
 }
 
