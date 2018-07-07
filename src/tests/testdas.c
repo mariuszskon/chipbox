@@ -40,7 +40,7 @@ int main() {
 
     test_twoargs(0x61CD, "0x6XNN", "LD", "VX, NN", "V1", "CD");
 
-    test_twoargs(0x7242, "0x7XNN", "ADD", "VX, NN", "V1", "42");
+    test_twoargs(0x7242, "0x7XNN", "ADD", "VX, NN", "V2", "42");
 
     test_twoargs(0x8AB0, "0x8XY0", "LD", "VX, VY", "VA", "VB");
 
