@@ -56,6 +56,11 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
                     return get_XY_args(&info, instruction, "SHL");
             }
             break; /* fall through to unknown instruction handling - 0x8XYN where N is unexcepted value */
+        case 9:
+            if ((instruction & 0x000F) == 0) {
+                return get_XY_args(&info, instruction, "SNE");
+            }
+            break; /* 0x9XYZ, Z != 0 is undefined */
     }
 
     /* if we have not returned yet, the instruction was unknown */
