@@ -34,6 +34,28 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
             return get_XNN_args(&info, instruction, "LD");
         case 7:
             return get_XNN_args(&info, instruction, "ADD");
+        case 8:
+            switch (instruction & 0x000F) {
+                case 0:
+                    return get_XY_args(&info, instruction, "LD");
+                case 1:
+                    return get_XY_args(&info, instruction, "OR");
+                case 2:
+                    return get_XY_args(&info, instruction, "AND");
+                case 3:
+                    return get_XY_args(&info, instruction, "XOR");
+                case 4:
+                    return get_XY_args(&info, instruction, "ADD");
+                case 5:
+                    return get_XY_args(&info, instruction, "SUB");
+                case 6:
+                    return get_XY_args(&info, instruction, "SHR");
+                case 7:
+                    return get_XY_args(&info, instruction, "SUBN");
+                case 0xE:
+                    return get_XY_args(&info, instruction, "SHL");
+            }
+            break; /* fall through to unknown instruction handling - 0x8XYN where N is unexcepted value */
     }
 
     /* if we have not returned yet, the instruction was unknown */
