@@ -61,6 +61,10 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
                 return get_XY_args(&info, instruction, "SNE");
             }
             break; /* 0x9XYZ, Z != 0 is undefined */
+        case 0xA:
+            strcpy(info.args[info.num_args], "I");
+            info.num_args++;
+            return get_NNN_arg(&info, instruction, "LD");
     }
 
     /* if we have not returned yet, the instruction was unknown */
@@ -70,7 +74,7 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
 
 struct chipbox_instruction_info get_NNN_arg(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic) {
     get_no_args(info, mnemonic);
-    info->num_args = 1;
+    info->num_args++;
     sprintf(info->args[info->num_args-1], "%X", instruction & 0x0FFF);
     return *info;
 }
