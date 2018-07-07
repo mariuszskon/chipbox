@@ -69,6 +69,8 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
             strcpy(info.args[info.num_args], "V0");
             info.num_args++;
             return get_NNN_arg(&info, instruction, "JP");
+        case 0xC:
+            return get_XNN_args(&info, instruction, "RND");
     }
 
     /* if we have not returned yet, the instruction was unknown */
