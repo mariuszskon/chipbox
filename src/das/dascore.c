@@ -76,6 +76,14 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
             sprintf(info.args[info.num_args], "%X", instruction & 0x000F);
             info.num_args++;
             return info;
+        case 0xE:
+            switch (instruction & 0x00FF) {
+                case 0x9E:
+                    return get_X_arg(&info, instruction, "SKP");
+                case 0xA1:
+                    return get_X_arg(&info, instruction, "SKNP");
+            }
+            break; /* unknown instruction of form 0xEXNN - NN is unknown */
     }
 
     /* if we have not returned yet, the instruction was unknown */
