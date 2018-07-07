@@ -50,6 +50,10 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
             strcpy(info.mnemonic, "LD");
             get_XNN_args(&info, instruction);
             return info;
+        case 7:
+            strcpy(info.mnemonic, "ADD");
+            get_XNN_args(&info, instruction);
+            return info;
     }
 
     /* if we have not returned yet, the instruction was unknown */
