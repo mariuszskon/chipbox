@@ -11,49 +11,29 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
         case 0:
             switch (instruction) {
                 case 0x00E0:
-                    strcpy(info.mnemonic, "CLS");
-                    info.num_args = 0;
-                    return info;
+                    return get_no_args(&info, "CLS");
                 case 0x00EE:
-                    strcpy(info.mnemonic, "RET");
-                    info.num_args = 0;
-                    return info;
+                    return get_no_args(&info, "RET");
                 default:
-                    strcpy(info.mnemonic, "SYS");
-                    get_NNN_arg(&info, instruction);
-                    return info;
+                    return get_NNN_arg(&info, instruction, "SYS");
             }
         case 1:
-            strcpy(info.mnemonic, "JP");
-            get_NNN_arg(&info, instruction);
-            return info;
+            return get_NNN_arg(&info, instruction, "JP");
         case 2:
-            strcpy(info.mnemonic, "CALL");
-            get_NNN_arg(&info, instruction);
-            return info;
+            return get_NNN_arg(&info, instruction, "CALL");
         case 3:
-            strcpy(info.mnemonic, "SE");
-            get_XNN_args(&info, instruction);
-            return info;
+            return get_XNN_args(&info, instruction, "SE");
         case 4:
-            strcpy(info.mnemonic, "SNE");
-            get_XNN_args(&info, instruction);
-            return info;
+            return get_XNN_args(&info, instruction, "SNE");
         case 5:
             if ((instruction & 0x000F) == 0) {
-                strcpy(info.mnemonic, "SE");
-                get_XY_args(&info, instruction);
-                return info;
+                return get_XY_args(&info, instruction, "SE");
             }
             break; /* 0x5XYZ where Z != 0 is undefined */
         case 6:
-            strcpy(info.mnemonic, "LD");
-            get_XNN_args(&info, instruction);
-            return info;
+            return get_XNN_args(&info, instruction, "LD");
         case 7:
-            strcpy(info.mnemonic, "ADD");
-            get_XNN_args(&info, instruction);
-            return info;
+            return get_XNN_args(&info, instruction, "ADD");
     }
 
     /* if we have not returned yet, the instruction was unknown */
@@ -61,32 +41,45 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
     return info;
 }
 
-void get_NNN_arg(struct chipbox_instruction_info *info, dbyte instruction) {
+struct chipbox_instruction_info get_NNN_arg(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic) {
+    get_no_args(info, mnemonic);
     info->num_args = 1;
     sprintf(info->args[info->num_args-1], "%X", instruction & 0x0FFF);
+    return *info;
 }
 
-void get_X_arg(struct chipbox_instruction_info *info, dbyte instruction) {
+struct chipbox_instruction_info get_X_arg(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic) {
+    get_no_args(info, mnemonic);
     info->num_args++;
     sprintf(info->args[info->num_args-1], "V%X", (instruction & 0x0F00) >> 8);
+    return *info;
 }
 
-void get_NN_arg(struct chipbox_instruction_info *info, dbyte instruction) {
+struct chipbox_instruction_info get_NN_arg(struct chipbox_instruction_info *info, dbyte instruction) {
     info->num_args++;
     sprintf(info->args[info->num_args-1], "%02X", instruction & 0x00FF);
+    return *info;
 }
 
-void get_XNN_args(struct chipbox_instruction_info *info, dbyte instruction) {
-    get_X_arg(info, instruction);
+struct chipbox_instruction_info get_XNN_args(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic) {
+    get_X_arg(info, instruction, mnemonic);
     get_NN_arg(info, instruction);
+    return *info;
 }
 
-void get_Y_arg(struct chipbox_instruction_info *info, dbyte instruction) {
+struct chipbox_instruction_info get_Y_arg(struct chipbox_instruction_info *info, dbyte instruction) {
     info->num_args++;
     sprintf(info->args[info->num_args-1], "V%X", (instruction & 0x00F0) >> 4);
+    return *info;
 }
 
-void get_XY_args(struct chipbox_instruction_info *info, dbyte instruction) {
-    get_X_arg(info, instruction);
+struct chipbox_instruction_info get_XY_args(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic) {
+    get_X_arg(info, instruction, mnemonic);
     get_Y_arg(info, instruction);
+    return *info;
+}
+
+struct chipbox_instruction_info get_no_args(struct chipbox_instruction_info *info, char *mnemonic) {
+    strcpy(info->mnemonic, mnemonic);
+    return *info;
 }

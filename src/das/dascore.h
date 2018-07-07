@@ -14,11 +14,12 @@ struct chipbox_instruction_info {
 };
 
 struct chipbox_instruction_info disassemble_instruction(dbyte instruction);
-void get_NNN_arg(struct chipbox_instruction_info *info, dbyte instruction);
-void get_X_arg(struct chipbox_instruction_info *info, dbyte instruction);
-void get_NN_arg(struct chipbox_instruction_info *info, dbyte instruction);
-void get_XNN_args(struct chipbox_instruction_info *info, dbyte instruction);
-void get_Y_arg(struct chipbox_instruction_info *info, dbyte instruction);
-void get_XY_args(struct chipbox_instruction_info *info, dbyte instruction);
+struct chipbox_instruction_info get_NNN_arg(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic);
+struct chipbox_instruction_info get_X_arg(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic);
+struct chipbox_instruction_info get_NN_arg(struct chipbox_instruction_info *info, dbyte instruction);
+struct chipbox_instruction_info get_XNN_args(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic);
+struct chipbox_instruction_info get_Y_arg(struct chipbox_instruction_info *info, dbyte instruction);
+struct chipbox_instruction_info get_XY_args(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic);
+struct chipbox_instruction_info get_no_args(struct chipbox_instruction_info *info, char *mnemonic);
 
 #endif
