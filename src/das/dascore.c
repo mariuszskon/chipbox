@@ -84,6 +84,49 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
                     return get_X_arg(&info, instruction, "SKNP");
             }
             break; /* unknown instruction of form 0xEXNN - NN is unknown */
+        case 0xF:
+            switch (instruction & 0x00FF) {
+                case 0x07:
+                    get_X_arg(&info, instruction, "LD");
+                    strcpy(info.args[info.num_args], "DT");
+                    info.num_args++;
+                    return info;
+                case 0x0A:
+                    get_X_arg(&info, instruction, "LD");
+                    strcpy(info.args[info.num_args], "K");
+                    info.num_args++;
+                    return info;
+                case 0x15:
+                    strcpy(info.args[info.num_args], "DT");
+                    info.num_args++;
+                    return get_X_arg(&info, instruction, "LD");
+                case 0x18:
+                    strcpy(info.args[info.num_args], "ST");
+                    info.num_args++;
+                    return get_X_arg(&info, instruction, "LD");
+                case 0x1E:
+                    strcpy(info.args[info.num_args], "I");
+                    info.num_args++;
+                    return get_X_arg(&info, instruction, "ADD");
+                case 0x29:
+                    strcpy(info.args[info.num_args], "F");
+                    info.num_args++;
+                    return get_X_arg(&info, instruction, "LD");
+                case 0x33:
+                    strcpy(info.args[info.num_args], "B");
+                    info.num_args++;
+                    return get_X_arg(&info, instruction, "LD");
+                case 0x55:
+                    strcpy(info.args[info.num_args], "[I]");
+                    info.num_args++;
+                    return get_X_arg(&info, instruction, "LD");
+                case 0x65:
+                    get_X_arg(&info, instruction, "LD");
+                    strcpy(info.args[info.num_args], "[I]");
+                    info.num_args++;
+                    return info;
+            }
+            break; /* 0xFXNN, NN unknown */
     }
 
     /* if we have not returned yet, the instruction was unknown */
