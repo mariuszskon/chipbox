@@ -55,7 +55,7 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
                 case 0xE:
                     return get_XY_args(&info, instruction, "SHL");
             }
-            break; /* fall through to unknown instruction handling - 0x8XYN where N is unexcepted value */
+            break; /* fall through to unknown instruction handling - 0x8XYZ where Z is unexpected value */
         case 9:
             if ((instruction & 0x000F) == 0) {
                 return get_XY_args(&info, instruction, "SNE");
@@ -83,7 +83,7 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
                 case 0xA1:
                     return get_X_arg(&info, instruction, "SKNP");
             }
-            break; /* unknown instruction of form 0xEXNN - NN is unknown */
+            break; /* unknown instruction of form 0xEXZZ - ZZ is unknown */
         case 0xF:
             switch (instruction & 0x00FF) {
                 case 0x07:
@@ -126,7 +126,7 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
                     info.num_args++;
                     return info;
             }
-            break; /* 0xFXNN, NN unknown */
+            break; /* 0xFXZZ, ZZ unknown */
     }
 
     /* if we have not returned yet, the instruction was unknown */
