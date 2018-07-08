@@ -33,7 +33,7 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], stru
     };
 
     if (argc < 2 || find_arg(argc, argv, "help") != -1) {
-        printf("Usage: %s [options...] <file>\n", argv[0]);
+        printf("Usage: %s [options...] [file]\n", argv[0]);
         printf("\nOptions:\n");
         for (i = 0; i < CHIPBOX_SDL_ARG_NUM; i++) {
             string_to_short_long_args(args_list[i], short_arg, long_arg);

@@ -46,7 +46,7 @@ In chipbox, the keys are mapped to the [scancodes](https://wiki.libsdl.org/SDL_S
 
 ## Options
 
-    Usage: chipbox_sdl [options...] <file>
+    Usage: chipbox_sdl [options...] [file]
 
     Options:
      -h, --help           show this help message
