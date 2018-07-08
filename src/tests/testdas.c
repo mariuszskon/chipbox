@@ -96,6 +96,14 @@ int main() {
 
     test_noargs(0x5AB1, "0x5XYZ, Z != 0", "???");
 
+    test_noargs(0x8018, "0x8XYZ, Z != 0 to 7 or E", "???");
+
+    test_noargs(0x9CD1, "0x9XYZ, Z != 0", "???");
+
+    test_noargs(0xEABC, "0xEXZZ, ZZ != 9E or A1", "???");
+
+    test_noargs(0xFA01, "0xFXZZ, ZZ != 07, 0A, 15, 18, 1E, 29, 33, 55, 65", "???");
+
     print_end();
     return 0;
 }
