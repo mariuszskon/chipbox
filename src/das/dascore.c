@@ -136,7 +136,7 @@ struct chipbox_instruction_info disassemble_instruction(dbyte instruction) {
 
 struct chipbox_instruction_info get_NNN_arg(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic) {
     get_no_args(info, mnemonic);
-    sprintf(info->args[info->num_args], "%X", instruction & 0x0FFF);
+    sprintf(info->args[info->num_args], "%03X", instruction & 0x0FFF);
     info->num_args++;
     return *info;
 }
