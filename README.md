@@ -4,6 +4,15 @@
 
 A work-in-progress [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter/emulator, written in ANSI C and utilising the wonderful [SDL2](https://libsdl.org/) library for input, graphics and sound.
 
+## Features
+
+* A CHIP-8 interpreter implementing all documented instructions
+* Minimalist SDL2 application with visual, audio and input support on many platforms
+* Options for switching between different popular interpretations of instructions ("quirks")
+* Options for clock speed, error logging etc.
+* Simple disassembler
+* Reusable pure C API
+
 ## Prebuilt binaries
 
 You should use these if you can.
