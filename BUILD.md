@@ -9,7 +9,7 @@ For runtime, you need:
 
 For building, you need:
 
-* An ANSI C compiler capable of linking SDL2 (GCC 7 with make, and Visual Studio Community 2017 were tested)
+* A Standard C compiler capable of compiling C89/C90 and linking SDL2 (GCC 7 with make, and Visual Studio Community 2017 were tested)
 * [CMake](https://cmake.org/)
 * SDL2 development libraries
 
