@@ -2,7 +2,7 @@
 
 [GitHub](https://github.com/mariuszskon/chipbox/)
 
-A work-in-progress [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter/emulator, written in Standard C (also known as ANSI C, ISO C, C89, C90) and utilising the wonderful [SDL2](https://libsdl.org/) library for input, graphics and sound.
+A work-in-progress [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter/emulator, written in Standard C (also known as ANSI C or C89) and utilising the wonderful [SDL2](https://libsdl.org/) library for input, graphics and sound.
 
 ## Features
 
