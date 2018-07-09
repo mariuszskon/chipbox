@@ -18,7 +18,7 @@ int disassemble_file(char *filename) {
     dbyte pc = CHIPBOX_PROGRAM_START; /* ensure address is offset correctly to allow for easier reading of e.g. jumps */
     FILE *fp = fopen(filename, "rb");
     if (!fp) {
-        fprintf(stderr, "Could not open file '%s'", filename);
+        fprintf(stderr, "Could not open file '%s'\n", filename);
         return 0;
     }
 
@@ -27,7 +27,7 @@ int disassemble_file(char *filename) {
         pc++;
         if ((c = fgetc(fp)) == EOF) {
             /* since every chip-8 instruction is 2 bytes long, an EOF should not be reached is we have read 1 byte */
-            fprintf(stderr, "Unexpected end-of-file at 0x%04X (actual byte %X/%u)", pc, pc - CHIPBOX_PROGRAM_START, pc - CHIPBOX_PROGRAM_START);
+            fprintf(stderr, "Unexpected end-of-file at 0x%04X (actual byte %X/%u)\n", pc, pc - CHIPBOX_PROGRAM_START, pc - CHIPBOX_PROGRAM_START);
             return 0;
         }
         instruction |= (byte) c;
