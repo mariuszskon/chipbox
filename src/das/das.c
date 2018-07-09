@@ -35,6 +35,8 @@ int disassemble_file(char *filename) {
         print_chipbox_instruction_info(pc - 2, instruction, disassemble_instruction(instruction));
     }
 
+    fclose(fp);
+
     return 1;
 }
 

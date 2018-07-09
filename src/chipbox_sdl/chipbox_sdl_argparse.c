@@ -56,6 +56,7 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], stru
     }
     size_to_read = (size_to_read < file_size) ? size_to_read : file_size; /* read no more than max size or size of file */
     SDL_RWread(file, file_data, sizeof(byte), size_to_read);
+    SDL_RWclose(file);
 
     config->scale = get_int_arg_or_default(argc, argv, "scale", CHIPBOX_SDL_DEFAULT_SCALE);
     if (!nonzero_positive(config->scale, "scale")) return 0;
