@@ -88,7 +88,7 @@ int run_chipbox(SDL_Renderer *renderer, byte *play_sound, byte file_data[], int 
         chipbox_vm_update_input(&state);
 
         for (ticks_to_do = i = (delta_time * config->tps) / 1000; i > 0; i--) {
-            if (!chipbox_vm_step(&state, config->min_log_level)) {
+            if (!chipbox_vm_step(&state, config)) {
                 running = 0;
                 break;
             } else {

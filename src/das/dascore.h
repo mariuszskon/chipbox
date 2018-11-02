@@ -21,5 +21,6 @@ struct chipbox_instruction_info get_XNN_args(struct chipbox_instruction_info *in
 struct chipbox_instruction_info get_Y_arg(struct chipbox_instruction_info *info, dbyte instruction);
 struct chipbox_instruction_info get_XY_args(struct chipbox_instruction_info *info, dbyte instruction, char *mnemonic);
 struct chipbox_instruction_info get_no_args(struct chipbox_instruction_info *info, char *mnemonic);
+void print_chipbox_instruction_info(dbyte pc, dbyte instruction, struct chipbox_instruction_info info);
 
 #endif
