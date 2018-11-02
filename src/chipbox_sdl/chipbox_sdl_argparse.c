@@ -29,7 +29,7 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], stru
         "set scaling of display",
         "set CHIP-8 ticks/instructions per second",
         "set 'mattmik' or 'cowgod' compatibility mode",
-        "set logging level (none, error, warn (default), info)"
+        "set CPU logging level (none, error, warn (default), info)"
     };
 
     if (argc < 2 || find_arg(argc, argv, "help") != -1) {
