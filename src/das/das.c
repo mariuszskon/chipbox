@@ -42,7 +42,7 @@ int disassemble_file(char *filename) {
 
 void print_chipbox_instruction_info(dbyte pc, dbyte instruction, struct chipbox_instruction_info info) {
     int i;
-    printf("%04X: %04X    %-*s ", pc, instruction, CHIPBOX_OPCODE_MNEMONIC_MAX_LENGTH, info.mnemonic);
+    printf("0x%04X: %04X    %-*s ", pc, instruction, CHIPBOX_OPCODE_MNEMONIC_MAX_LENGTH, info.mnemonic);
     for (i = 0; i < info.num_args; i++) {
         printf(" %s", info.args[i]);
         if (i != info.num_args - 1) { /* not last argument */
