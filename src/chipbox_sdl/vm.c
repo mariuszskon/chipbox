@@ -11,7 +11,7 @@ int chipbox_vm_step(struct chipbox_chip8_state* state, struct chipbox_sdl_config
     dbyte log_PC = state->PC; /* get the PC before we actually do anything (like modify it) */
     int eval_result;
     opcode = chipbox_cpu_get_opcode(state);
-    chipbox_print_log(state, log_PC, opcode, config->min_log_level);
+    chipbox_print_log(state, log_PC, opcode, config->log_level);
 
     if (config->debug_level >= CHIPBOX_DEBUG_LEVEL_INSTRUCTION) {
         chipbox_print_debug_instruction(log_PC, opcode);
@@ -21,7 +21,7 @@ int chipbox_vm_step(struct chipbox_chip8_state* state, struct chipbox_sdl_config
         return 0;
     } else {
         eval_result = chipbox_cpu_eval_opcode(state, opcode);
-        chipbox_print_log(state, log_PC, opcode, config->min_log_level);
+        chipbox_print_log(state, log_PC, opcode, config->log_level);
 
         if (config->debug_level >= CHIPBOX_DEBUG_LEVEL_EVERYTHING) {
             chipbox_print_debug_state_dump(state);
@@ -68,9 +68,9 @@ void chipbox_vm_update_input(struct chipbox_chip8_state *state) {
     state->input[0xF] = keys[SDL_SCANCODE_V];
 }
 
-void chipbox_print_log(struct chipbox_chip8_state* state, dbyte PC, dbyte opcode, byte min_log_level) {
+void chipbox_print_log(struct chipbox_chip8_state* state, dbyte PC, dbyte opcode, byte log_level) {
     char level[CHIPBOX_MAX_LOG_LEVEL_LENGTH], message[CHIPBOX_MAX_LOG_MSG_LENGTH];
-    if (state->log_level < min_log_level) {
+    if (state->log_level > log_level || log_level == CHIPBOX_LOG_LEVEL_NONE) {
         return;
     }
 

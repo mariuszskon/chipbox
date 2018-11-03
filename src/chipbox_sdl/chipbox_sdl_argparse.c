@@ -80,19 +80,19 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], stru
     get_str_arg_or_default(argc, argv, "log", log_level_str, MAX_LOG_LEVEL_LENGTH, CHIPBOX_SDL_DEFAULT_LOG_LEVEL_STR);
     if (strcmp(log_level_str, "warn") == 0 || strcmp(log_level_str, "WARN") == 0 ||
         strcmp(log_level_str, "w") == 0 || strcmp(log_level_str, "W") == 0) {
-        config->min_log_level = CHIPBOX_LOG_LEVEL_WARN;
+        config->log_level = CHIPBOX_LOG_LEVEL_WARN;
     } else if (strcmp(log_level_str, "error") == 0 || strcmp(log_level_str, "ERROR") == 0 ||
                strcmp(log_level_str, "e") == 0 || strcmp(log_level_str, "E") == 0) {
-        config->min_log_level = CHIPBOX_LOG_LEVEL_ERROR;
+        config->log_level = CHIPBOX_LOG_LEVEL_ERROR;
     } else if (strcmp(log_level_str, "info") == 0 || strcmp(log_level_str, "INFO") == 0 ||
                strcmp(log_level_str, "i") == 0 || strcmp(log_level_str, "I") == 0) {
-        config->min_log_level = CHIPBOX_LOG_LEVEL_INFO;
+        config->log_level = CHIPBOX_LOG_LEVEL_INFO;
     } else if (strcmp(log_level_str, "none") == 0 || strcmp(log_level_str, "NONE") == 0 ||
                strcmp(log_level_str, "n") == 0 || strcmp(log_level_str, "N") == 0) {
-        config->min_log_level = CHIPBOX_LOG_LEVEL_ERROR + 1;
+        config->log_level = CHIPBOX_LOG_LEVEL_NONE;
     } else {
         fprintf(stderr, "Unrecognised log level '%s'\n", log_level_str);
-        config->min_log_level = CHIPBOX_LOG_LEVEL_DEFAULT;
+        config->log_level = CHIPBOX_LOG_LEVEL_DEFAULT;
     }
 
     get_str_arg_or_default(argc, argv, "debug", debug_level_str, MAX_DEBUG_LEVEL_LENGTH, CHIPBOX_SDL_DEFAULT_DEBUG_LEVEL_STR);

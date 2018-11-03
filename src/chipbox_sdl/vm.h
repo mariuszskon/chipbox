@@ -9,6 +9,6 @@
 
 int chipbox_vm_step(struct chipbox_chip8_state* state, struct chipbox_sdl_config *config);
 void chipbox_vm_update_input(struct chipbox_chip8_state *state);
-void chipbox_print_log(struct chipbox_chip8_state* state, dbyte PC, dbyte opcode, byte min_log_level);
+void chipbox_print_log(struct chipbox_chip8_state* state, dbyte PC, dbyte opcode, byte log_level);
 
 #endif
