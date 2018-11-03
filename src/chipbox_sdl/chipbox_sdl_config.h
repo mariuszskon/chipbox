@@ -8,7 +8,7 @@ struct chipbox_sdl_config {
     int tps; /* ticks/instructions per second */
     byte compat_mode; /* cpu compatibility mode (e.g. mattmik or cowgod) */
     byte min_log_level; /* log messages must be CHIPBOX_LOG_LEVEL_* or higher to be printed */
-    byte min_debug_level; /* what debug messages should be shown, must be CHIPBOX_DEBUG_LEVEL_* */
+    byte debug_level; /* what debug messages should be shown, must be CHIPBOX_DEBUG_LEVEL_* */
 };
 
 #endif

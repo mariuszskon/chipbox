@@ -98,16 +98,16 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], stru
     get_str_arg_or_default(argc, argv, "debug", debug_level_str, MAX_DEBUG_LEVEL_LENGTH, CHIPBOX_SDL_DEFAULT_DEBUG_LEVEL_STR);
     if (strcmp(debug_level_str, "everything") == 0 || strcmp(log_level_str, "EVERYTHING") == 0 ||
         strcmp(debug_level_str, "e") == 0 || strcmp(log_level_str, "E") == 0) {
-        config->min_debug_level = CHIPBOX_DEBUG_LEVEL_EVERYTHING;
+        config->debug_level = CHIPBOX_DEBUG_LEVEL_EVERYTHING;
     } else if (strcmp(debug_level_str, "instruction") == 0 || strcmp(debug_level_str, "INSTRUCTION") == 0 ||
                strcmp(debug_level_str, "i") == 0 || strcmp(debug_level_str, "i") == 0) {
-        config->min_debug_level = CHIPBOX_DEBUG_LEVEL_INSTRUCTION;
+        config->debug_level = CHIPBOX_DEBUG_LEVEL_INSTRUCTION;
     } else if (strcmp(debug_level_str, "none") == 0 || strcmp(debug_level_str, "NONE") == 0 ||
                strcmp(debug_level_str, "n") == 0 || strcmp(debug_level_str, "N") == 0) {
-        config->min_debug_level = CHIPBOX_DEBUG_LEVEL_NONE;
+        config->debug_level = CHIPBOX_DEBUG_LEVEL_NONE;
     } else {
         fprintf(stderr, "Unrecognised debug level '%s'\n", debug_level_str);
-        config->min_debug_level = CHIPBOX_DEBUG_LEVEL_DEFAULT;
+        config->debug_level = CHIPBOX_DEBUG_LEVEL_DEFAULT;
     }
 
     if (unfound_args(argc, argv)) {
