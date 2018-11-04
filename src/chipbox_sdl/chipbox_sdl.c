@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     config.tps = CHIPBOX_SDL_DEFAULT_TPS;
     config.compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
 
-    if (!handle_args(argc, argv, size_to_read, file_data, &config) || !setup_sdl(&window, &renderer, &audio_device, &play_sound, config.scale)) {
+    if (!handle_args(argc, argv, &size_to_read, file_data, &config) || !setup_sdl(&window, &renderer, &audio_device, &play_sound, config.scale)) {
         /* there was an error in handling command-line argumetns or in the initialisation of SDL */
         return 1;
     }

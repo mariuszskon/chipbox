@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 /* parse and "execute" command line arguments, reading up to size_to_read bytes into file_data */
-int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], struct chipbox_sdl_config *config) {
+int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], struct chipbox_sdl_config *config) {
     SDL_RWops *file = NULL;
     Sint64 file_size;
     int i;
@@ -58,8 +58,8 @@ int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], stru
         fprintf(stderr, "File size detection error: %s\n", SDL_GetError());
         return 0;
     }
-    size_to_read = (size_to_read < file_size) ? size_to_read : file_size; /* read no more than max size or size of file */
-    SDL_RWread(file, file_data, sizeof(byte), size_to_read);
+    *size_to_read = (*size_to_read < file_size) ? *size_to_read : file_size; /* read no more than max size or size of file */
+    SDL_RWread(file, file_data, sizeof(byte), *size_to_read);
     SDL_RWclose(file);
 
     config->scale = get_int_arg_or_default(argc, argv, "scale", CHIPBOX_SDL_DEFAULT_SCALE);

@@ -14,6 +14,6 @@
 
 #include "chipbox_sdl_config.h"
 
-int handle_args(int argc, char *argv[], int size_to_read, byte file_data[], struct chipbox_sdl_config *config);
+int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], struct chipbox_sdl_config *config);
 
 #endif
