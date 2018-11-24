@@ -418,7 +418,7 @@ int main() {
     state.DT = 50;
     state.V[4] = 99;
     test(chipbox_cpu_eval_opcode(&state, 0xF407), "0xFX07 (LD VX, DT) should succeed");
-    test(state.V[4] == 50, "0xFX07 (LD VX, DT) should set VX to DT");
+    test(state.V[4] == 50-1, "0xFX07 (LD VX, DT) should set VX to DT"); /* -1 because some time passes due to executing instructions, so double DT truncated */
 
     state = chipbox_init_state(TESTCORE_SPEED);
     state.PC = 0x404;

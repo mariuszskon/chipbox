@@ -41,7 +41,7 @@ void chipbox_print_debug_state_dump(struct chipbox_chip8_state *state) {
         printf("%02X ", state->V[i]);
     }
     printf("\n%-4s %-4s %-2s %-2s %-2s\n", "PC", "I", "DT", "ST", "SP");
-    printf("%04X %04X %02X %02X %02X\n", state->PC, state->I, state->DT, state->ST, state->SP);
+    printf("%04X %04X %02X %02X %02X\n", state->PC, state->I, (byte)state->DT, (byte)state->ST, state->SP);
     printf("REGISTERS END\n");
 
     printf("STACK START\n");

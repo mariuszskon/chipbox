@@ -51,8 +51,8 @@ struct chipbox_chip8_state {
     byte memory[CHIPBOX_MEMORY_SIZE];
     byte V[CHIPBOX_GREGISTERS];
     dbyte I; /* memory address register */
-    byte DT; /* delay timer */
-    byte ST; /* sound timer */
+    double DT; /* delay timer - double to ensure reasonable accuracy at many speeds */
+    double ST; /* sound timer */
     dbyte PC; /* program counter */
     byte SP; /* stack pointer */
     dbyte stack[CHIPBOX_STACK_SIZE];

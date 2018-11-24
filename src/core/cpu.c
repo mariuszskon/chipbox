@@ -144,24 +144,29 @@ byte chipbox_cpu_raw_byte_draw(struct chipbox_chip8_state *state, byte draw_byte
     return collision;
 }
 
+void decrement_timer(double *timer, double decrement) {
+    if (*timer > 0) {
+        if (decrement > *timer) {
+            *timer = 0;
+        } else {
+            *timer -= decrement;
+        }
+    }
+}
+
 /* chipbox_cpu_eval_opcode: evaluates an opcode by manipulating state
    this is where the bulk of the logic for the chip-8 interpreter/emulator lies
    returns 1 on success, 0 on error */
 int chipbox_cpu_eval_opcode(struct chipbox_chip8_state *state, dbyte opcode) {
     int i, j;
     byte x, y;
-    dbyte instructions_per_timer_tick = state->speed / CHIPBOX_TIMER_RATE;
+    double decrement;
 
     state->instruction_count++;
 
-    if (state->instruction_count % instructions_per_timer_tick == 0) {
-        if (state->DT > 0) {
-            state->DT--;
-        }
-        if (state->ST > 0) {
-            state->ST--;
-        }
-    }
+    decrement = 1 * (double)CHIPBOX_TIMER_RATE / state->speed; /* 1 instruction executed * how many timer cycles occurred */
+    decrement_timer(&(state->DT), decrement);
+    decrement_timer(&(state->ST), decrement);
 
     chipbox_cpu_opcode_xy(opcode, &x, &y);
 
