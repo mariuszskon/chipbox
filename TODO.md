@@ -1,7 +1,6 @@
 # TODOs
 
 * Fix high pitched sound in Windows - cause unknown
-* Add ability to select random seed
 * Add debugger
 * Save states etc.
 * Rewind

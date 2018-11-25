@@ -24,7 +24,8 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
         "tps",
         "mode",
         "log",
-        "debug"
+        "debug",
+        "random"
     };
 
     char args_helptext[CHIPBOX_SDL_ARG_NUM][MAX_HELPTEXT_LENGTH] = {
@@ -33,7 +34,8 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
         "set CHIP-8 ticks/instructions per second",
         "set 'mattmik' or 'cowgod' compatibility mode",
         "set CPU logging level (none, error, warn (default), info)",
-        "set debug mode (none (default), instruction, everything)"
+        "set debug mode (none (default), instruction, everything)",
+        "set random seed (default uses system time)"
     };
 
     if (argc < 2 || find_arg(argc, argv, "help") != -1) {
@@ -109,6 +111,9 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
         fprintf(stderr, "Unrecognised debug level '%s'\n", debug_level_str);
         config->debug_level = CHIPBOX_DEBUG_LEVEL_DEFAULT;
     }
+
+    config->seed = get_int_arg_or_default(argc, argv, "random", CHIPBOX_SDL_DEFAULT_SEED);
+    if (!nonzero_positive(config->seed, "random")) return 0;
 
     if (unfound_args(argc, argv)) {
         return 0;

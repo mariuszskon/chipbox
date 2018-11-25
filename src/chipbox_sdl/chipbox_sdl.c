@@ -73,6 +73,7 @@ int run_chipbox(SDL_Renderer *renderer, byte *play_sound, byte file_data[], int 
     int ticks_to_do;
 
     state = chipbox_init_state(config->tps);
+    chipbox_cpu_srand(&state, config->seed);
     state.compat_mode = config->compat_mode;
     chipbox_cpu_load_program(&state, file_data, size_to_read);
     current_time = SDL_GetTicks();
