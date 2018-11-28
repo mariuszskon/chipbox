@@ -11,7 +11,7 @@
 int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], struct chipbox_sdl_config *config) {
     SDL_RWops *file = NULL;
     Sint64 file_size;
-    int i;
+    int i, c;
     char long_arg[MAX_LONG_ARG_LENGTH+1];
     char short_arg[MAX_SHORT_ARG_LENGTH+1];
     char compat_str[MAX_COMPAT_LENGTH+1];
@@ -34,7 +34,7 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
         "set CHIP-8 ticks/instructions per second",
         "set 'mattmik' or 'cowgod' compatibility mode",
         "set CPU logging level (none, error, warn (default), info)",
-        "set debug mode (none (default), instruction, everything)",
+        "set debug mode ((n)one (default), (e)verything, or a combination of (d)isassemble, (c)ount, (s)creen, (r)egisters, stac(k), (i)nput, (m)emory",
         "set random seed (default uses system time)"
     };
 
@@ -101,15 +101,31 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
     if (strcmp(debug_level_str, "everything") == 0 || strcmp(log_level_str, "EVERYTHING") == 0 ||
         strcmp(debug_level_str, "e") == 0 || strcmp(log_level_str, "E") == 0) {
         config->debug_level = CHIPBOX_DEBUG_LEVEL_EVERYTHING;
-    } else if (strcmp(debug_level_str, "instruction") == 0 || strcmp(debug_level_str, "INSTRUCTION") == 0 ||
-               strcmp(debug_level_str, "i") == 0 || strcmp(debug_level_str, "i") == 0) {
-        config->debug_level = CHIPBOX_DEBUG_LEVEL_INSTRUCTION;
     } else if (strcmp(debug_level_str, "none") == 0 || strcmp(debug_level_str, "NONE") == 0 ||
                strcmp(debug_level_str, "n") == 0 || strcmp(debug_level_str, "N") == 0) {
         config->debug_level = CHIPBOX_DEBUG_LEVEL_NONE;
     } else {
-        fprintf(stderr, "Unrecognised debug level '%s'\n", debug_level_str);
-        config->debug_level = CHIPBOX_DEBUG_LEVEL_DEFAULT;
+        for (i = 0; debug_level_str[i] != 0; i++) {
+            c = tolower(debug_level_str[i]);
+            if (c == 'd') {
+                config->debug_level |= CHIPBOX_DEBUG_LEVEL_DISASSEMBLE;
+            } else if (c == 'c') {
+                config->debug_level |= CHIPBOX_DEBUG_LEVEL_COUNT;
+            } else if (c == 's') {
+                config->debug_level |= CHIPBOX_DEBUG_LEVEL_SCREEN;
+            } else if (c == 'r') {
+                config->debug_level |= CHIPBOX_DEBUG_LEVEL_REGISTERS;
+            } else if (c == 'k') {
+                config->debug_level |= CHIPBOX_DEBUG_LEVEL_STACK;
+            } else if (c == 'i') {
+                config->debug_level |= CHIPBOX_DEBUG_LEVEL_INPUT;
+            } else if (c == 'm') {
+                config->debug_level |= CHIPBOX_DEBUG_LEVEL_MEMORY;
+            } else {
+                fprintf(stderr, "Unrecognised debug level '%s'\n", debug_level_str);
+                config->debug_level = CHIPBOX_DEBUG_LEVEL_DEFAULT;
+            }
+        }
     }
 
     config->seed = get_int_arg_or_default(argc, argv, "random", CHIPBOX_SDL_DEFAULT_SEED);

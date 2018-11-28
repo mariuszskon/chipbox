@@ -10,22 +10,17 @@ int chipbox_vm_step(struct chipbox_chip8_state* state, struct chipbox_sdl_config
     dbyte opcode;
     dbyte log_PC = state->PC; /* get the PC before we actually do anything (like modify it) */
     int eval_result;
+
+    chipbox_print_debug_state_dump(state, config->debug_level);
+
     opcode = chipbox_cpu_get_opcode(state);
     chipbox_print_log(state, log_PC, opcode, config->log_level);
-
-    if (config->debug_level >= CHIPBOX_DEBUG_LEVEL_INSTRUCTION) {
-        chipbox_print_debug_instruction(log_PC, opcode);
-    }
 
     if (state->log_level == CHIPBOX_LOG_LEVEL_ERROR) {
         return 0;
     } else {
         eval_result = chipbox_cpu_eval_opcode(state, opcode);
         chipbox_print_log(state, log_PC, opcode, config->log_level);
-
-        if (config->debug_level >= CHIPBOX_DEBUG_LEVEL_EVERYTHING) {
-            chipbox_print_debug_state_dump(state);
-        }
 
         return eval_result;
     }
