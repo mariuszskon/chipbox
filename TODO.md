@@ -1,7 +1,8 @@
 # TODOs
 
 * Fix high pitched sound in Windows - cause unknown
-* Add debugger
+* Clean up argparsing code to be less repetitive
+* Add debugger - pausing, stepping, changing values etc.
 * Save states etc.
 * Rewind
 * Sprite wrapping (for compatibility)
