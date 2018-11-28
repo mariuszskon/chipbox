@@ -22,11 +22,13 @@ void chipbox_screen_to_sdl_rects(byte screen[], SDL_Rect rects[], int *count) {
 }
 
 /* chipbox_render: render chip8 screen, scaling each pixel by scale */
-void chipbox_render(SDL_Renderer* renderer, SDL_Rect rects[], int count, int scale) {
-    SDL_RenderSetScale(renderer, scale, scale);
+void chipbox_render(SDL_Renderer* renderer, SDL_Texture *chip8_screen, SDL_Rect rects[], int count) {
+    SDL_SetRenderTarget(renderer, chip8_screen);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, SDL_ALPHA_OPAQUE);
     SDL_RenderFillRects(renderer, rects, count);
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopy(renderer, chip8_screen, NULL, NULL);
     SDL_RenderPresent(renderer);
 }

@@ -14,6 +14,7 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
     int i, c;
     char long_arg[MAX_LONG_ARG_LENGTH+1];
     char short_arg[MAX_SHORT_ARG_LENGTH+1];
+    char blur_str[MAX_BLUR_LENGTH+1];
     char compat_str[MAX_COMPAT_LENGTH+1];
     char log_level_str[MAX_LOG_LEVEL_LENGTH+1];
     char debug_level_str[MAX_DEBUG_LEVEL_LENGTH+1];
@@ -21,6 +22,7 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
     char args_list[CHIPBOX_SDL_ARG_NUM][MAX_LONG_ARG_LENGTH+1 - 2] = {
         "help",
         "scale",
+        "blur",
         "tps",
         "mode",
         "log",
@@ -31,6 +33,7 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
     char args_helptext[CHIPBOX_SDL_ARG_NUM][MAX_HELPTEXT_LENGTH] = {
         "show this help message",
         "set scaling of display",
+        "if blurring should be applied (yes, no (default))",
         "set CHIP-8 ticks/instructions per second",
         "set 'mattmik' or 'cowgod' compatibility mode",
         "set CPU logging level (none, error, warn (default), info)",
@@ -66,6 +69,17 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
 
     config->scale = get_int_arg_or_default(argc, argv, "scale", CHIPBOX_SDL_DEFAULT_SCALE);
     if (!nonzero_positive(config->scale, "scale")) return 0;
+
+    get_str_arg_or_default(argc, argv, "blur", blur_str, MAX_BLUR_LENGTH, CHIPBOX_SDL_DEFAULT_BLUR_STR);
+    if (strcmp(blur_str, "yes") == 0 || strcmp(blur_str, "YES") == 0) {
+        config->blur = 1;
+    } else if (strcmp(blur_str, "no") == 0 || strcmp(blur_str, "NO") == 0) {
+        config->blur = 0;
+    } else {
+        fprintf(stderr, "Unrecognised blur '%s'\n", blur_str);
+        config->blur = CHIPBOX_SDL_DEFAULT_BLUR;
+    }
+
     config->tps = get_int_arg_or_default(argc, argv, "tps", CHIPBOX_SDL_DEFAULT_TPS);
     if (!nonzero_positive(config->tps, "tps")) return 0;
 

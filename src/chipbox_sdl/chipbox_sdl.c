@@ -13,6 +13,7 @@
 int main(int argc, char* argv[]) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
+    SDL_Texture* chip8_screen = NULL;
     SDL_AudioDeviceID audio_device;
     struct chipbox_sdl_config config;
     int size_to_read = CHIPBOX_MEMORY_SIZE - CHIPBOX_PROGRAM_START;
@@ -22,24 +23,30 @@ int main(int argc, char* argv[]) {
     config.tps = CHIPBOX_SDL_DEFAULT_TPS;
     config.compat_mode = CHIPBOX_COMPATIBILITY_MODE_DEFAULT;
 
-    if (!handle_args(argc, argv, &size_to_read, file_data, &config) || !setup_sdl(&window, &renderer, &audio_device, &play_sound, config.scale)) {
+    if (!handle_args(argc, argv, &size_to_read, file_data, &config) || !setup_sdl(&window, &renderer, &chip8_screen, &audio_device, &play_sound, &config)) {
         /* there was an error in handling command-line argumetns or in the initialisation of SDL */
         return 1;
     }
 
-    run_chipbox(renderer, &play_sound, file_data, size_to_read, &config);
+    run_chipbox(renderer, chip8_screen, &play_sound, file_data, size_to_read, &config);
 
     quit_sdl(window, renderer, audio_device);
     return 0;
 }
 
-int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *audio_device, byte *play_sound, int scale) {
+int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture** chip8_screen, SDL_AudioDeviceID *audio_device, byte *play_sound, struct chipbox_sdl_config *config) {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "SDL failed to initialise: %s\n", SDL_GetError());
         return 0;
     }
 
-    *window = SDL_CreateWindow("chipbox_sdl", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, CHIPBOX_SCREEN_WIDTH_PIXELS * scale, CHIPBOX_SCREEN_HEIGHT * scale, SDL_WINDOW_SHOWN);
+    if (config->blur) {
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+    } else {
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+    }
+
+    *window = SDL_CreateWindow("chipbox_sdl", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, CHIPBOX_SCREEN_WIDTH_PIXELS * config->scale, CHIPBOX_SCREEN_HEIGHT * config->scale, SDL_WINDOW_SHOWN);
     if (*window == NULL) {
         fprintf(stderr, "Window creation failure: %s\n", SDL_GetError());
         return 0;
@@ -50,6 +57,7 @@ int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *a
         fprintf(stderr, "Renderer creation failure: %s\n", SDL_GetError());
         return 0;
     }
+    *chip8_screen = SDL_CreateTexture(*renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, CHIPBOX_SCREEN_WIDTH_PIXELS, CHIPBOX_SCREEN_HEIGHT);
 
     *audio_device = init_audio(play_sound);
     if (audio_device == 0) {
@@ -60,7 +68,7 @@ int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_AudioDeviceID *a
     return 1;
 }
 
-int run_chipbox(SDL_Renderer *renderer, byte *play_sound, byte file_data[], int size_to_read, struct chipbox_sdl_config *config) {
+int run_chipbox(SDL_Renderer *renderer, SDL_Texture *chip8_screen, byte *play_sound, byte file_data[], int size_to_read, struct chipbox_sdl_config *config) {
     SDL_Event e;
     struct chipbox_chip8_state state;
     int pixel_count;
@@ -99,7 +107,7 @@ int run_chipbox(SDL_Renderer *renderer, byte *play_sound, byte file_data[], int 
         delta_time -= (ticks_to_do * 1000) / config->tps; /* account for left over time */
 
         chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
-        chipbox_render(renderer, pixel_rects, pixel_count, config->scale);
+        chipbox_render(renderer, chip8_screen, pixel_rects, pixel_count);
     }
 
     return 0;
