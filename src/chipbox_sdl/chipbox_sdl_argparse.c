@@ -71,9 +71,9 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
     if (!nonzero_positive(config->scale, "scale")) return 0;
 
     get_str_arg_or_default(argc, argv, "blur", blur_str, MAX_BLUR_LENGTH, CHIPBOX_SDL_DEFAULT_BLUR_STR);
-    if (strcmp(blur_str, "yes") == 0 || strcmp(blur_str, "YES") == 0) {
+    if (option_equal(blur_str, "yes")) {
         config->blur = 1;
-    } else if (strcmp(blur_str, "no") == 0 || strcmp(blur_str, "NO") == 0) {
+    } else if (option_equal(blur_str, "no")) {
         config->blur = 0;
     } else {
         fprintf(stderr, "Unrecognised blur '%s'\n", blur_str);
@@ -84,9 +84,9 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
     if (!nonzero_positive(config->tps, "tps")) return 0;
 
     get_str_arg_or_default(argc, argv, "mode", compat_str, MAX_COMPAT_LENGTH, CHIPBOX_SDL_DEFAULT_COMPAT_MODE_STR);
-    if (strcmp(compat_str, "mattmik") == 0 || strcmp(compat_str, "MATTMIK") == 0) {
+    if (option_equal(compat_str, "mattmik")) {
         config->compat_mode = CHIPBOX_COMPATIBILITY_MODE_MATTMIK;
-    } else if (strcmp(compat_str, "cowgod") == 0 || strcmp(compat_str, "COWGOD") == 0) {
+    } else if (option_equal(compat_str, "cowgod")) {
         config->compat_mode = CHIPBOX_COMPATIBILITY_MODE_COWGOD;
     } else {
         fprintf(stderr, "Unrecognised compatiblity mode '%s'\n", compat_str);
@@ -94,17 +94,13 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
     }
 
     get_str_arg_or_default(argc, argv, "log", log_level_str, MAX_LOG_LEVEL_LENGTH, CHIPBOX_SDL_DEFAULT_LOG_LEVEL_STR);
-    if (strcmp(log_level_str, "warn") == 0 || strcmp(log_level_str, "WARN") == 0 ||
-        strcmp(log_level_str, "w") == 0 || strcmp(log_level_str, "W") == 0) {
+    if (option_equal(log_level_str, "warn")) {
         config->log_level = CHIPBOX_LOG_LEVEL_WARN;
-    } else if (strcmp(log_level_str, "error") == 0 || strcmp(log_level_str, "ERROR") == 0 ||
-               strcmp(log_level_str, "e") == 0 || strcmp(log_level_str, "E") == 0) {
+    } else if (option_equal(log_level_str, "error")) {
         config->log_level = CHIPBOX_LOG_LEVEL_ERROR;
-    } else if (strcmp(log_level_str, "info") == 0 || strcmp(log_level_str, "INFO") == 0 ||
-               strcmp(log_level_str, "i") == 0 || strcmp(log_level_str, "I") == 0) {
+    } else if (option_equal(log_level_str, "info")) {
         config->log_level = CHIPBOX_LOG_LEVEL_INFO;
-    } else if (strcmp(log_level_str, "none") == 0 || strcmp(log_level_str, "NONE") == 0 ||
-               strcmp(log_level_str, "n") == 0 || strcmp(log_level_str, "N") == 0) {
+    } else if (option_equal(log_level_str, "none")) {
         config->log_level = CHIPBOX_LOG_LEVEL_NONE;
     } else {
         fprintf(stderr, "Unrecognised log level '%s'\n", log_level_str);
@@ -112,11 +108,9 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
     }
 
     get_str_arg_or_default(argc, argv, "debug", debug_level_str, MAX_DEBUG_LEVEL_LENGTH, CHIPBOX_SDL_DEFAULT_DEBUG_LEVEL_STR);
-    if (strcmp(debug_level_str, "everything") == 0 || strcmp(log_level_str, "EVERYTHING") == 0 ||
-        strcmp(debug_level_str, "e") == 0 || strcmp(log_level_str, "E") == 0) {
+    if (option_equal(debug_level_str, "everything")) {
         config->debug_level = CHIPBOX_DEBUG_LEVEL_EVERYTHING;
-    } else if (strcmp(debug_level_str, "none") == 0 || strcmp(debug_level_str, "NONE") == 0 ||
-               strcmp(debug_level_str, "n") == 0 || strcmp(debug_level_str, "N") == 0) {
+    } else if (option_equal(debug_level_str, "none")) {
         config->debug_level = CHIPBOX_DEBUG_LEVEL_NONE;
     } else {
         for (i = 0; debug_level_str[i] != 0; i++) {
@@ -150,4 +144,15 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
     }
 
     return 1;
+}
+
+/* determines if target matches option, with equality being defined as entire string match, or just first character IF target is only one character, case insensitive */
+int option_equal(char *target, char *option) {
+    int i;
+    for (i = 0; target[i] != 0; i++) {
+        target[i] = tolower(target[i]);
+    }
+
+    return (strlen(target) == 1 && target[0] == option[0]) ||
+        (strcmp(target, option) == 0);
 }
