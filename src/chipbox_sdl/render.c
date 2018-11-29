@@ -22,13 +22,20 @@ void chipbox_screen_to_sdl_rects(byte screen[], SDL_Rect rects[], int *count) {
 }
 
 /* chipbox_render: render chip8 screen, scaling each pixel by scale */
-void chipbox_render(SDL_Renderer* renderer, SDL_Texture *chip8_screen, SDL_Rect rects[], int count) {
+void chipbox_render(SDL_Renderer* renderer, SDL_Texture *chip8_screen, SDL_Rect rects[], int count, int ghosting) {
+    if (ghosting < 0 || ghosting > 0xFF) ghosting = 1;
     SDL_SetRenderTarget(renderer, chip8_screen);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF / ghosting);
+    SDL_RenderFillRect(renderer, NULL);
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderFillRects(renderer, rects, count);
+
     SDL_SetRenderTarget(renderer, NULL);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+    SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, chip8_screen, NULL, NULL);
     SDL_RenderPresent(renderer);
 }

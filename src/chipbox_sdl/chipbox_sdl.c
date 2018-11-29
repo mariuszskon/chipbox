@@ -58,6 +58,12 @@ int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture** chip8_
         return 0;
     }
     *chip8_screen = SDL_CreateTexture(*renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, CHIPBOX_SCREEN_WIDTH_PIXELS, CHIPBOX_SCREEN_HEIGHT);
+    SDL_SetRenderTarget(*renderer, *chip8_screen);
+    SDL_SetRenderDrawColor(*renderer, 0, 0, 0, 0xFF);
+    SDL_RenderClear(*renderer);
+    SDL_SetRenderTarget(*renderer, NULL);
+    SDL_SetRenderDrawColor(*renderer, 0, 0, 0, 0xFF);
+    SDL_RenderClear(*renderer);
 
     *audio_device = init_audio(play_sound);
     if (audio_device == 0) {
@@ -107,7 +113,7 @@ int run_chipbox(SDL_Renderer *renderer, SDL_Texture *chip8_screen, byte *play_so
         delta_time -= (ticks_to_do * 1000) / config->tps; /* account for left over time */
 
         chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
-        chipbox_render(renderer, chip8_screen, pixel_rects, pixel_count);
+        chipbox_render(renderer, chip8_screen, pixel_rects, pixel_count, config->ghosting);
     }
 
     return 0;

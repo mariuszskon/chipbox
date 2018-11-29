@@ -11,6 +11,7 @@ struct chipbox_sdl_config {
     byte log_level; /* log messages must be CHIPBOX_LOG_LEVEL_* or lower to be printed */
     byte debug_level; /* what debug messages should be shown, must be CHIPBOX_DEBUG_LEVEL_* */
     dbyte seed; /* seed to use for random number generation */
+    int ghosting;
 };
 
 #endif

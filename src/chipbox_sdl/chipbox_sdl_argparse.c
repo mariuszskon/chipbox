@@ -27,7 +27,8 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
         "mode",
         "log",
         "debug",
-        "random"
+        "random",
+        "ghosting"
     };
 
     char args_helptext[CHIPBOX_SDL_ARG_NUM][MAX_HELPTEXT_LENGTH] = {
@@ -38,7 +39,8 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
         "set 'mattmik' or 'cowgod' compatibility mode",
         "set CPU logging level (none, error, warn (default), info)",
         "set debug mode ((n)one (default), (e)verything, or a combination of (d)isassemble, (c)ount, (s)creen, (r)egisters, stac(k), (i)nput, (m)emory",
-        "set random seed (default uses system time)"
+        "set random seed (default uses system time)",
+        "set the ghosting/burn-in amount (1 is default - no ghosting)"
     };
 
     if (argc < 2 || find_arg(argc, argv, "help") != -1) {
@@ -138,6 +140,9 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
 
     config->seed = get_int_arg_or_default(argc, argv, "random", CHIPBOX_SDL_DEFAULT_SEED);
     if (!nonzero_positive(config->seed, "random")) return 0;
+
+    config->ghosting = get_int_arg_or_default(argc, argv, "ghosting", CHIPBOX_SDL_DEFAULT_GHOSTING);
+    if (!nonzero_positive(config->ghosting, "ghosting")) return 0;
 
     if (unfound_args(argc, argv)) {
         return 0;

@@ -3,7 +3,7 @@
 
 #include <time.h>
 
-#define CHIPBOX_SDL_ARG_NUM 8
+#define CHIPBOX_SDL_ARG_NUM 9
 #define MAX_HELPTEXT_LENGTH 160
 #define MAX_BLUR_LENGTH 3
 #define MAX_COMPAT_LENGTH 7
@@ -17,6 +17,7 @@
 #define CHIPBOX_SDL_DEFAULT_LOG_LEVEL_STR "WARN"
 #define CHIPBOX_SDL_DEFAULT_DEBUG_LEVEL_STR "NONE"
 #define CHIPBOX_SDL_DEFAULT_SEED time(NULL)
+#define CHIPBOX_SDL_DEFAULT_GHOSTING 1
 
 #include "chipbox_sdl_config.h"
 

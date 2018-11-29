@@ -5,6 +5,5 @@
 * Save states etc.
 * Rewind
 * Sprite wrapping (for compatibility)
-* Ghosting simulation
 * Pre-made input (i.e. TAS support)
 * Add assembler
