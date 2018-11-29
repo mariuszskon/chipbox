@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 
     run_chipbox(renderer, chip8_screen, &play_sound, file_data, size_to_read, &config);
 
-    quit_sdl(window, renderer, audio_device);
+    quit_sdl(window, renderer, chip8_screen, audio_device);
     return 0;
 }
 
@@ -119,8 +119,9 @@ int run_chipbox(SDL_Renderer *renderer, SDL_Texture *chip8_screen, byte *play_so
     return 0;
 }
 
-void quit_sdl(SDL_Window *window, SDL_Renderer *renderer, SDL_AudioDeviceID audio_device) {
+void quit_sdl(SDL_Window *window, SDL_Renderer *renderer, SDL_Texture *chip8_screen, SDL_AudioDeviceID audio_device) {
     close_audio(audio_device);
+    SDL_DestroyTexture(chip8_screen);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

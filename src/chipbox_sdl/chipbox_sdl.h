@@ -7,6 +7,6 @@
 
 int setup_sdl(SDL_Window **window, SDL_Renderer **renderer, SDL_Texture** chip8_screen, SDL_AudioDeviceID *audio_device, byte *play_sound, struct chipbox_sdl_config *config);
 int run_chipbox(SDL_Renderer *renderer, SDL_Texture *chip8_screen, byte *play_sound, byte file_data[], int size_to_read, struct chipbox_sdl_config *config);
-void quit_sdl(SDL_Window *window, SDL_Renderer *renderer, SDL_AudioDeviceID audio_device);
+void quit_sdl(SDL_Window *window, SDL_Renderer *renderer, SDL_Texture *chip8_screen, SDL_AudioDeviceID audio_device);
 
 #endif
