@@ -85,7 +85,7 @@ int run_chipbox(SDL_Renderer *renderer, SDL_Texture *chip8_screen, byte *play_so
     int running = 1;
     int paused = 0;
     int i;
-    int ticks_to_do;
+    unsigned long ticks_to_do;
 
     state = chipbox_init_state(config->tps);
     chipbox_cpu_srand(&state, config->seed);
@@ -93,6 +93,7 @@ int run_chipbox(SDL_Renderer *renderer, SDL_Texture *chip8_screen, byte *play_so
     chipbox_cpu_load_program(&state, file_data, size_to_read);
     current_time = SDL_GetTicks();
     while (running) {
+        ticks_to_do = 0;
         new_time = SDL_GetTicks();
         delta_time += new_time - current_time;
         current_time = new_time;
@@ -102,26 +103,30 @@ int run_chipbox(SDL_Renderer *renderer, SDL_Texture *chip8_screen, byte *play_so
             } else if (e.type == SDL_KEYDOWN && e.key.repeat == 0) { /* ensure keys used for debugging are not registered when held down to prevent very fast toggling */
                 if (e.key.keysym.sym == SDLK_p) {
                     paused = !paused;
+                } else if (e.key.keysym.sym == SDLK_n) {
+                    ticks_to_do = 1;
                 }
             }
         }
 
-        if (!paused) {
-            chipbox_vm_update_input(&state);
+        chipbox_vm_update_input(&state);
 
-            for (ticks_to_do = i = (delta_time * config->tps) / 1000; i > 0; i--) {
-                if (!chipbox_vm_step(&state, config)) {
-                    running = 0;
-                    break;
-                } else {
-                    *play_sound = handle_sound(state.ST);
-                }
+        /* if ticks_to_do is already set (e.g. by "step" key press), use that, otherwise calculate it */
+        ticks_to_do = ticks_to_do ? ticks_to_do : ((delta_time * config->tps) / 1000);
+        for (i = ticks_to_do ; i > 0; i--) {
+            if (!chipbox_vm_step(&state, config)) {
+                running = 0;
+                break;
+            } else {
+                *play_sound = handle_sound(state.ST);
             }
-            delta_time -= (ticks_to_do * 1000) / config->tps; /* account for left over time */
+        }
+        delta_time -= (ticks_to_do * 1000) / config->tps; /* account for left over time */
 
-            chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
-            chipbox_render(renderer, chip8_screen, pixel_rects, pixel_count, config->ghosting);
-        } else {
+        chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
+        chipbox_render(renderer, chip8_screen, pixel_rects, pixel_count, config->ghosting);
+
+        if (paused) {
             /* do not account for change in time if paused to prevent speed up when unpausing */
             delta_time = 0;
             current_time = SDL_GetTicks();
