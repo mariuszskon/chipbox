@@ -83,6 +83,7 @@ int run_chipbox(SDL_Renderer *renderer, SDL_Texture *chip8_screen, byte *play_so
     unsigned long current_time;
     unsigned long delta_time = 0;
     int running = 1;
+    int paused = 0;
     int i;
     int ticks_to_do;
 
@@ -98,22 +99,33 @@ int run_chipbox(SDL_Renderer *renderer, SDL_Texture *chip8_screen, byte *play_so
         while(SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
                 running = 0;
+            } else if (e.type == SDL_KEYDOWN && e.key.repeat == 0) { /* ensure keys used for debugging are not registered when held down to prevent very fast toggling */
+                if (e.key.keysym.sym == SDLK_p) {
+                    paused = !paused;
+                }
             }
         }
-        chipbox_vm_update_input(&state);
 
-        for (ticks_to_do = i = (delta_time * config->tps) / 1000; i > 0; i--) {
-            if (!chipbox_vm_step(&state, config)) {
-                running = 0;
-                break;
-            } else {
-                *play_sound = handle_sound(state.ST);
+        if (!paused) {
+            chipbox_vm_update_input(&state);
+
+            for (ticks_to_do = i = (delta_time * config->tps) / 1000; i > 0; i--) {
+                if (!chipbox_vm_step(&state, config)) {
+                    running = 0;
+                    break;
+                } else {
+                    *play_sound = handle_sound(state.ST);
+                }
             }
-        }
-        delta_time -= (ticks_to_do * 1000) / config->tps; /* account for left over time */
+            delta_time -= (ticks_to_do * 1000) / config->tps; /* account for left over time */
 
-        chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
-        chipbox_render(renderer, chip8_screen, pixel_rects, pixel_count, config->ghosting);
+            chipbox_screen_to_sdl_rects(state.screen, pixel_rects, &pixel_count);
+            chipbox_render(renderer, chip8_screen, pixel_rects, pixel_count, config->ghosting);
+        } else {
+            /* do not account for change in time if paused to prevent speed up when unpausing */
+            delta_time = 0;
+            current_time = SDL_GetTicks();
+        }
     }
 
     return 0;
