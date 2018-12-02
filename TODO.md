@@ -7,3 +7,4 @@
 * Sprite wrapping (for compatibility)
 * Pre-made input (i.e. TAS support)
 * Add assembler
+* Key remapping
