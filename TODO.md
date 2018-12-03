@@ -1,7 +1,7 @@
 # TODOs
 
 * Fix high pitched sound in Windows - cause unknown
-* Add debugger - pausing, stepping, changing values etc.
+* Add SDL-less debugger
 * Save states etc.
 * Rewind
 * Sprite wrapping (for compatibility)
