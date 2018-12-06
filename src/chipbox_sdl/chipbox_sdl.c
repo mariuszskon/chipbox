@@ -83,7 +83,7 @@ int run_chipbox(SDL_Renderer *renderer, SDL_Texture *chip8_screen, byte *play_so
     unsigned long current_time;
     unsigned long delta_time = 0;
     int running = 1;
-    int paused = 0;
+    int paused = config->pause;
     int i;
     unsigned long ticks_to_do;
 

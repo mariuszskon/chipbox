@@ -28,7 +28,8 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
         "log",
         "debug",
         "random",
-        "ghosting"
+        "ghosting",
+        "pause"
     };
 
     char args_helptext[CHIPBOX_SDL_ARG_NUM][MAX_HELPTEXT_LENGTH] = {
@@ -40,7 +41,8 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
         "set CPU logging level (none, error, warn (default), info)",
         "set debug mode ((n)one (default), (e)verything, or a combination of (d)isassemble, (c)ount, (s)creen, (r)egisters, stac(k), (i)nput, (m)emory",
         "set random seed (default uses system time)",
-        "set the ghosting/burn-in amount (1 is default - no ghosting)"
+        "set the ghosting/burn-in amount (1 is default - no ghosting)",
+        "begin emulation in paused state"
     };
 
     if (argc < 2 || find_arg(argc, argv, "help") != -1) {
@@ -143,6 +145,12 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
 
     config->ghosting = get_int_arg_or_default(argc, argv, "ghosting", CHIPBOX_SDL_DEFAULT_GHOSTING);
     if (!nonzero_positive(config->ghosting, "ghosting")) return 0;
+
+    if (find_arg(argc, argv, "pause") != -1) {
+        config->pause = 1;
+    } else {
+        config->pause = 0;
+    }
 
     if (unfound_args(argc, argv)) {
         return 0;

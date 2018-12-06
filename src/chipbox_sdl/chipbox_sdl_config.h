@@ -12,6 +12,7 @@ struct chipbox_sdl_config {
     byte debug_level; /* what debug messages should be shown, must be CHIPBOX_DEBUG_LEVEL_* */
     dbyte seed; /* seed to use for random number generation */
     int ghosting;
+    byte pause; /* if emulation should begin paused */
 };
 
 #endif

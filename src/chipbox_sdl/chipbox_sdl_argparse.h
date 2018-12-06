@@ -3,7 +3,7 @@
 
 #include <time.h>
 
-#define CHIPBOX_SDL_ARG_NUM 9
+#define CHIPBOX_SDL_ARG_NUM 10
 #define MAX_HELPTEXT_LENGTH 160
 #define MAX_BLUR_LENGTH 3
 #define MAX_COMPAT_LENGTH 7
