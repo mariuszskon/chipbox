@@ -39,7 +39,7 @@ int handle_args(int argc, char *argv[], int *size_to_read, byte file_data[], str
         "set CHIP-8 ticks/instructions per second",
         "set 'mattmik' or 'cowgod' compatibility mode",
         "set CPU logging level (none, error, warn (default), info)",
-        "set debug mode ((n)one (default), (e)verything, or a combination of (d)isassemble, (c)ount, (s)creen, (r)egisters, stac(k), (i)nput, (m)emory",
+        "set debug mode ((n)one (default), (e)verything, or a combination of (d)isassemble, (c)ount, (s)creen, (r)egisters, stac(k), (i)nput, (m)emory)",
         "set random seed (default uses system time)",
         "set the ghosting/burn-in amount (1 is default - no ghosting)",
         "begin emulation in paused state"
