@@ -11,6 +11,8 @@ A work-in-progress [CHIP-8](https://en.wikipedia.org/wiki/CHIP-8) interpreter/em
 * Options for switching between different popular interpretations of instructions ("quirks")
 * Options for graphics scaling, clock speed, error logging etc.
 * Simple disassembler
+* Debugging options
+* Fancy graphics options, such as blurring and simulating ghosting
 * Reusable pure C API
 
 ## Prebuilt binaries
@@ -53,6 +55,11 @@ In chipbox, the keys are mapped to the [scancodes](https://wiki.libsdl.org/SDL_S
     A S D F
     Z X C V
 
+In addition to the classic input keys, chipbox features emulator-specific keys:
+
+* `p` to pause emulation
+* `n` to execute the next instruction, if paused
+
 ## Options
 
     Usage: chipbox_sdl [options...] [file]
@@ -60,9 +67,14 @@ In chipbox, the keys are mapped to the [scancodes](https://wiki.libsdl.org/SDL_S
     Options:
      -h, --help           show this help message
      -s, --scale          set scaling of display
+     -b, --blur           if blurring should be applied (yes, no (default))
      -t, --tps            set CHIP-8 ticks/instructions per second
      -m, --mode           set 'mattmik' or 'cowgod' compatibility mode
-     -l, --log            set logging level (none, error, warn (default), info)
+     -l, --log            set CPU logging level (none, error, warn (default), info)
+     -d, --debug          set debug mode ((n)one (default), (e)verything, or a combination of (d)isassemble, (c)ount, (s)creen, (r)egisters, stac(k), (i)nput, (m)emory
+     -r, --random         set random seed (default uses system time)
+     -g, --ghosting       set the ghosting/burn-in amount (1 is default - no ghosting)
+     -p, --pause          begin emulation in paused state
 
 ## Building
 
